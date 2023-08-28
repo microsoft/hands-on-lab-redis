@@ -1,8 +1,10 @@
 using System.Collections;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Redis;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
-namespace Microsoft.Azure.WebJobs.Extensions.Redis.Samples
+namespace HoL.Redis.Products
 {
     public static class ProductsCacheRefresh
     {
