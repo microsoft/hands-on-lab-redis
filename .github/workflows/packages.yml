@@ -1,0 +1,29 @@
+name: Update workshop packages
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_packages:
+    name: Update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Azure Function zip
+      run:  cd src/HoL.Redis.Products && zip -r ../../Azure.Function.HoL.Redis.Products.zip .
+
+    - name: Infrastructure As Code zip
+      run:  cd terraform && zip -r ../infrastructure-terraform.zip .
+
+    - name: Update release
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        name: Workshop packages
+        tag: latest
+        artifacts: "*.zip"
+        allowUpdates: true
