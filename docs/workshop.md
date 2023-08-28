@@ -24,6 +24,8 @@ Welcome
 
 ## Prerequisites
 
+## Structure 
+![Lab Structure Draft](assets/Draft_lab.png)
 
 ---
 
