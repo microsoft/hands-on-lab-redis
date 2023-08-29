@@ -12,12 +12,3 @@ resource "azurerm_redis_cache" "this" {
 
   redis_configuration {}
 }
-
-resource "azurerm_api_management_redis_cache" "this" {
-  name              = format("apim-redis-%s", local.resource_suffix_kebabcase)
-  api_management_id = azurerm_api_management.this.id
-  connection_string = azurerm_redis_cache.this.primary_connection_string
-  description       = "Redis cache instances"
-  redis_cache_id    = azurerm_redis_cache.this.id
-  cache_location    = azurerm_resource_group.this.location
-}

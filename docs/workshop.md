@@ -117,7 +117,18 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 # Lab 2 : APIM External Caching Setup
 
+## API Via APIM without cache
+
 ## Setup APIM External 
+
+Setup the Cache Instance inside APIM
+Set by Default for all regions
+
+Example with policy to do all the cache.
+Remove this policy globally
+
+Create one for the /products only.
+
 ## APIM Cache Policy delegation + API specific caching removal
 
 ---
