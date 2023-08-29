@@ -115,11 +115,70 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 ---
 
-# Lab 2 : APIM External Caching Setup
+# Lab 2 : Add cache to your API with APIM
 
-## API Via APIM without cache
+In the previous lab, you saw how to add code in your API to be able to use an Azure Cache for Redis. In this lab, you will see how to add a cache to your API without modifing its code.
 
-## Setup APIM External 
+## Architecture recap
+
+If you look at the architecture you deployed for this workshop, you will see that you have an API Management (APIM) in front of the API that provide you the different products.
+
+![Architecture recap](https://placehold.co/600x400)
+
+The APIM is used as a facade for all your APIs, in the next section you will discover how to add a cache on your APIs using the APIM and Azure Cache for Redis.
+
+### Setup APIM External 
+
+First things you need to do, is to connect your Azure Redis Cache to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
+
+So go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **External cache**.
+
+![External cache](./assets/apim-external-cache.png)
+
+Then click on **Add** and fill the form with the following information:
+
+- In the `Cache instance` field, select the Azure Cache for Redis you deployed in the previous lab.
+- In the `Use from` field, set the region to `Default`, this will allow your Azure Cache for Redis to be used by all your APIM instances whatever their region.
+
+![External cache form](./assets/apim-external-cache-form.png)
+
+Then, click the **Save** button.
+
+You should now see your Azure Cache for Redis in the list of external cache:
+
+![External cache list](./assets/apim-external-cache-list.png)
+
+### Setup APIM Cache Policy globally
+
+Now that you have your Azure Cache for Redis connected to your APIM, you need to configure it to use it. To do this, you will use a policy.
+
+Go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **APIs**. You will see a **Product API** with a **Get Products** operation:
+
+![APIM APIs](./assets/apim-api-get-products.png)
+
+To be able to compare the performance of your API with and without the cache, you will first call it without the cache using [Postman][postman-link].
+
+Go to the **Test** tab of the **Get Products** operation and take the generated url inside the `Request URL` section. Use Postman and you should see the response of your API taking between 1 and 2 seconds:
+
+![Postman get products](https://placehold.co/600x400)
+
+Now to reduce this time you can specify a policy to use the cache. Select `All operations` in the `Inbound processing` section and click on the **+ Add policy** button:
+
+![APIM policy](./assets/apim-in-bound-policy.png)
+
+Select the cache-lookup/store policy and click on the **Add** button:
+
+![APIM cache-lookup policy](./assets/apim-cache-lookup-store-policy.png)
+
+Set the duration to `30` seconds for the cache to be able to test it and click **Save**.
+
+![APIM cache-lookup policy form](./assets/apim-cache-lookup-store-policy-form.png)
+
+In real life scenario, this value will depend on your business needs.
+
+That's it! You have now your cache policy setup globally to be used by your API. You can now test it again with Postman and you should see the response time of your API reduced to a few milliseconds:
+
+![Postman get products with cache](https://placehold.co/600x400)
 
 Setup the Cache Instance inside APIM
 Set by Default for all regions
@@ -131,6 +190,7 @@ Create one for the /products only.
 
 ## APIM Cache Policy delegation + API specific caching removal
 
+[postman-link]: https://www.postman.com/
 ---
 
 # Lab 3 : Azure Cache for Redis Governance 

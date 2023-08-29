@@ -1,6 +1,15 @@
-resource "azurerm_monitor_workspace" "this" {
-  name                = format("mw-%s", local.resource_suffix_kebabcase)
-  resource_group_name = azurerm_resource_group.this.name
+resource "azurerm_log_analytics_workspace" "this" {
+  name                = format("log-%s", local.resource_suffix_kebabcase)
   location            = azurerm_resource_group.this.location
-  tags                = local.tags
+  resource_group_name = azurerm_resource_group.this.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "this" {
+  name                = format("appi-%s", local.resource_suffix_kebabcase)
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  workspace_id        = azurerm_log_analytics_workspace.this.id
+  application_type    = "web"
 }
