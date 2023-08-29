@@ -1,0 +1,8 @@
+@apimEndpoint = swapi.dev/api
+@products = people
+@typeJson = Accept: application/json
+
+###
+# @name = Get Products from APIM Endpoint
+GET https://{{apimEndpoint}}/{{products}}
+{{typeJson}}
