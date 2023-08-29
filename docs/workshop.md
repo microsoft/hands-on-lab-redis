@@ -180,6 +180,22 @@ That's it! You have now your cache policy setup globally to be used by your API.
 
 ![Postman get products with cache](https://placehold.co/600x400)
 
+### Caching a specific operation
+
+In the previous section, you saw how to setup a cache policy globally for all your operations. But what if you want to cache only a specific operation?
+
+Before you do this, you need to remove the global cache policy you just added. To do this, go to the **All operations** section of your API and click on the **...** button of the **cache-lookup** and the **cache-store** policies and select **Delete**:
+
+![APIM remove policies](./assets/apim-remove-policies.png)
+
+Then click on the **Save** button.
+
+Now, to cache only the **Get Products** operation you need to specify to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` `cache-store-value`.
+
+
+
+## APIM Cache Policy delegation + API specific caching removal
+
 Setup the Cache Instance inside APIM
 Set by Default for all regions
 
@@ -187,8 +203,6 @@ Example with policy to do all the cache.
 Remove this policy globally
 
 Create one for the /products only.
-
-## APIM Cache Policy delegation + API specific caching removal
 
 [postman-link]: https://www.postman.com/
 ---
