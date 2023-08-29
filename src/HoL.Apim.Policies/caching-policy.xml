@@ -1,0 +1,28 @@
+<policies>
+    <inbound>
+        <base />
+        <cache-lookup-value key="products:all" variable-name="allproducts" caching-type="external" />
+        <choose>
+            <when condition="@(context.Variables.ContainsKey("allproducts"))">
+                <return-response>
+                    <set-status code="200" reason="OK" />
+                    <set-header name="Content-Type" exists-action="override">
+                        <value>application/json</value>
+                    </set-header>
+                    <set-body>@((string)context.Variables["allproducts"])</set-body>
+                </return-response>
+            </when>
+            <otherwise />
+        </choose>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <cache-store-value key="products:all" value="@((string)context.Response.Body.As<string>(preserveContent: true))" duration="60" caching-type="external" />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
