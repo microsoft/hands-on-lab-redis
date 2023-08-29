@@ -15,7 +15,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Azure Function zip
-      run:  cd src/HoL.Redis.Products && zip -r ../../Azure.Function.HoL.Redis.Products.zip .
+      run:  cd src/HoL.Redis.Func.Watcher && zip -r ../../HoL.Redis.Func.Watcher.zip .
+
+    - name: API zip
+      run:  cd src/HoL.Redis.Api && zip -r ../../HoL.Redis.Api.zip .
+
+    - name: APIM Policies zip
+      run:  cd src/HoL.Apim.Policies && zip -r ../../HoL.Apim.Policies.zip .
 
     - name: Infrastructure As Code zip
       run:  cd terraform && zip -r ../infrastructure-terraform.zip .
