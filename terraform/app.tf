@@ -6,6 +6,10 @@ resource "azurerm_linux_web_app" "this" {
 
   tags = local.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {
   }
 }

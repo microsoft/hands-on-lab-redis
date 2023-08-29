@@ -18,5 +18,9 @@ resource "azurerm_linux_function_app" "this" {
 
   tags = local.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {}
 }

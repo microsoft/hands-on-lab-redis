@@ -23,7 +23,7 @@ resource "azurerm_cosmosdb_account" "this" {
 }
 
 resource "azurerm_cosmosdb_sql_database" "this" {
-  name                = "eshopdb"
+  name                = "catalogdb"
   resource_group_name = azurerm_cosmosdb_account.this.resource_group_name
   account_name        = azurerm_cosmosdb_account.this.name
 }
