@@ -257,7 +257,13 @@ You can now test your API again with Postman or the HTTP REST file like previous
 
 # Lab 4 : Event-Driven Architecture 
 
-## Redis Triggered Azure Function 
+In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired.
+
+The idea is to use an Azure Function triggered by an Azure Redis Cache event to refresh the cache when the data expired.
+
+## Redis Triggered Azure Function
+
+
 
 ## Refresh caching on expired key 
 

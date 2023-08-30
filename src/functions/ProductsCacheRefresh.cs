@@ -5,7 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Redis;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
-namespace Func.Watcher
+namespace Functions
 {
     public static class RedisCacheRefresh
     {
