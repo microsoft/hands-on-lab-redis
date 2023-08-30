@@ -131,7 +131,7 @@ The APIM is used as a facade for all your APIs, in the next section you will dis
 
 ### Setup APIM External 
 
-First things you need to do, is to connect your Azure Redis Cache to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
+First things you need to do, is to connect your Azure Cache for Redis to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
 
 So go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **External cache**.
 
@@ -259,11 +259,25 @@ You can now test your API again with Postman or the HTTP REST file like previous
 
 In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired.
 
-The idea is to use an Azure Function triggered by an Azure Redis Cache event to refresh the cache when the data expired.
+The idea is to use an Azure Function triggered by an Azure Cache for Redis event to refresh the cache when the data expired.
 
 ## Redis Triggered Azure Function
 
+Open the Azure Function project in Visual Studio Code and go to the `ProductsCacheRefresh.cs`. You will discover a method called `ProductsEventsTrigger`.
 
+This methods as an attribute called `RedisCacheTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
+
+```csharp
+[RedisPubSubTrigger("REDIS_CONNECTION_STRING", "__keyspace@0__:*_%REDIS_PRODUCT_ALL%")] ChannelMessage channelMessage
+```
+
+This element is composed of two parts:
+- The first part is the connection string of the Azure Cache for Redis defined in the environment variables. 
+- The second part is the pattern of the event to listen to. In this case, it will listen to all the events that has a specific suffix value defined by the environment variables
+
+Both environment variables are defined in the `local.settings.json` that you must create if you want to run this Azure Function locally (you have the template in the `local.settings.json.template` file).
+
+The goal is to detect when the cache is expired and to refresh it for the `products:all` key. To do this, you will use the `ChannelMessage` object that contains the information about the event and listen to the `expired` event.
 
 ## Refresh caching on expired key 
 
