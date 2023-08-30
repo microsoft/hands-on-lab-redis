@@ -1,6 +1,6 @@
 {
-    "azureFunctions.projectSubpath": "src/HoL.Redis.Func.Watcher",
-    "azureFunctions.deploySubpath": "src/HoL.Redis.Func.Watcher/bin/Release/net6.0/publish",
+    "azureFunctions.projectSubpath": "src/functions",
+    "azureFunctions.deploySubpath": "src/functions/bin/Release/net6.0/publish",
     "azureFunctions.projectLanguage": "C#",
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",

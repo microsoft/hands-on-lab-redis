@@ -14,17 +14,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Azure Function zip
-      run:  cd src/HoL.Redis.Func.Watcher && zip -r ../../HoL.Redis.Func.Watcher.zip .
+    - name: Azure Functions zip
+      run:  cd src/functions && zip -r ../../functions.zip .
 
     - name: API zip
-      run:  cd src/HoL.Redis.Api && zip -r ../../HoL.Redis.Api.zip .
+      run:  cd src/catalog-api && zip -r ../../catalog-api.zip .
 
     - name: APIM Policies zip
-      run:  cd src/HoL.Apim.Policies && zip -r ../../HoL.Apim.Policies.zip .
+      run:  cd src/apim-policies && zip -r ../../apim-policies.zip .
 
     - name: Infrastructure As Code zip
-      run:  cd terraform && zip -r ../infrastructure-terraform.zip .
+      run:  cd terraform && zip -r ../terraform.zip .
 
     - name: Update release
       uses: ncipollo/release-action@v1.12.0

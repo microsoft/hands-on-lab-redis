@@ -15,20 +15,29 @@ resource "azurerm_api_management_product" "this" {
   api_management_name   = azurerm_api_management.this.name
   resource_group_name   = azurerm_resource_group.this.name
   display_name          = "Catalog API"
+  description           = "Catalog API for demo purposes."
   subscription_required = false
   approval_required     = false
   published             = true
 }
 
 resource "azurerm_api_management_api" "products" {
-  name                = "products"
-  resource_group_name = azurerm_resource_group.this.name
+  name                  = "products"
+  resource_group_name   = azurerm_resource_group.this.name
+  api_management_name   = azurerm_api_management.this.name
+  subscription_required = azurerm_api_management_product.this.subscription_required
+  revision              = "1"
+  display_name          = "Products"
+  path                  = "products"
+  protocols             = ["https"]
+  service_url           = "https://swapi.dev/api" // TODO: change later
+}
+
+resource "azurerm_api_management_product_api" "catalog_products" {
+  api_name            = azurerm_api_management_api.products.name
+  product_id          = azurerm_api_management_product.this.product_id
   api_management_name = azurerm_api_management.this.name
-  revision            = "1"
-  display_name        = "Products"
-  path                = "products"
-  protocols           = ["https"]
-  service_url         = "https://swapi.dev/api" // TODO: change later
+  resource_group_name = azurerm_api_management.this.resource_group_name
 }
 
 resource "azurerm_api_management_api_operation" "get_people" {

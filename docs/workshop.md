@@ -106,6 +106,8 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 ## Redis basics 
 
+[terraform-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/infrastructure-terraform.zip
+
 ---
 
 # Lab 1 : Redis setup in Azure Infra Environment 
@@ -156,11 +158,17 @@ Go to your resource group, search the API Management service (APIM), select it a
 
 ![APIM APIs](./assets/apim-api-get-products.png)
 
-To be able to compare the performance of your API with and without the cache, you will first call it without the cache using [Postman][postman-link].
+To be able to compare the performance of your API with and without the cache, you will first call it without the cache using [Postman][postman-link] or using the `products.http` inside the `Payloads` folder.
 
-Go to the **Test** tab of the **Get Products** operation and take the generated url inside the `Request URL` section. Use Postman and you should see the response of your API taking between 1 and 2 seconds:
+Go to the **Test** tab of the **Get Products** operation in your APIM and take the generated url inside the `Request URL` section.
+
+If you use Postman and you should see the response of your API taking multiples seconds:
 
 ![Postman get products](https://placehold.co/600x400)
+
+If you use the HTTP REST file you should see:
+
+![HTTP REST get products](./assets/apim-http-rest-before-caching.png)
 
 Now to reduce this time you can specify a policy to use the cache. Select `All operations` in the `Inbound processing` section and click on the **+ Add policy** button:
 
@@ -176,9 +184,7 @@ Set the duration to `30` seconds for the cache to be able to test it and click *
 
 In real life scenario, this value will depend on your business needs.
 
-That's it! You have now your cache policy setup globally to be used by your API. You can now test it again with Postman and you should see the response time of your API reduced to a few milliseconds:
-
-![Postman get products with cache](https://placehold.co/600x400)
+That's it! You have now your cache policy setup globally to be used by your API. You can now test it again with Postman or HTTP REST you should see the response time of your API reduced to a few milliseconds!
 
 ### Caching a specific operation
 
@@ -190,19 +196,51 @@ Before you do this, you need to remove the global cache policy you just added. T
 
 Then click on the **Save** button.
 
-Now, to cache only the **Get Products** operation you need to specify to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` `cache-store-value`.
+Now, to cache only the **Get Products** operation you need to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` `cache-store-value`. They are a bit different from the previous policies as they allow you to specify the key to use in the cache.
 
+This time, you will need to edit the policy manually. So go to the **Get Products** operation and click one of the **Policy code editor** button:
 
+![APIM policy code editor](./assets/apim-policy-code-editor.png)
 
-## APIM Cache Policy delegation + API specific caching removal
+Then, inside the editor replace the inbound block of the policy with the following content:
 
-Setup the Cache Instance inside APIM
-Set by Default for all regions
+```xml
+<inbound>
+    <base />
+    <cache-lookup-value key="products:all" variable-name="allproducts" caching-type="external" />
+    <choose>
+        <when condition="@(context.Variables.ContainsKey("allproducts"))">
+            <return-response>
+                <set-status code="200" reason="OK" />
+                <set-header name="Content-Type" exists-action="override">
+                    <value>application/json</value>
+                </set-header>
+                <set-body>@((string)context.Variables["allproducts"])</set-body>
+            </return-response>
+        </when>
+        <otherwise />
+    </choose>
+</inbound>
+```
 
-Example with policy to do all the cache.
-Remove this policy globally
+This policy will first try to get the value from the cache using the key `products:all` and if it exists, it will return it. If it exists it will return the result of the cache directly using the `return-response`. If it doesn't exist, it will continue the execution of the policy.
 
-Create one for the /products only.
+Then, add the following policy in the outbound block of the policy:
+
+```xml
+<outbound>
+    <base />
+    <cache-store-value key="products:all" value="@((string)context.Response.Body.As<string>(preserveContent: true))" duration="60" caching-type="external" />
+</outbound>
+```
+
+This policy will store the result of the operation in the cache using the key `products:all` and the value of the response body. It will store it for 60 seconds. Of course, you can change the key and the duration to fit your needs.
+
+Notice the `external` cache type is used in both policies. This is because you are using an external cache which is Azure Cache for Redis in your case. If you were using the internal cache of the APIM, you would have used the `internal` cache type.
+
+Then, click on the **Save** button.
+
+You can now test your API again with Postman or the HTTP REST file like previously and you should see the response time of this particular operation reduced to a few milliseconds, but this time only for the **Get Products** operation.
 
 [postman-link]: https://www.postman.com/
 ---

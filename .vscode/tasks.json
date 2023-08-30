@@ -12,7 +12,7 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/HoL.Redis.Func.Watcher"
+        "cwd": "${workspaceFolder}/src/Func.Watcher"
       }
     },
     {
@@ -31,7 +31,7 @@
       },
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/HoL.Redis.Func.Watcher"
+        "cwd": "${workspaceFolder}/src/functions"
       }
     },
     {
@@ -47,7 +47,7 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/HoL.Redis.Func.Watcher"
+        "cwd": "${workspaceFolder}/src/functions"
       }
     },
     {
@@ -64,14 +64,14 @@
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/HoL.Redis.Func.Watcher"
+        "cwd": "${workspaceFolder}/src/functions"
       }
     },
     {
       "type": "func",
       "dependsOn": "build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/src/HoL.Redis.Func.Watcher/bin/Debug/net6.0"
+        "cwd": "${workspaceFolder}/src/functions/bin/Debug/net6.0"
       },
       "command": "host start",
       "isBackground": true,
