@@ -4,7 +4,7 @@ using Microsoft.Azure.Cosmos.Linq;
 public interface ICosmosService
 {
     Task<IEnumerable<Product>> RetrieveAllProductsAsync();
-    Task<Product> RetrieveProductByIdAsync(string id);
+    Task<Product?> RetrieveProductByIdAsync(string id);
 }
 
 public class CosmosService : ICosmosService
@@ -15,9 +15,9 @@ public class CosmosService : ICosmosService
     public CosmosService(IConfiguration configuration)
     {
         _client = new CosmosClient(
-            connectionString: configuration["AZURE_COSMOS_CONNECTION_STRING"]
+            connectionString: configuration["AZURE_COSMOS_CONNECTION_STRING"]!
         );
-        databaseName = configuration["AZURE_COSMOS_DATABASE"];
+        databaseName = configuration["AZURE_COSMOS_DATABASE"]!;
     }
 
     private Container productContainer
@@ -44,8 +44,15 @@ public class CosmosService : ICosmosService
         return results;
     }
 
-    public async Task<Product> RetrieveProductByIdAsync(string id)
+    public async Task<Product?> RetrieveProductByIdAsync(string id)
     {
-        return await productContainer.ReadItemAsync<Product>(id, new PartitionKey(id));
+        try
+        {
+            return await productContainer.ReadItemAsync<Product>(id, new PartitionKey(id));
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
