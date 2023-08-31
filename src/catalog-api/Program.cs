@@ -1,26 +1,34 @@
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ProductDb>(opt => opt.UseInMemoryDatabase("ProductList"));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddDbContext<CosmosDBContext>();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
-app.MapGet("/products", async (ProductDb db) =>
-    await db.Products.ToListAsync());
+app.UseCors();
 
-app.MapGet("/products/{id}", async (int id, ProductDb db) =>
-    await db.Products.FindAsync(id)
-        is Product product
-            ? Results.Ok(product)
-            : Results.NotFound());
+app.MapGet("/products", async (CosmosDBContext database) => {
+    // Check the following links for queries: https://learn.microsoft.com/en-us/ef/core/providers/cosmos/?tabs=dotnet-core-cli#queries
+    var products = await database.Products.ToListAsync();
+    return Results.Ok(products);
+});
 
-app.MapPost("/products", async (Product product, ProductDb db) =>
-{
-    db.Products.Add(product);
-    await db.SaveChangesAsync();
+app.MapGet("/products/{id}", async (string id, CosmosDBContext database) => {
+    var product = await database.Products.WithPartitionKey(id).FirstOrDefaultAsync();
 
-    return Results.Created($"/products/{product.Id}", product);
+    return product == null
+        ? Results.NotFound()
+        : Results.Ok(product);
 });
 
 app.Run();

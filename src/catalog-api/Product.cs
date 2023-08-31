@@ -1,13 +1,13 @@
 public class Product
 {
-    public int Id { get; set; }
-    public string? Title { get; set; }
-    public string? Description { get; set; }
+    public string id { get; set; }
+    public string? title { get; set; }
+    public string? description { get; set; }
 
-    public string? Image { get; set; }
+    public string? image { get; set; }
 
-    public int? Quantity { get; set; }
+    public int? quantity { get; set; }
 
     // Price in cents
-    public int? Price { get; set; }
+    public int? price { get; set; }
 }
