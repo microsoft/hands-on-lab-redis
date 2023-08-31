@@ -1,82 +1,326 @@
 [
-    {
-        "title": "Xbox Series X",
-        "description": "Powerful gaming console with 4K graphics and ultra-fast processing speed."
-    },
-    {
-        "title": "Surface Pro 7",
-        "description": "Hybrid laptop/tablet with high-resolution touch screen and long battery life."
-    },
-    {
-        "title": "Xbox Series S",
-        "description": "Small but powerful gaming console with 1440p graphics and ultra-fast processing speed."
-    },
-    {
-        "title": "Surface Laptop 3",
-        "description": "Stylish and powerful laptop with fast performance, high-resolution touch screen, and long battery life."
-    },
-    {
-        "title": "Microsoft Office 365",
-        "description": "Cloud-based suite of productivity tools including Word, Excel, PowerPoint, and Outlook."
-    },
-    {
-        "title": "Microsoft Teams",
-        "description": "Collaboration platform for teams to chat, share files, and hold meetings online."
-    },
-    {
-        "title": "Windows 10",
-        "description": "Latest version of Microsoft's operating system for desktop and laptop computers."
-    },
-    {
-        "title": "Microsoft Edge",
-        "description": "Web browser that provides fast and secure browsing with built-in privacy features."
-    },
-    {
-        "title": "Microsoft Surface Studio 2",
-        "description": "All-in-one desktop computer with high-resolution touch screen and powerful performance."
-    },
-    {
-        "title": "Microsoft Surface Book 3",
-        "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."
-    },
-    {  
-      "title": "Microsoft Surface Go 2",  
-      "description": "Lightweight and portable tablet with high-resolution touch screen and long battery life."  
-    },  
-    {  
-      "title": "Microsoft Surface Pro X",  
-      "description": "Ultra-thin and versatile laptop/tablet with high-resolution touch screen and long battery life."  
-    },  
-    {  
-      "title": "Microsoft Surface Duo",  
-      "description": "Dual-screen smartphone with innovative design and productivity-enhancing features."  
-    },  
-    {  
-      "title": "Xbox One X",  
-      "description": "Powerful gaming console with 4K graphics and immersive gaming experience."  
-    },  
-    {  
-      "title": "Xbox Game Pass Ultimate",  
-      "description": "Subscription service that provides access to a vast library of games for Xbox and PC."  
-    },  
-    {  
-      "title": "Microsoft Office Home and Student 2019",  
-      "description": "Productivity suite that includes Word, Excel, and PowerPoint for home and student use."  
-    },  
-    {  
-      "title": "Microsoft Edge",  
-      "description": "Fast and secure web browser with built-in privacy features and customizable interface."  
-    },  
-    {  
-      "title": "Windows 10 Pro",  
-      "description": "Advanced version of Microsoft's operating system with enhanced security and management features."  
-    },  
-    {  
-      "title": "Microsoft Surface Laptop Go",  
-      "description": "Lightweight and stylish laptop with fast performance and long battery life."  
-    },  
-    {  
-      "title": "Microsoft Surface Book 2",  
-      "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."  
-    }  
+  {
+    "title": "Xbox Series X",
+    "description": "Powerful gaming console with 4K graphics and ultra-fast processing speed."
+  },
+  {
+    "title": "Surface Pro 7",
+    "description": "Hybrid laptop/tablet with high-resolution touch screen and long battery life."
+  },
+  {
+    "title": "Xbox Series S",
+    "description": "Small but powerful gaming console with 1440p graphics and ultra-fast processing speed."
+  },
+  {
+    "title": "Surface Laptop 3",
+    "description": "Stylish and powerful laptop with fast performance, high-resolution touch screen, and long battery life."
+  },
+  {
+    "title": "Microsoft Office 365",
+    "description": "Cloud-based suite of productivity tools including Word, Excel, PowerPoint, and Outlook."
+  },
+  {
+    "title": "Microsoft Surface Studio 2",
+    "description": "All-in-one desktop computer with high-resolution touch screen and powerful performance."
+  },
+  {
+    "title": "Microsoft Surface Book 3",
+    "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."
+  },
+  {
+    "title": "Microsoft Surface Go 2",
+    "description": "Lightweight and portable tablet with high-resolution touch screen and long battery life."
+  },
+  {
+    "title": "Microsoft Surface Pro X",
+    "description": "Ultra-thin and versatile laptop/tablet with high-resolution touch screen and long battery life."
+  },
+  {
+    "title": "Microsoft Surface Duo",
+    "description": "Dual-screen smartphone with innovative design and productivity-enhancing features."
+  },
+  {
+    "title": "Xbox One X",
+    "description": "Powerful gaming console with 4K graphics and immersive gaming experience."
+  },
+  {
+    "title": "Xbox Game Pass Ultimate",
+    "description": "Subscription service that provides access to a vast library of games for Xbox and PC."
+  },
+  {
+    "title": "Microsoft Office Home and Student 2019",
+    "description": "Productivity suite that includes Word, Excel, and PowerPoint for home and student use."
+  },
+  {
+    "title": "Windows 10 Pro",
+    "description": "Advanced version of Microsoft's operating system with enhanced security and management features."
+  },
+  {
+    "title": "Microsoft Surface Laptop Go",
+    "description": "Lightweight and stylish laptop with fast performance and long battery life."
+  },
+  {
+    "title": "Microsoft Surface Book 2",
+    "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."
+  },
+  {
+    "title": "Microsoft Word",
+    "description": "A word processing software used for creating, editing, and formatting documents."
+  },
+  {
+    "title": "Microsoft Excel",
+    "description": "A spreadsheet software used for organizing, analyzing, and visualizing data."
+  },
+  {
+    "title": "Microsoft PowerPoint",
+    "description": "A presentation software used for creating and delivering engaging and impactful presentations."
+  },
+  {
+    "title": "Microsoft Outlook",
+    "description": "An email and personal information management software used for managing emails, calendars, and contacts."
+  },
+  {
+    "title": "Microsoft Access",
+    "description": "A database management software used for creating and managing databases."
+  },
+  {
+    "title": "Microsoft OneNote",
+    "description": "A note-taking software used for capturing and organizing notes, ideas, and information."
+  },
+  {
+    "title": "Microsoft Publisher",
+    "description": "A desktop publishing software used for creating and publishing professional-looking documents and marketing materials."
+  },
+  {
+    "title": "Microsoft Teams",
+    "description": "A collaboration software used for chat, video calls, and file sharing among team members."
+  },
+  {
+    "title": "Microsoft Power BI",
+    "description": "A business analytics service used for analyzing data and sharing insights through interactive visualizations and reports."
+  },
+  {
+    "title": "Microsoft Dynamics 365",
+    "description": "A cloud-based business management software used for customer relationship management, enterprise resource planning, and business intelligence."
+  },
+  {
+    "title": "Microsoft Azure",
+    "description": "A cloud computing platform used for building, deploying, and managing applications and services through a global network of data centers."
+  },
+  {
+    "title": "Microsoft Visual Studio",
+    "description": "An integrated development environment used for creating and testing software applications for Windows, Android, and iOS platforms."
+  },
+  {
+    "title": "Microsoft Edge",
+    "description": "A web browser developed by Microsoft and included in Windows 10, used for browsing the internet and accessing online services."
+  },
+  {
+    "title": "Microsoft HoloLens",
+    "description": "A mixed reality headset developed by Microsoft, used for creating and experiencing interactive holographic experiences."
+  },
+  {
+    "title": "Microsoft Bing",
+    "description": "A search engine developed by Microsoft, used for finding information and browsing the web."
+  },
+  {
+    "title": "Microsoft Visual Studio Code",
+    "description": "A free source-code editor developed by Microsoft, used for building and debugging software applications."
+  },
+  {
+    "title": "Halo",
+    "description": "A first-person shooter video game franchise developed by Bungie and 343 Industries, exclusive to Xbox consoles and Windows."
+  },
+  {
+    "title": "Forza Horizon",
+    "description": "An open-world racing video game series developed by Playground Games, exclusive to Xbox consoles and Windows."
+  },
+  {
+    "title": "Gears of War",
+    "description": "A third-person shooter video game franchise developed by Epic Games and The Coalition, exclusive to Xbox consoles and Windows."
+  },
+  {
+    "title": "Minecraft",
+    "description": "A sandbox video game developed by Mojang Studios, acquired by Microsoft in 2014, available on multiple platforms including Xbox and Windows."
+  },
+  {
+    "title": "Sea of Thieves",
+    "description": "An action-adventure video game developed by Rare, exclusive to Xbox consoles and Windows."
+  },
+  {
+    "title": "Age of Empires",
+    "description": "A real-time strategy video game franchise developed by Ensemble Studios and Relic Entertainment, exclusive to Windows."
+  },
+  {
+    "title": "Flight Simulator",
+    "description": "A flight simulation video game franchise developed by Microsoft, exclusive to Windows."
+  },
+  {
+    "title": "Azure Virtual Machines",
+    "description": "A service that provides virtual machines on demand for running applications and workloads on the cloud."
+  },
+  {
+    "title": "Azure App Service",
+    "description": "A platform-as-a-service that enables developers to build, deploy, and scale web and mobile applications on the cloud."
+  },
+  {
+    "title": "Azure Functions",
+    "description": "A serverless computing service that enables developers to run event-driven code on the cloud, without managing infrastructure."
+  },
+  {
+    "title": "Azure Cosmos DB",
+    "description": "A globally distributed database service that enables developers to build highly scalable and responsive applications on the cloud."
+  },
+  {
+    "title": "Azure Cognitive Services",
+    "description": "A suite of artificial intelligence services that enable developers to add intelligent features such as speech recognition, computer vision, and natural language processing to their applications."
+  },
+  {
+    "title": "Azure DevOps",
+    "description": "A suite of services that enable developers to plan, build, test, and deploy software applications with automated workflows on the cloud."
+  },
+  {
+    "title": "Azure Kubernetes Service",
+    "description": "A fully managed service that enables developers to deploy and manage containerized applications with Kubernetes orchestration on the cloud."
+  },
+  {
+    "title": "Azure Blob Storage",
+    "description": "A service that provides scalable and cost-effective storage for unstructured data such as images, videos, and documents on the cloud."
+  },
+  {
+    "title": "Azure SQL Database",
+    "description": "A managed relational database service that provides high availability, security, and performance on the cloud."
+  },
+  {
+    "title": "Azure Stream Analytics",
+    "description": "A real-time data analytics service that enables developers to process and analyze streaming data from various sources on the cloud."
+  },
+  {
+    "title": "Azure Backup",
+    "description": "A service that provides backup and recovery for virtual machines, applications, and data on the cloud."
+  },
+  {
+    "title": "Azure Databricks",
+    "description": "A fast, easy, and collaborative Apache Spark-based analytics platform that enables developers to process big data and build machine learning models on the cloud."
+  },
+  {
+    "title": "Azure ExpressRoute",
+    "description": "A dedicated private connection between on-premises infrastructure and Azure datacenters for high-performance and secure access to cloud resources."
+  },
+  {
+    "title": "Azure Site Recovery",
+    "description": "A disaster recovery service that provides replication, failover, and recovery for virtual machines and applications on the cloud."
+  },
+  {
+    "title": "Azure Active Directory",
+    "description": "A cloud-based identity and access management service."
+  },
+  {
+    "title": "Azure Data Factory",
+    "description": "A cloud-based data integration service."
+  },
+  {
+    "title": "Azure Event Grid",
+    "description": "A fully-managed event routing service."
+  },
+  {
+    "title": "Azure Key Vault",
+    "description": "A cloud-based service for managing cryptographic keys and secrets."
+  },
+  {
+    "title": "Azure Logic Apps",
+    "description": "A cloud-based service for building and automating workflows and integrations."
+  },
+  {
+    "title": "Azure Machine Learning",
+    "description": "A cloud-based service for building and deploying machine learning models."
+  },
+  {
+    "title": "Azure Security Center",
+    "description": "A unified security management and threat protection service."
+  },
+  {
+    "title": "Power Apps",
+    "description": "A low-code development platform for building custom business applications."
+  },
+  {
+    "title": "Power BI",
+    "description": "A business analytics service that provides interactive visualizations and business intelligence capabilities."
+  },
+  {
+    "title": "Power Automate",
+    "description": "A cloud-based service for building and automating workflows across various applications and services."
+  },
+  {
+    "title": "Power Virtual Agents",
+    "description": "A no-code chatbot building service that enables developers to create and deploy chatbots to various channels."
+  },
+  {
+    "title": "Dataverse",
+    "description": "A low-code data platform that provides a standardized data schema, data management, and application development capabilities."
+  },
+  {
+    "title": "AI Builder",
+    "description": "A no-code artificial intelligence service that enables developers to add pre-built AI models or build custom models using a simple interface."
+  },
+  {
+    "title": "Azure Functions Premium",
+    "description": "A serverless computing service with advanced scaling and networking capabilities for running event-driven code on the cloud."
+  },
+  {
+    "title": "Azure Arc",
+    "description": "A hybrid cloud management service that enables customers to manage resources across on-premises, multi-cloud, and edge environments."
+  },
+  {
+    "title": "Azure Front Door",
+    "description": "A global, scalable, and secure entry point for web applications and APIs on the cloud."
+  },
+  {
+    "title": "Azure Sphere",
+    "description": "A comprehensive IoT security solution that provides a secured hardware platform, an operating system, and a cloud-based security service."
+  },
+  {
+    "title": "Azure Synapse Analytics",
+    "description": "A limitless analytics service that brings together big data and data warehousing on the cloud."
+  },
+  {
+    "title": "Azure Firewall",
+    "description": "A cloud-based network security service that provides inbound and outbound protection for virtual networks and applications."
+  },
+  {
+    "title": "Azure Maps",
+    "description": "A set of location-based services and APIs for building and integrating maps, geocoding, routing, and traffic data into applications."
+  },
+  {
+    "title": "Azure Data Lake Storage",
+    "description": "A scalable and secure data lake storage service for big data analytics on the cloud."
+  },
+  {
+    "title": "Windows Server",
+    "description": "A server operating system designed for running applications, services, and infrastructure on-premises or in hybrid environments."
+  },
+  {
+    "title": "SQL Server",
+    "description": "A relational database management system for storing, organizing, and managing data on-premises or in hybrid environments."
+  },
+  {
+    "title": "SharePoint Server",
+    "description": "A collaboration and content management platform for building intranets, portals, and document management systems on-premises or in hybrid environments."
+  },
+  {
+    "title": "Exchange Server",
+    "description": "A messaging and collaboration platform for managing email, calendar, and contacts on-premises or in hybrid environments."
+  },
+  {
+    "title": "System Center Configuration Manager",
+    "description": "A systems management tool for deploying, managing, and securing devices, applications, and updates on-premises or in hybrid environments."
+  },
+  {
+    "title": "Skype for Business Server",
+    "description": "A unified communications platform for instant messaging, voice and video calls, and online meetings on-premises or in hybrid environments."
+  },
+  {
+    "title": "Visual Studio",
+    "description": "An integrated development environment for building applications, services, and games for Windows, Android, iOS, and web platforms."
+  }
 ]
