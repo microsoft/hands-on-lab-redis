@@ -1,5 +1,3 @@
-using System;
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
@@ -12,6 +10,7 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddSingleton<ICosmosService, CosmosService>();
+builder.Services.AddSingleton<IRedisService, RedisService>();
 
 var app = builder.Build();
 app.UseCors();
@@ -22,12 +21,25 @@ app.MapGet("/products", async (ICosmosService cosmosService) => {
     return Results.Ok(products);
 });
 
-app.MapGet("/products/{id}", async (ICosmosService cosmosService, string id) => {
+app.MapGet("/products/{id}", async (ICosmosService cosmosService, IRedisService redisService, string id) => {
+    Product? cachedProduct = await redisService.GetProductAsync(id);
+
+    if (cachedProduct != null) {
+        Console.WriteLine("Returning a production description from the cache:");
+        Console.WriteLine(cachedProduct?.Id);
+
+        return Results.Ok(cachedProduct);
+    }
+
     var product = await cosmosService.RetrieveProductByIdAsync(id);
 
-    return product == null
-        ? Results.NotFound()
-        : Results.Ok(product);
+    if (product == null) {
+        return Results.NotFound();
+    }
+
+    await redisService.SetProductAsync(product);
+
+    return Results.Ok(product);
 });
 
 app.Run();
