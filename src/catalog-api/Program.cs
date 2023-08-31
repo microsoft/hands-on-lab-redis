@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<CosmosDBContext>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -12,19 +11,19 @@ builder.Services.AddCors(options =>
             policy.AllowAnyMethod();
         });
 });
+builder.Services.AddSingleton<ICosmosService, CosmosService>();
 
 var app = builder.Build();
-
 app.UseCors();
 
-app.MapGet("/products", async (CosmosDBContext database) => {
+app.MapGet("/products", async (ICosmosService cosmosService) => {
     // Check the following links for queries: https://learn.microsoft.com/en-us/ef/core/providers/cosmos/?tabs=dotnet-core-cli#queries
-    var products = await database.Products.ToListAsync();
+    var products = await cosmosService.RetrieveAllProductsAsync();
     return Results.Ok(products);
 });
 
-app.MapGet("/products/{id}", async (string id, CosmosDBContext database) => {
-    var product = await database.Products.WithPartitionKey(id).FirstOrDefaultAsync();
+app.MapGet("/products/{id}", async (ICosmosService cosmosService, string id) => {
+    var product = await cosmosService.RetrieveProductByIdAsync(id);
 
     return product == null
         ? Results.NotFound()

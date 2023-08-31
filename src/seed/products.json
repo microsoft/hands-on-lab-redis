@@ -1,0 +1,82 @@
+[
+    {
+        "title": "Xbox Series X",
+        "description": "Powerful gaming console with 4K graphics and ultra-fast processing speed."
+    },
+    {
+        "title": "Surface Pro 7",
+        "description": "Hybrid laptop/tablet with high-resolution touch screen and long battery life."
+    },
+    {
+        "title": "Xbox Series S",
+        "description": "Small but powerful gaming console with 1440p graphics and ultra-fast processing speed."
+    },
+    {
+        "title": "Surface Laptop 3",
+        "description": "Stylish and powerful laptop with fast performance, high-resolution touch screen, and long battery life."
+    },
+    {
+        "title": "Microsoft Office 365",
+        "description": "Cloud-based suite of productivity tools including Word, Excel, PowerPoint, and Outlook."
+    },
+    {
+        "title": "Microsoft Teams",
+        "description": "Collaboration platform for teams to chat, share files, and hold meetings online."
+    },
+    {
+        "title": "Windows 10",
+        "description": "Latest version of Microsoft's operating system for desktop and laptop computers."
+    },
+    {
+        "title": "Microsoft Edge",
+        "description": "Web browser that provides fast and secure browsing with built-in privacy features."
+    },
+    {
+        "title": "Microsoft Surface Studio 2",
+        "description": "All-in-one desktop computer with high-resolution touch screen and powerful performance."
+    },
+    {
+        "title": "Microsoft Surface Book 3",
+        "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."
+    },
+    {  
+      "title": "Microsoft Surface Go 2",  
+      "description": "Lightweight and portable tablet with high-resolution touch screen and long battery life."  
+    },  
+    {  
+      "title": "Microsoft Surface Pro X",  
+      "description": "Ultra-thin and versatile laptop/tablet with high-resolution touch screen and long battery life."  
+    },  
+    {  
+      "title": "Microsoft Surface Duo",  
+      "description": "Dual-screen smartphone with innovative design and productivity-enhancing features."  
+    },  
+    {  
+      "title": "Xbox One X",  
+      "description": "Powerful gaming console with 4K graphics and immersive gaming experience."  
+    },  
+    {  
+      "title": "Xbox Game Pass Ultimate",  
+      "description": "Subscription service that provides access to a vast library of games for Xbox and PC."  
+    },  
+    {  
+      "title": "Microsoft Office Home and Student 2019",  
+      "description": "Productivity suite that includes Word, Excel, and PowerPoint for home and student use."  
+    },  
+    {  
+      "title": "Microsoft Edge",  
+      "description": "Fast and secure web browser with built-in privacy features and customizable interface."  
+    },  
+    {  
+      "title": "Windows 10 Pro",  
+      "description": "Advanced version of Microsoft's operating system with enhanced security and management features."  
+    },  
+    {  
+      "title": "Microsoft Surface Laptop Go",  
+      "description": "Lightweight and stylish laptop with fast performance and long battery life."  
+    },  
+    {  
+      "title": "Microsoft Surface Book 2",  
+      "description": "Powerful and versatile laptop with detachable touch screen for use as a tablet."  
+    }  
+]

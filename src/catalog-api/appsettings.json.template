@@ -1,0 +1,11 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "AZURE_COSMOS_CONNECTION_STRING": "",
+  "AZURE_COSMOS_DATABASE": ""
+}
