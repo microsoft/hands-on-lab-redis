@@ -33,7 +33,7 @@ resource "azurerm_cosmosdb_sql_container" "products" {
   resource_group_name   = azurerm_cosmosdb_account.this.resource_group_name
   account_name          = azurerm_cosmosdb_account.this.name
   database_name         = azurerm_cosmosdb_sql_database.this.name
-  partition_key_path    = "/definition/id"
+  partition_key_path    = "/id"
   partition_key_version = 1
 
   indexing_policy {
@@ -53,7 +53,7 @@ resource "azurerm_cosmosdb_sql_container" "products" {
   }
 
   unique_key {
-    paths = ["/definition/idlong", "/definition/idshort"]
+    paths = ["/idlong", "/idshort"]
   }
 }
 
@@ -62,7 +62,7 @@ resource "azurerm_cosmosdb_sql_container" "browsing_history" {
   resource_group_name   = azurerm_cosmosdb_account.this.resource_group_name
   account_name          = azurerm_cosmosdb_account.this.name
   database_name         = azurerm_cosmosdb_sql_database.this.name
-  partition_key_path    = "/definition/id"
+  partition_key_path    = "/id"
   partition_key_version = 1
 
   indexing_policy {
@@ -82,6 +82,6 @@ resource "azurerm_cosmosdb_sql_container" "browsing_history" {
   }
 
   unique_key {
-    paths = ["/definition/idlong", "/definition/idshort"]
+    paths = ["/idlong", "/idshort"]
   }
 }
