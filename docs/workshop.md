@@ -104,9 +104,92 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 ![Architecture overview](https://placehold.co/600x400)
 
+## Seed the database
+
+In this Hands On Lab, you will use a Cosmos DB database to store and retrieve your data. To be able to use it, you need to seed it with some data.
+
+To do this, download the [zip file][database-seed-zip] that contains the data to seed your database, then unzip it and you will find a `products.json` file.
+
+Go to your resource group, search the Cosmos DB account, select it and in the left menu, click on **Data Explorer**. Then, click on the database called `catalogdb` and click on the `products` container and select `Items`:
+
+![Cosmos DB Data Explorer](./assets/cosmos-db-data-explorer.png)
+
+Then, click on the **Upload Item** button and select the `products.json` file you just downloaded and click **Upload**. This will upload the data in your database:
+
+![Cosmos DB Upload Item](./assets/cosmos-db-upload-item.png)
+
+The number of products in the screenshot can differ from the number of products you have in your file.
+
+Now if you close the **Upload Item** window and click on the **Refresh** button, you should see the data in your database:
+
+![Cosmos DB Data](./assets/cosmos-db-data.png)
+
+You have now seeded your database with the data you will use in this Hands On Lab.
+
 ## Redis basics 
 
+To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
+
+Let's see quickly how to use Redis using the Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis, select it and in the left menu, click on **Overview** and click on the **Console** button:
+
+![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console.png)
+
+Now inside the console, let's play with basic Redis commands.
+
+Run the following command to set a key/value pair in Redis:
+
+```bash
+set key1 myvalue1
+```
+
+To retrieve the value of the key, run the command:
+
+```bash
+get key1
+```
+
+To check if a key exists in Redis, just run:
+
+```bash
+exists key1
+```
+
+To delete a specific key in Redis, run the command:
+
+```bash
+del key
+```
+
+Run the following commands to set a key with an expiration of 10 seconds in Redis:
+
+```bash
+set key1 myvalue1
+expire key1 10
+```
+
+After 10 seconds, if you run the `get` command on `key1`, you will see that the key will return `nil` which means that the key doesn't exist anymore.
+
+To test if Redis is working, you can run the `ping` command:
+
+```bash
+ping
+```
+
+It should return `PONG` which means that Redis is working.
+
+![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console-demo.png)
+
+To summarize, you can use the following basic commands to interact with Redis:
+
+- `set` [key] [value]: Sets a key/value in the cache. Returns `OK` on success.
+- `get` [key]: Gets a value from the cache.
+- `exists` [key]: Returns `1` if the key exists in the cache, otherwise `0` if it doesn’t.
+- `del` [key]: Deletes the value associated with the key.
+- `expire` [key] [value]: Expires the key after the specified number of seconds.
+- `ping`: Ping the server. Returns `PONG`.
+
 [terraform-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/infrastructure-terraform.zip
+[database-seed-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/database-sample-data.zip
 
 ---
 
@@ -129,7 +212,20 @@ If you look at the architecture you deployed for this workshop, you will see tha
 
 The APIM is used as a facade for all your APIs, in the next section you will discover how to add a cache on your APIs using the APIM and Azure Cache for Redis.
 
-### Setup APIM External 
+## Disabling cache in your API
+
+In the previous lab, you added code in your API to use an Azure Cache for Redis. To be able to compare the performance of your API with and without the cache, you need to disable the cache in your API. 
+
+To avoid modifying the code of your API, we have added an environment variable called `CACHE_ENABLED` that you can use to enable or disable the cache.
+
+To disable the cache, you need to set the value of this environment variable to `false`. To do this, go to your resource group, search the App service, select it and in the left menu, click on **Configuration**. 
+You will see the `CACHE_ENABLED` environment variable with the value `true` replace the value by `false` and click on the **Save** button:
+
+![App service configuration](https://placehold.co/600x400)
+
+Now if you try to call your API with Postman or the HTTP REST file you should see the response time of your API taking multiples seconds again.
+
+## Setup APIM External 
 
 First things you need to do, is to connect your Azure Cache for Redis to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
 
@@ -243,6 +339,7 @@ Then, click on the **Save** button.
 You can now test your API again with Postman or the HTTP REST file like previously and you should see the response time of this particular operation reduced to a few milliseconds, but this time only for the **Get Products** operation.
 
 [postman-link]: https://www.postman.com/
+
 ---
 
 # Lab 3 : Azure Cache for Redis Governance 
@@ -281,7 +378,7 @@ The goal is to detect when the cache is expired and to refresh it for the `produ
 
 ## Refresh caching on expired key 
 
---- 
+---
 
 # Lab 5 : Cloud-Native Architectures (AKS / ACA)
 
