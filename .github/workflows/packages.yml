@@ -23,6 +23,9 @@ jobs:
     - name: APIM Policies zip
       run:  cd src/apim-policies && zip -r ../../apim-policies.zip .
 
+    - name: Database sample data zip
+      run:  cd src/seed && zip -r ../../database-sample-data.zip .
+
     - name: Infrastructure As Code zip
       run:  cd terraform && zip -r ../terraform.zip .
 
