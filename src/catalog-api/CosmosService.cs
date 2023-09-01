@@ -26,7 +26,9 @@ public class CosmosService : ICosmosService
     }
 
     public async Task<IEnumerable<Product>> RetrieveAllProductsAsync()
-    { 
+    {
+        await SimulatedDatabaseLatency.Wait();
+
         var queryable = productContainer.GetItemLinqQueryable<Product>();
 
         using FeedIterator<Product> feed = queryable
@@ -46,6 +48,8 @@ public class CosmosService : ICosmosService
 
     public async Task<Product?> RetrieveProductByIdAsync(string id)
     {
+        await SimulatedDatabaseLatency.Wait();
+
         try
         {
             return await productContainer.ReadItemAsync<Product>(id, new PartitionKey(id));
