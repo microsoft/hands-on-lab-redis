@@ -193,11 +193,38 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 ---
 
-# Lab 1 : Redis setup in Azure Infra Environment 
+# Lab 1 : Use Azure Redis Cache in your API
+
+In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance.
+
+## Run the API
+
+Let's [download][api-zip] the API project and run it locally or use the provided GitHub Codespaces.
+
+Restore the dependencies of the project by running the following command:
+
+```bash
+dotnet restore
+```
+
+Then, run the following command to run the API:
+
+```bash
+dotnet run
+```
+
+Then go to the following url: `http://localhost:5076"/products` and you should see the list of products.
+
+## Add Azure Cache for Redis to your API
+
+If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your API.
+
+Now, open the `ProductEndpoints.cs` 
 
 ## From DB search to introducing caching 
 ### Postman testing
 
+[api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 ---
 
 # Lab 2 : Add cache to your API with APIM
@@ -216,10 +243,10 @@ The APIM is used as a facade for all your APIs, in the next section you will dis
 
 In the previous lab, you added code in your API to use an Azure Cache for Redis. To be able to compare the performance of your API with and without the cache, you need to disable the cache in your API. 
 
-To avoid modifying the code of your API, we have added an environment variable called `CACHE_ENABLED` that you can use to enable or disable the cache.
+To avoid modifying the code of your API, we have added an environment variable called `CACHE_DISABLE` that you can use to enable or disable the cache.
 
 To disable the cache, you need to set the value of this environment variable to `false`. To do this, go to your resource group, search the App service, select it and in the left menu, click on **Configuration**. 
-You will see the `CACHE_ENABLED` environment variable with the value `true` replace the value by `false` and click on the **Save** button:
+You will see the `CACHE_DISABLE` environment variable with the value `true` replace the value by `false` and click on the **Save** button:
 
 ![App service configuration](https://placehold.co/600x400)
 
