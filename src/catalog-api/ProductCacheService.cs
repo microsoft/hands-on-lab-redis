@@ -11,6 +11,7 @@ public interface IProductCacheService
 public class ProductCacheService : IProductCacheService
 {
     private readonly string prefix = "products";
+    private readonly bool disableProductListCache = Environment.GetEnvironmentVariable("CACHE_DISABLE") == "1";
 
     private string ProductsKey()
     {
@@ -41,7 +42,10 @@ public class ProductCacheService : IProductCacheService
 
     public async Task<IEnumerable<Product>?> GetProductsAsync()
     {
-        // TODO: allow disabling cache with CACHE_DISABLE=1
+        if (disableProductListCache) {
+            return null;
+        }
+
         var json = await RedisService.Get(ProductsKey());
 
         if (json == null) {
@@ -53,8 +57,9 @@ public class ProductCacheService : IProductCacheService
 
     public async Task SetProductsAsync(IEnumerable<Product> products)
     {
-        // TODO: allow disabling cache with CACHE_DISABLE=1
-        var json = JsonSerializer.Serialize<IEnumerable<Product>>(products);
-        await RedisService.Set(ProductsKey(), json);
+        if (!disableProductListCache) {
+            var json = JsonSerializer.Serialize<IEnumerable<Product>>(products);
+            await RedisService.Set(ProductsKey(), json);
+        }
     }
 }
