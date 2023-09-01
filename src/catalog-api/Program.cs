@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddSingleton<ICosmosService, CosmosService>();
-builder.Services.AddSingleton<IRedisService, RedisService>();
+builder.Services.AddSingleton<IProductCacheService, ProductCacheService>();
 
 var app = builder.Build();
 app.UseCors();

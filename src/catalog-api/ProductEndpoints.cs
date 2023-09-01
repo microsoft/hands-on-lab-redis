@@ -2,17 +2,30 @@ public static class ProductEndpoints
 {
     public static void MapProductEndpoints(this WebApplication app)
     {
-        app.MapGet("/products", async (ICosmosService cosmosService) => {
-            // Check the following links for queries: https://learn.microsoft.com/en-us/ef/core/providers/cosmos/?tabs=dotnet-core-cli#queries
+        app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheService productCacheService) => {
+            IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
+
+            if (cachedProducts != null) {
+                Console.WriteLine("Returning product list from the cache");
+
+                return Results.Ok(cachedProducts);
+            }
+
+            // Fetch data from Cosmos DB
             var products = await cosmosService.RetrieveAllProductsAsync();
+
+            if (products.Any()) {
+                await productCacheService.SetProductsAsync(products);
+            }
+
             return Results.Ok(products);
         });
 
-        app.MapGet("/products/{id}", async (ICosmosService cosmosService, IRedisService redisService, string id) => {
-            Product? cachedProduct = await redisService.GetProductAsync(id);
+        app.MapGet("/products/{id}", async (ICosmosService cosmosService, IProductCacheService productCacheService, string id) => {
+            Product? cachedProduct = await productCacheService.GetProductAsync(id);
 
             if (cachedProduct != null) {
-                Console.WriteLine("Returning a production description from the cache:");
+                Console.WriteLine("Returning a product description from the cache:");
                 Console.WriteLine(cachedProduct?.Id);
 
                 return Results.Ok(cachedProduct);
@@ -24,7 +37,7 @@ public static class ProductEndpoints
                 return Results.NotFound();
             }
 
-            await redisService.SetProductAsync(product);
+            await productCacheService.SetProductAsync(product);
 
             return Results.Ok(product);
         });
