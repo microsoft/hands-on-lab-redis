@@ -225,6 +225,7 @@ Now, open the `ProductEndpoints.cs`
 ### Postman testing
 
 [api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
+
 ---
 
 # Lab 2 : Add cache to your API with APIM
@@ -256,6 +257,15 @@ Now if you try to call your API with Postman or the HTTP REST file you should se
 
 First things you need to do, is to connect your Azure Cache for Redis to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
 
+<div class="task" data-title="Tasks">
+
+> - Link your APIM to your Azure Cache for Redis
+> - Make sure to choose the `Default` region to be able to use it from all your APIM instances
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
 So go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **External cache**.
 
 ![External cache](./assets/apim-external-cache.png)
@@ -272,11 +282,32 @@ Then, click the **Save** button.
 You should now see your Azure Cache for Redis in the list of external cache:
 
 ![External cache list](./assets/apim-external-cache-list.png)
+</details>
 
 ### Setup APIM Cache Policy globally
 
 Now that you have your Azure Cache for Redis connected to your APIM, you need to configure it to use it. To do this, you will use a policy.
 
+<div class="task" data-title="Tasks">
+
+> - Using the interface add the policies `cache-lookup` and `cache-store` to cache all the operations of your API
+> - Set the duration to `30` seconds for the cache to be able to test it
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> You can find more information about the cache policies here:<br>
+> [Cache Lookup Policy][cache-lookup-policy]<br>
+> [Cache Store Policy][cache-store-policy]
+
+</div>
+
+[cache-lookup-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-policy
+[cache-store-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-store-policy
+
+<details>
+<summary>Toggle solution</summary>
 Go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **APIs**. You will see a **Product API** with a **Get Products** operation:
 
 ![APIM APIs](./assets/apim-api-get-products.png)
@@ -308,6 +339,7 @@ Set the duration to `30` seconds for the cache to be able to test it and click *
 In real life scenario, this value will depend on your business needs.
 
 That's it! You have now your cache policy setup globally to be used by your API. You can now test it again with Postman or HTTP REST you should see the response time of your API reduced to a few milliseconds!
+</details>
 
 ### Caching a specific operation
 
@@ -318,6 +350,18 @@ Before you do this, you need to remove the global cache policy you just added. T
 ![APIM remove policies](./assets/apim-remove-policies.png)
 
 Then click on the **Save** button.
+
+<div class="task" data-title="Tasks">
+
+> - This task is a more advanced one and you will need to edit the policy manually
+> - Use the policies `cache-lookup-value` and `cache-store-value` to cache only the **Get Products** operation
+> - Set the duration to `60` seconds for the cache to be able to test it
+> - You will need to use the `return-response` in the `inbound` block of the policy to return the result of the cache directly
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
 
 Now, to cache only the **Get Products** operation you need to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` `cache-store-value`. They are a bit different from the previous policies as they allow you to specify the key to use in the cache.
 
@@ -366,6 +410,7 @@ Then, click on the **Save** button.
 You can now test your API again with Postman or the HTTP REST file like previously and you should see the response time of this particular operation reduced to a few milliseconds, but this time only for the **Get Products** operation.
 
 [postman-link]: https://www.postman.com/
+</details>
 
 ---
 
