@@ -9,8 +9,11 @@ builder.Services.AddCors(options =>
             policy.AllowAnyMethod();
         });
 });
+
+builder.Services.AddSingleton<ISimulatedDatabaseLatency, SimulatedDatabaseLatency>();
+builder.Services.AddSingleton<IRedisService, RedisService>();
 builder.Services.AddSingleton<ICosmosService, CosmosService>();
-builder.Services.AddSingleton<IProductCacheService, ProductCacheService>();
+builder.Services.AddScoped<IProductCacheService, ProductCacheService>();
 
 var app = builder.Build();
 app.UseCors();

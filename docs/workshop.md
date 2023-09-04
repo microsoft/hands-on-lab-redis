@@ -219,7 +219,70 @@ Then go to the following url: `http://localhost:5076"/products` and you should s
 
 If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your API.
 
-Now, open the `ProductEndpoints.cs` 
+The goal of this part is to setup the Azure Cache for Redis in your API and to use it to improve the performance of the `/products` endpoint. To do this, you will use the `ProductCacheService.cs` class.
+
+If you open it you will see two methods `GetProductsAsync` and `SetProductsAsync`. The first one is used to get the products from the cache and the second one is used to set the products in the cache. They both use the `IRedisService` object to interact with the cache and use the mechanism of serialization/deserialization to store and retrieve the data.
+
+Before doing this, for the purpose of this lab you will have to delay the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds and you will not be able to see the difference between the response time with and without the cache after a few try.
+
+<div class="task" data-title="Tasks">
+
+> - Now, open the `ProductEndpoints.cs`
+> - Use the `IProductCacheService` to setup the cache in the `/products` endpoint
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Now, open the `ProductEndpoints.cs` and in the endpoint `/products` use the `IProductCacheService` to retreive the products from the cache. If some products are found in the cache, return them directly: 
+
+```csharp
+IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
+
+if (cachedProducts != null) {
+    // Returning product list from the cache
+    return Results.Ok(cachedProducts);
+}
+```
+
+If no products are found in the cache, fetch the data from Cosmos DB and store them in the cache before returning them:
+
+```csharp
+// Fetch data from Cosmos DB
+var products = await cosmosService.RetrieveAllProductsAsync();
+
+if (products.Any()) {
+    await productCacheService.SetProductsAsync(products);
+}
+
+return Results.Ok(products);
+```
+
+So the final code of the endpoint should look like this:
+
+```csharp
+app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheService productCacheService) => {
+    IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
+
+    if (cachedProducts != null) {
+        // Returning product list from the cache
+        return Results.Ok(cachedProducts);
+    }
+
+    // Fetch data from Cosmos DB
+    var products = await cosmosService.RetrieveAllProductsAsync();
+
+    if (products.Any()) {
+        await productCacheService.SetProductsAsync(products);
+    }
+
+    return Results.Ok(products);
+});
+```
+
+Now, if you run your API again using Postman or the HTTP REST file, and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds!
+</detail>
 
 ## From DB search to introducing caching 
 ### Postman testing

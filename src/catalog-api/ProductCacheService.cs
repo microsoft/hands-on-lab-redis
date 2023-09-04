@@ -10,22 +10,21 @@ public interface IProductCacheService
 
 public class ProductCacheService : IProductCacheService
 {
-    private readonly string prefix = "products";
-    private readonly bool disableProductListCache = Environment.GetEnvironmentVariable("CACHE_DISABLE") == "1";
+    private readonly IRedisService _redisService;
+    private readonly string _prefix = "products";
+    private readonly bool _disableProductListCache;
 
-    private string ProductsKey()
+    public ProductCacheService(IRedisService redisService, IConfiguration configuration)
     {
-        return prefix;
+        _redisService = redisService;
+        _disableProductListCache = configuration["CACHE_DISABLE"] == "1";
     }
 
-    private string ProductKey(string productId)
-    {
-        return $"{prefix}:{productId}";
-    }
+    private string ProductKey(string productId) => $"{_prefix}:{productId}";
 
     public async Task<Product?> GetProductAsync(string id)
     {
-        var json = await RedisService.Get(ProductKey(id));
+        var json = await _redisService.Get(ProductKey(id));
 
         if (json == null) {
             return null;
@@ -37,16 +36,16 @@ public class ProductCacheService : IProductCacheService
     public async Task SetProductAsync(Product product)
     {
         var json = JsonSerializer.Serialize<Product>(product);
-        await RedisService.Set(ProductKey(product.Id), json);
+        await _redisService.Set(ProductKey(product.Id), json);
     }
 
     public async Task<IEnumerable<Product>?> GetProductsAsync()
     {
-        if (disableProductListCache) {
+        if (_disableProductListCache) {
             return null;
         }
 
-        var json = await RedisService.Get(ProductsKey());
+        var json = await _redisService.Get("products");
 
         if (json == null) {
             return null;
@@ -57,9 +56,9 @@ public class ProductCacheService : IProductCacheService
 
     public async Task SetProductsAsync(IEnumerable<Product> products)
     {
-        if (!disableProductListCache) {
+        if (!_disableProductListCache) {
             var json = JsonSerializer.Serialize<IEnumerable<Product>>(products);
-            await RedisService.Set(ProductsKey(), json);
+            await _redisService.Set(_prefix, json);
         }
     }
 }

@@ -4,21 +4,27 @@ using StackExchange.Redis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public static class RedisService
+public interface IRedisService {
+    Task<string?> Get(string key);
+    Task Set(string key, string value);
+}
+
+public class RedisService : IRedisService
 { 
     // TODO: provide a sample with AAD authentication
-    private static readonly ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("AZURE_REDIS_CONNECTION_STRING")!, AzureCacheForRedis.ConfigureForAzure);
+    private readonly IDatabase _database;
 
-    private static IDatabase Database
+    public RedisService(IConfiguration configuration)
     {
-        get => connectionMultiplexer.GetDatabase();
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["AZURE_REDIS_CONNECTION_STRING"], AzureCacheForRedis.ConfigureForAzure);
+        _database = connectionMultiplexer.GetDatabase();
     }
 
-    public static async Task<string?> Get(string key)
+    public async Task<string?> Get(string key)
     {
         try
         {
-            var value = await Database.StringGetAsync(key);
+            var value = await _database.StringGetAsync(key);
             var stringValue = value.ToString();
 
             if (stringValue == string.Empty) {
@@ -33,9 +39,9 @@ public static class RedisService
         }
     }
 
-    public static async Task Set(string key, string value)
+    public async Task Set(string key, string value)
     {
         // TODO: Allow controlling TTL, for the function trigger lab
-        await Database.StringSetAsync(key, value);
+        await _database.StringSetAsync(key, value);
     }
 }

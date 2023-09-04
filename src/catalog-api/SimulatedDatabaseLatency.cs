@@ -1,16 +1,26 @@
-public static class SimulatedDatabaseLatency
+public interface ISimulatedDatabaseLatency 
 {
-    private static readonly int simulatedDBLatencyInSeconds;
+    Task Wait();
+}
 
-    static SimulatedDatabaseLatency() {
-        simulatedDBLatencyInSeconds = SimulatedLatencyInSeconds();
+// This class is used to simulate a database latency. 
+// The latency is configured via the environment variable SIMULATED_DB_LATENCY_IN_SECONDS.
+public class SimulatedDatabaseLatency : ISimulatedDatabaseLatency
+{
+    private readonly int _simulatedDBLatencyInSeconds;
+    private readonly IConfiguration _configuration;
+
+    public SimulatedDatabaseLatency(IConfiguration configuration)
+    {
+        _simulatedDBLatencyInSeconds = SimulatedLatencyInSeconds();
+        _configuration = configuration;
     }
 
-    private static int SimulatedLatencyInSeconds()
+    private int SimulatedLatencyInSeconds()
     {
         try
         {
-            string? latencyInSecondsAsString = Environment.GetEnvironmentVariable("SIMULATED_DB_LATENCY_IN_SECONDS");
+            string? latencyInSecondsAsString = _configuration["SIMULATED_DB_LATENCY_IN_SECONDS"];
             return String.IsNullOrEmpty(latencyInSecondsAsString) ? 0 : Int32.Parse(latencyInSecondsAsString);
         }
         catch
@@ -19,11 +29,11 @@ public static class SimulatedDatabaseLatency
         }
     }
 
-    public static async Task Wait()
+    public async Task Wait()
     {
-        if (simulatedDBLatencyInSeconds > 0) {
-            Console.WriteLine($"Simulating a latency of {simulatedDBLatencyInSeconds} seconds");
-            await Task.Delay(TimeSpan.FromSeconds(simulatedDBLatencyInSeconds));
+        if (_simulatedDBLatencyInSeconds > 0) {
+            Console.WriteLine($"Simulating a latency of {_simulatedDBLatencyInSeconds} seconds");
+            await Task.Delay(TimeSpan.FromSeconds(_simulatedDBLatencyInSeconds));
         }
     }
 }
