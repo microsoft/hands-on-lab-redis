@@ -6,7 +6,7 @@ public static class ProductEndpoints
             IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
 
             if (cachedProducts != null) {
-                // Returning product list from the cache
+                Console.WriteLine("Returning product list from the cache");
                 return Results.Ok(cachedProducts);
             }
 

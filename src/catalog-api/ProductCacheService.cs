@@ -17,9 +17,12 @@ public class ProductCacheService : IProductCacheService
     public ProductCacheService(IRedisService redisService, IConfiguration configuration)
     {
         _redisService = redisService;
-        _disableProductListCache = configuration["CACHE_DISABLE"] == "1";
+        _disableProductListCache = configuration["PRODUCT_LIST_CACHE_DISABLE"] == "1";
     }
 
+    // Used to have only one key for all products
+    private string ProductKey() => _prefix;
+    // Used to have a key for each product
     private string ProductKey(string productId) => $"{_prefix}:{productId}";
 
     public async Task<Product?> GetProductAsync(string id)
@@ -45,7 +48,7 @@ public class ProductCacheService : IProductCacheService
             return null;
         }
 
-        var json = await _redisService.Get("products");
+        var json = await _redisService.Get(ProductKey());
 
         if (json == null) {
             return null;
