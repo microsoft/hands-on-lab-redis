@@ -13,11 +13,34 @@ public class RedisService : IRedisService
 { 
     // TODO: provide a sample with AAD authentication
     private readonly IDatabase _database;
+    private readonly int _defaultTTLInSeconds = 60;
+    private readonly TimeSpan _ttl; // Time To Live
 
     public RedisService(IConfiguration configuration)
     {
         var connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["AZURE_REDIS_CONNECTION_STRING"], AzureCacheForRedis.ConfigureForAzure);
         _database = connectionMultiplexer.GetDatabase();
+        _ttl = TTL(configuration["AZURE_REDIS_TTL_IN_SECONDS"]);
+    }
+
+    private TimeSpan TTL(string? ttlInSecondsAsString)
+    {
+        int ttlInSeconds;
+
+        try
+        {
+            ttlInSeconds = String.IsNullOrEmpty(ttlInSecondsAsString) ? _defaultTTLInSeconds : Int32.Parse(ttlInSecondsAsString);
+        }
+        catch
+        {
+            ttlInSeconds = _defaultTTLInSeconds;
+        }
+
+        if (ttlInSeconds <= 0) {
+            ttlInSeconds = _defaultTTLInSeconds;
+        }
+
+        return TimeSpan.FromSeconds(ttlInSeconds);
     }
 
     public async Task<string?> Get(string key)
@@ -41,7 +64,6 @@ public class RedisService : IRedisService
 
     public async Task Set(string key, string value)
     {
-        // TODO: Allow controlling TTL, for the function trigger lab
-        await _database.StringSetAsync(key, value);
+        await _database.StringSetAsync(key, value, _ttl);
     }
 }
