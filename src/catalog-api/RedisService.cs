@@ -13,7 +13,8 @@ public class RedisService : IRedisService
 { 
     // TODO: provide a sample with AAD authentication
     private readonly IDatabase _database;
-    private readonly TimeSpan? _ttl; // Time To Live
+    private readonly int _defaultTTLInSeconds = 60;
+    private readonly TimeSpan _ttl; // Time To Live
 
     public RedisService(IConfiguration configuration)
     {
@@ -22,22 +23,24 @@ public class RedisService : IRedisService
         _ttl = TTL(configuration["AZURE_REDIS_TTL_IN_SECONDS"]);
     }
 
-    private TimeSpan? TTL(string? ttlInSecondsAsString)
+    private TimeSpan TTL(string? ttlInSecondsAsString)
     {
+        int ttlInSeconds;
+
         try
         {
-            int ttlInSeconds = String.IsNullOrEmpty(ttlInSecondsAsString) ? 0 : Int32.Parse(ttlInSecondsAsString);
-
-            if (ttlInSeconds <= 0) {
-                return null;
-            }
-
-            return TimeSpan.FromSeconds(ttlInSeconds);
+            ttlInSeconds = String.IsNullOrEmpty(ttlInSecondsAsString) ? _defaultTTLInSeconds : Int32.Parse(ttlInSecondsAsString);
         }
         catch
         {
-            return null;
+            ttlInSeconds = _defaultTTLInSeconds;
         }
+
+        if (ttlInSeconds <= 0) {
+            ttlInSeconds = _defaultTTLInSeconds;
+        }
+
+        return TimeSpan.FromSeconds(ttlInSeconds);
     }
 
     public async Task<string?> Get(string key)
