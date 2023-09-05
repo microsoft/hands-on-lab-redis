@@ -30,7 +30,7 @@ resource "azurerm_api_management_api" "products" {
   display_name          = "Products"
   path                  = "products"
   protocols             = ["https"]
-  service_url           = "https://swapi.dev/api" // TODO: change later
+  service_url           = format("https://%s",azurerm_linux_web_app.this.default_hostname)
 }
 
 resource "azurerm_api_management_product_api" "catalog_products" {
@@ -47,7 +47,7 @@ resource "azurerm_api_management_api_operation" "get_people" {
   resource_group_name = azurerm_api_management_api.products.resource_group_name
   display_name        = "Get Products"
   method              = "GET"
-  url_template        = "/people/" // TODO: change later
+  url_template        = "/products"
   description         = "Get products."
 
   response {
