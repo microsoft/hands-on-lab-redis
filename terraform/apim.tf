@@ -30,7 +30,7 @@ resource "azurerm_api_management_api" "products" {
   display_name          = "Products"
   path                  = "products"
   protocols             = ["https"]
-  service_url           = format("https://%s",azurerm_linux_web_app.this.default_hostname)
+  service_url           = format("https://%s", azurerm_linux_web_app.this.default_hostname)
 }
 
 resource "azurerm_api_management_product_api" "catalog_products" {
