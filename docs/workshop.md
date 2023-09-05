@@ -39,7 +39,6 @@ If you want's to run the labs locally, make sure you have:
 - Git
 - A GitHub Account
 - The [Azure][azure-vs-code-extension]
-- The [Azure Function extension][azure-function-vs-code-extension]
 
 <div class="task" data-title="Task">
 
@@ -83,7 +82,6 @@ az provider register --namespace 'Microsoft.Web'
 [az-cli-install]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 [az-func-core-tools]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools
 [vs-code]: https://code.visualstudio.com/
-[azure-function-vs-code-extension]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions
 [azure-vs-code-extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack
 [az-portal]: https://portal.azure.com/signin/index/
 
@@ -113,10 +111,10 @@ The deployment take between 15 to 25 minutes depending on the Azure demands.
 
 While you are deploying the infrastructure of the labs, let's discover it together:
 
-![Architecture overview](https://placehold.co/600x400)
+![Architecture overview](./assets/architecture.png)
 
 The architecture is composed of the following elements:
-- An Azure Static Web App that will be used to display the data of the API
+- An Azure Static Web App that will be used to display the data from the API
 - An App Service that will host an API and store the data in a Cosmos DB database
 - An APIM which will be used as a facade for the API
 - An Azure Cache for Redis that will be used to cache the data of the API
@@ -351,11 +349,11 @@ Of course you can do it using Postman or the HTTP REST file inside the `src/payl
 
 In the previous lab, you saw how to add code in your API to be able to use an Azure Cache for Redis. In this lab, you will see how to add a cache to your API without modifing its code.
 
-## Architecture recap
+## Architecture reminder
 
 If you look at the architecture that you deployed for this workshop, remember that you have an API Management (APIM) in front of the API that provide you the different products.
 
-![Architecture recap](https://placehold.co/600x400)
+![Architecture reminder](./assets/architecture.png)
 
 The APIM is used as a facade for all your APIs (in this case you only have one), in the next section you will discover how to add a cache on your APIs using the APIM and Azure Cache for Redis.
 
