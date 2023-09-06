@@ -320,7 +320,7 @@ app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheServic
 ```
 
 Now, if you run your API again using Postman or the HTTP REST file, and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds!
-</detail>
+</details>
 
 ## Deploy the API to Azure
 
