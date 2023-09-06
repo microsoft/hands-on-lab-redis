@@ -8,10 +8,11 @@ import TableRow from '@mui/material/TableRow';
 import Product from './Product';
 import useFetch from './useFetch';
 import Loader from './Loader';
+import CallDuration from './CallDuration';
 
 export default function ProductList() {
     const [products, setProducts] = useState<Product[]>([]);
-    const [initialProducts, loading] = useFetch<Product[]>('/api/products');
+    const [initialProducts, loading,, durationInMs] = useFetch<Product[]>('/api/products');
 
     useEffect(() => {
         if (Array.isArray(initialProducts)) {
@@ -42,6 +43,9 @@ export default function ProductList() {
                 </TableBody>
             </Table>
             <Loader loading={loading} />
+            {!loading && (
+                <CallDuration durationInMs={durationInMs} />
+            )}
         </>
     );
 }

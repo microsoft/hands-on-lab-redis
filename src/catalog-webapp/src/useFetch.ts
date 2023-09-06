@@ -5,10 +5,12 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<ResponseDataType | undefined>();
     const [error, setError] = useState<any>();
+    const [durationInMs, setDurationInMs] = useState<number | undefined>();
 
-    useEffect(() => {  
+    useEffect(() => {
         (async () => {
             try {
+                const start = Date.now();
                 const options = {
                     signal: controller.signal,
                     method: method || 'GET',
@@ -16,6 +18,8 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
                 };
 
                 const response = await fetch(url, options);
+                setDurationInMs(Date.now() - start);
+
                 const responseData: ResponseDataType = await response.json();
                 setData(responseData);
             } catch (requestError: any) {
@@ -28,5 +32,5 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
         return () => controller.abort();
     }, [url, method, body, controller]);
 
-    return [data, loading, error, controller];
+    return [data, loading, error, durationInMs, controller];
 }

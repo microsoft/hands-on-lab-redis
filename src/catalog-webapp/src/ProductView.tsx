@@ -6,10 +6,11 @@ import Typography from '@mui/material/Typography';
 import Product from './Product';
 import useFetch from './useFetch';
 import Loader from './Loader';
+import CallDuration from './CallDuration';
 
 export default function ProductView() {
     let { id } = useParams<'id'>();
-    const [product, loading] = useFetch<Product>(`/api/products/${id}`);
+    const [product, loading,, durationInMs] = useFetch<Product>(`/api/products/${id}`);
 
     return (
         <>
@@ -61,6 +62,9 @@ export default function ProductView() {
             </>
           )}
           <Loader loading={loading} />
+          {!loading && (
+              <CallDuration durationInMs={durationInMs} />
+          )}
         </>
     );
 }
