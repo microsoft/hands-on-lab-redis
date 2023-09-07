@@ -32,12 +32,13 @@
 			"name": "Lab 4 - Functions Cache Refresh"
 		},
 		{
-			"path": "../src/debug-tools"
+			"path": "../src/tmp"
 		}
 	],
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
-		"dotnet.defaultSolution": "src/src.sln"
+		"dotnet.defaultSolution": "src/src.sln",
+		"azurite.location": "src/tmp"
 	},
 	"launch": {
 		"version": "0.2.0",
