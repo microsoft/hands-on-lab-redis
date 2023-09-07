@@ -32,7 +32,7 @@
     "postCreateCommand": "npm install -g @azure/static-web-apps-cli",
 
     //Restore dotnet packages to accelerate Build / Debug
-    "postStartCommand": "cd /src/catalog-api && dotnet restore && cd /src/functions",
+    "postStartCommand": "cd ~/src/catalog-api && dotnet restore && cd ../functions && dotnet restore",
 
     "customizations": {
       // Configure properties specific to VS Code.

@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../terraform"
+		},
+		{
+			"path": "../src/functions"
+		},
+		{
+			"path": "../src/catalog-api"
+		},		
+		{
+			"path": "../src/apim-policies"
+		},
+		{
+			"path": "../src/catalog-webapp"
+		},
+		{
+			"path": "../src/payloads"
+		},
+		
+	],
+	"settings": {
+		"debug.internalConsoleOptions": "neverOpen",
+		"dotnet.defaultSolution": "src/src.sln"
+	},
+	"launch": {
+		"Launch Function": "functions:Attach to .Net Functions",
+	}
+}
