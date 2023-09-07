@@ -4,30 +4,49 @@
 			"path": ".."
 		},
 		{
-			"path": "../terraform"
+			"path": "../terraform",
+			"name": "Lab 0 - Setup Infra"
 		},
 		{
-			"path": "../src/functions"
+			"path": "../src/seed",
+			 "name": "Lab 0 - Setup Data - Seed"
 		},
 		{
-			"path": "../src/catalog-api"
-		},		
-		{
-			"path": "../src/apim-policies"
+			"path": "../src/catalog-api",
+			"name": "Lab 1 - API"
 		},
 		{
-			"path": "../src/catalog-webapp"
+			"path": "../src/payloads", 
+			"name": "Lab 1 - API - payloads"
+		},	
+		{
+			"path": "../src/catalog-webapp",
+			"name": "Lab 1 - Web App"
 		},
 		{
-			"path": "../src/payloads"
+			"path": "../src/apim-policies",
+			"name": "Lab 2 - APIM Caching"
 		},
-		
+		{
+			"path": "../src/functions",
+			"name": "Lab 4 - Functions Cache Refresh"
+		},
+		{
+			"path": "../src/debug-tools"
+		}
 	],
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
 		"dotnet.defaultSolution": "src/src.sln"
 	},
 	"launch": {
-		"Launch Function": "functions:Attach to .Net Functions",
+		"version": "0.2.0",
+		"configurations": [],
+		"compounds": [
+			{
+				"name": "launch api + function",
+				"configurations": [".NET Core Attach","Attach to .NET Functions"]
+			}
+		]
 	}
 }

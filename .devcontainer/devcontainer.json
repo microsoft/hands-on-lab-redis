@@ -25,8 +25,9 @@
 
     //PORT Forward config : 
     //5076 : Asp Net Core HTTPS Debug port 
-    //7071 : Azure Function Debug port    
-    "forwardPorts": [5076, 7071],
+    //7071 : Azure Function Debug port
+    //1000[0,1,2] : Azurite storage emulator
+    "forwardPorts": [5076, 7071, 10000, 10001, 10002],
 
     //Static Web App Cli Install
     "postCreateCommand": "npm install -g @azure/static-web-apps-cli",
@@ -41,7 +42,8 @@
         "extensions": [
           "ms-dotnettools.csharp", 
           "ms-vscode.vscode-node-azure-pack",
-          "humao.rest-client"
+          "humao.rest-client", 
+          "azurite.azurite"
         ]
       }
     },
