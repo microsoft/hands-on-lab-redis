@@ -42,6 +42,7 @@
         "extensions": [
           "ms-dotnettools.csharp", 
           "ms-vscode.vscode-node-azure-pack",
+          "ms-azuretools.vscode-azurefunctions",
           "humao.rest-client", 
           "azurite.azurite"
         ]

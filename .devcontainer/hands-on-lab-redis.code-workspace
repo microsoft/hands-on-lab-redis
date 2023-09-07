@@ -37,8 +37,10 @@
 	],
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
-		"dotnet.defaultSolution": "src/src.sln",
-		"azurite.location": "src/tmp"
+		"dotnet.defaultSolution": "/src.sln",
+		"azurite.location": "tmp",
+		"azureFunctions.functionSubpath": "",
+		"azureFunctions.projectSubpath": "src/functions",
 	},
 	"launch": {
 		"version": "0.2.0",
