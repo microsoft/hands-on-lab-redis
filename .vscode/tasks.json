@@ -12,7 +12,7 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/Func.Watcher"
+        "cwd": "${workspaceFolder}/src/functions"
       }
     },
     {
