@@ -2,8 +2,7 @@ using System.Net;
 using System.Collections;
 using System.ComponentModel;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Azure.Functions.Worker.Redis;
+using Microsoft.Azure.Functions.Worker.Extensions.Redis;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
@@ -23,8 +22,8 @@ namespace functions
         }
 
         [Description("This function will be triggered when the EXPIRED command is being executed at monitoredKey expiry")]
-        [FunctionName("ProductsEvents")]
-        public static void ProductsEventsTrigger(
+        [Function("ProductsEvents")]
+        public async void ProductsEventsTrigger(
             [RedisPubSubTrigger("REDIS_CONNECTION_STRING", "__keyspace@0__:*_%REDIS_KEY_PRODUCTS_ALL%")] ChannelMessage channelMessage)
         {
             _logger.LogInformation($"{channelMessage.Channel} => {channelMessage.Message}");
@@ -32,9 +31,7 @@ namespace functions
             {
                 _logger.LogInformation("EXPIRED"); 
                 
-                var result = await _httpClient.GetAsync("/products")
-                    .GetAwaiter()
-                    .GetResult();
+                var result = await _httpClient.GetAsync("/products");
                 // TODO: CALL API TO REFRESH CACHE HERE 
             }
         }

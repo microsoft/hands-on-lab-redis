@@ -1,6 +1,6 @@
 {
     "azureFunctions.projectSubpath": "src/functions",
-    "azureFunctions.deploySubpath": "src/functions/bin/Release/net6.0/publish",
+    "azureFunctions.deploySubpath": "src/functions/bin/Release/net7.0/publish",
     "azureFunctions.projectLanguage": "C#",
     "azureFunctions.projectRuntime": "~4",
     "azureFunctions.preDeployTask": "publish (functions)"

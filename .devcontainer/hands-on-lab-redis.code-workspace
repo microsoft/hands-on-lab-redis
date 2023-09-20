@@ -38,7 +38,10 @@
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
 		"dotnet.defaultSolution": "/src.sln",
-		"azurite.location": "tmp"
+		"azurite.location": "/tmp",
+		"omnisharp.projectLoadTimeout": 180,
+		"omnisharp.autoStart": true,
+		"omnisharp.useModernNet": true
 	},
 	"launch": {
 		"version": "0.2.0",

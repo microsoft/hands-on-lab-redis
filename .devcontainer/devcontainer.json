@@ -10,7 +10,7 @@
           "version":"latest"
         },
 
-        //Azure Function Core tools + Visual Studio Extension install
+        // //Azure Function Core tools + Visual Studio Extension install
         "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1":{},
 
         //Node + npm install
@@ -33,7 +33,7 @@
     "postCreateCommand": "npm install -g @azure/static-web-apps-cli",
 
     //Restore dotnet packages to accelerate Build / Debug
-    "postStartCommand": "cd ~/src/catalog-api && dotnet restore && cd ../functions && dotnet restore",
+    // "postStartCommand": "cd ~/src/catalog-api && dotnet restore && cd ../functions && dotnet restore",
 
     "customizations": {
       // Configure properties specific to VS Code.
@@ -42,7 +42,6 @@
         "extensions": [
           "ms-dotnettools.csharp", 
           "ms-vscode.vscode-node-azure-pack",
-          "ms-azuretools.vscode-azurefunctions",
           "humao.rest-client", 
           "azurite.azurite"
         ]
