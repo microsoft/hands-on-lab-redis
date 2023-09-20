@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "REDIS_CONNECTION_STRING": "SET_YOUR_REDIS_CACHE_CONNECTION_STRING_FROM_AZURE_PORTAL : ACCESS KEYS TAB",
+        "REDIS_PRODUCT_ALL" : "products:all",
+        "CATALOG_API_URL": "SET_YOUR_CATALOG_API_URL"
+    }
+}
