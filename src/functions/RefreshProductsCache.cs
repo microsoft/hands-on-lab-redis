@@ -23,7 +23,7 @@ namespace functions
 
         [Description("This function will be triggered when the EXPIRED command is being executed at monitoredKey expiry")]
         [Function("ProductsEvents")]
-        public async void ProductsEventsTrigger(
+        public async Task ProductsEventsTrigger(
             [RedisPubSubTrigger("REDIS_CONNECTION_STRING", "__keyspace@0__:*_%REDIS_KEY_PRODUCTS_ALL%")] ChannelMessage channelMessage)
         {
             _logger.LogInformation($"{channelMessage.Channel} => {channelMessage.Message}");
