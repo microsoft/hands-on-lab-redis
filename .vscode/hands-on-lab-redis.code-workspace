@@ -38,10 +38,7 @@
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
 		"dotnet.defaultSolution": "/src.sln",
-		"azurite.location": "tmp",
-		"azureFunctions.functionSubpath": "",
-		"azureFunctions.projectSubpath": "src/functions",
-		"dotnet.server.useOmnisharp": true,
+		"azurite.location": "tmp"
 	},
 	"launch": {
 		"version": "0.2.0",
@@ -52,72 +49,5 @@
 				"configurations": [".NET Core Attach","Attach to .NET Functions"]
 			}
 		]
-	},
-	"tasks": {
-		"tasks": [
-			{
-				"label": "build",
-				"command": "dotnet",
-				"type": "process",
-				"args": [
-					"build",
-					"${workspaceFolder}/Catalog.Api.csproj",
-					"/property:GenerateFullPaths=true",
-					"/consoleloggerparameters:NoSummary"
-				],
-				"problemMatcher": "$msCompile"
-			},
-			{
-				"label": "publish",
-				"command": "dotnet",
-				"type": "process",
-				"args": [
-					"publish",
-					"${workspaceFolder}/Catalog.Api.csproj",
-					"/property:GenerateFullPaths=true",
-					"/consoleloggerparameters:NoSummary"
-				],
-				"problemMatcher": "$msCompile"
-			},
-			{
-				"label": "watch",
-				"command": "dotnet",
-				"type": "process",
-				"args": [
-					"watch",
-					"run",
-					"--project",
-					"${workspaceFolder}/Catalog.Api.csproj"
-				],
-				"problemMatcher": "$msCompile"
-			},
-			{
-				"label": "clean",
-				"command": "dotnet",
-				"type": "process",
-				"args": [
-					"clean",
-					"${workspaceFolder}",
-					"/property:GenerateFullPaths=true",
-					"/consoleloggerparameters:NoSummary"
-				],
-				"problemMatcher": "$msCompile"
-			},
-			{
-				"label": "publish-release",
-				"command": "dotnet",
-				"type": "process",
-				"args": [
-					"publish",
-					"${workspaceFolder}",
-					"--configuration",
-					"Release",
-					"/property:GenerateFullPaths=true",
-					"/consoleloggerparameters:NoSummary"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": "clean"
-			}
-		]
-	}
+	}	
 }
