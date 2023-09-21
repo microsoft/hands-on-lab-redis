@@ -41,7 +41,8 @@
 		"azurite.location": "/tmp",
 		"omnisharp.projectLoadTimeout": 180,
 		"omnisharp.autoStart": true,
-		"omnisharp.useModernNet": true
+		"omnisharp.useModernNet": true,
+		"dotnet.server.useOmnisharp": true
 	},
 	"launch": {
 		"version": "0.2.0",

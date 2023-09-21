@@ -8,39 +8,34 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Services.Redis;
 
-namespace functions
+namespace functions;
+public class RefreshProductsCache
 {
-    public class RefreshProductsCache
+    private readonly ILogger _logger;
+    private readonly HttpClient _httpCatalogApiClient;
+    private readonly IRedisService _redisService;
+
+    public RefreshProductsCache(
+        IHttpClientFactory httpClientFactory,
+        ILoggerFactory loggerFactory,
+        IRedisService redisService)
     {
-        private readonly ILogger _logger;
-        private readonly HttpClient _httpClient = null!;
-        private readonly IRedisService _redisService;
-        private readonly string _KEY_PRODUCTS_ALL; 
+        _httpCatalogApiClient = httpClientFactory.CreateClient(Const.CATALOG_API_CLIENT);
+        _logger = loggerFactory.CreateLogger<RefreshProductsCache>();
+        _redisService = redisService;
+    }
 
-        public RefreshProductsCache(
-            IHttpClientFactory httpClientFactory,
-            ILoggerFactory loggerFactory, 
-            IRedisService redisService)
+    [Description("This function will be triggered when the EXPIRED command is being executed at monitoredKey expiry")]
+    [Function("ProductsEvents")]
+    public async Task ProductsEventsTrigger(
+        [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
+    {
+        if (key.Contains(Const.REDIS_KEY_PRODUCTS_ALL))
         {
-            _httpClient = httpClientFactory.CreateClient("catalogApi");
-            _logger = loggerFactory.CreateLogger<RefreshProductsCache>();
-            _redisService = redisService;
-            _KEY_PRODUCTS_ALL = Environment.GetEnvironmentVariable("REDIS_KEY_PRODUCTS_ALL");
-        }
+            _logger.LogInformation($"{key} just EXPIRED");
 
-        [Description("This function will be triggered when the EXPIRED command is being executed at monitoredKey expiry")]
-        [Function("ProductsEvents")]
-        public async Task ProductsEventsTrigger(
-            [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
-        {
-            var keyChanged = key.Split("_")[1];
-            if(keyChanged == _KEY_PRODUCTS_ALL)
-            {
-                _logger.LogInformation($"{key} just EXPIRED"); 
-                
-                var result = await _httpClient.GetStringAsync("products");
-                _redisService.Set(key, result);
-            }
+            var result = await _httpCatalogApiClient.GetStringAsync("products");
+            _redisService.Set(key, result);
         }
     }
 }
