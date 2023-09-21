@@ -544,6 +544,20 @@ Azure Functions are event-driven and triggered by events from various sources. T
 
 Azure Functions run on the App Service platform, which provides features such as deployment slots, continuous deployment, HTTPS support, and hybrid connections. They can be deployed in the Consumption (Serverless), dedicated App Service Plan, or Premium Plan models.
 
+## Keyspace Notifications
+
+While Azure Cache for Redis manages the wraping of Keyspace events, it's mandatory to detail the event types you're interested in.
+
+To do so, you'll set the maximum level of notification possible to notify all the existing events in the Azure Cache for Redis **Advanced Settings** and **notify-keyspace-events**:
+
+![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console-advanced-settings.png)
+
+<div class="tip" data-title="Tips">
+
+> Resources : You'll find more insights [here][key-notifications-setup] on the events type that can be notified to fine-tune the notifications' scope
+
+</div>
+
 ## Redis Triggered Azure Function
 
 Open the Azure Function project in Visual Studio Code which is under `src/functions` and go to the `RefreshProductsCache.cs`. You will discover a method called `ProductsEventsTrigger` which is empty.
@@ -672,6 +686,7 @@ You now have an Azure Function that is triggered every time the key `products:al
 [key-bindings]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redispubsub?tabs=in-process%2Cnode-v3%2Cpython-v1&pivots=programming-language-csharp#examples
 [key-notifications]: https://redis.io/docs/manual/keyspace-notifications/
 [azure-function-overview]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp
+[key-notifications-setup]: https://redis.io/docs/manual/keyspace-notifications/#configuration
 
 ---
 
