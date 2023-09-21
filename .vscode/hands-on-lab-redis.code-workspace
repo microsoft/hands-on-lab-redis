@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "..",
+			"name":"Hands On Lab - Redis"
+		},
+		{
+			"path": "../src/catalog-api",
+			"name": "Lab 1 - API"
+		},
+		{
+			"path": "../src/functions",
+			"name": "Lab 4 - Functions Cache Refresh"
+		}
+	],
+	"settings": {
+		"debug.internalConsoleOptions": "neverOpen",
+		// "dotnet.defaultSolution": "/src.sln",
+		"azurite.location": "/tmp",
+		"omnisharp.autoStart": true,
+		"omnisharp.useModernNet": true,
+		"dotnet.server.useOmnisharp": true
+	}
+}

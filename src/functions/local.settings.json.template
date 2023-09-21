@@ -2,9 +2,10 @@
     "IsEncrypted": false,
     "Values": {
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-        "REDIS_CONNECTION_STRING": "SET_YOUR_REDIS_CACHE_CONNECTION_STRING_FROM_AZURE_PORTAL : ACCESS KEYS TAB",
-        "REDIS_PRODUCT_ALL" : "products:all",
-        "CATALOG_API_URL": "SET_YOUR_CATALOG_API_URL"
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "REDIS_KEY_PRODUCTS_ALL":"products:all",
+        "AZURE_REDIS_CONNECTION_STRING" : "YOUR_REDIS_CNCT_STRING",
+        "AZURE_REDIS_TTL_IN_SECONDS":"60",
+        "CATALOG_API_URL": "https://YOUR_APP_SERVICE_NAME.azurewebsites.net/"
     }
 }

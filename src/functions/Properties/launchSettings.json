@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "redis_func_trigger_dotnet6": {
+    "func": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7246",
+      "commandLineArgs": "--port 7066",
       "launchBrowser": false
     }
   }

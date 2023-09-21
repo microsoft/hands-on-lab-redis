@@ -1,58 +1,59 @@
 ```csharp
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using Microsoft.Azure.Functions.Worker.Redis;
 
-namespace Microsoft.Azure.WebJobs.Extensions.Redis.Samples
+namespace Microsoft.Azure.Functions.Worker.Redis.Samples
 {
     public static class SampleRedisSamples
-    {
-        
-        public const string REDIS_CONNECTION_STRING = "REDIS_CONNECTION_STRING";
+    {   
+        private readonly ILogger _logger;
+        private const string REDIS_CONNECTION_STRING = "REDIS_CONNECTION_STRING";
+
+        public RefreshRedisCache(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<RefreshRedisCache>();
+        }
 
         [Description("This function will be triggered when a message is published to the pubsubTest channel.")]
         [FunctionName(nameof(PubSubTrigger))]
         public static void PubSubTrigger(
-            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "PubSubChannelSample")] string message,
-            ILogger logger)
+            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "PubSubChannelSample")] string message)
         {
-            logger.LogInformation(message);
+            _logger.LogInformation(message);
         }
 
         [Description("This function will be triggered when a message is published to the KeySpaceTest key.")]
         [FunctionName(nameof(KeyspaceTrigger))]
         public static void KeyspaceTrigger(
-            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyspace@0__:KeySample")] string message,
-            ILogger logger)
+            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyspace@0__:KeySample")] string message)
         {
-            logger.LogInformation(message);
+            _logger.LogInformation(message);
 
         }
 
         [Description("This function will be triggered when the DEL command is being executed")]
         [FunctionName(nameof(KeyeventTrigger))]
         public static void KeyeventTrigger(
-            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyevent@0__:expired")] string message,
-            ILogger logger)
+            [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyevent@0__:expired")] string message)
         {
-            logger.LogInformation(message);
+            _logger.LogInformation(message);
         }
 
         [Description("This function will be triggered when a change is being made to the listTest list.")]
         [FunctionName(nameof(ListTrigger))]
         public static void ListTrigger(
-            [RedisListTrigger(REDIS_CONNECTION_STRING, "SampleList")] string entry,
-            ILogger logger)
+            [RedisListTrigger(REDIS_CONNECTION_STRING, "SampleList")] string entry)
         {
-            logger.LogInformation(entry);
+            _logger.LogInformation(entry);
         }
 
         [Description("This function will be triggered when a change is being made to the StreamTest Stream.")]
         [FunctionName(nameof(StreamTrigger))]
         public static void StreamTrigger(
-            [RedisStreamTrigger(REDIS_CONNECTION_STRING, "SampleStream")] string entry,
-            ILogger logger)
+            [RedisStreamTrigger(REDIS_CONNECTION_STRING, "SampleStream")] string entry)
         {
-            logger.LogInformation(entry);
+            _logger.LogInformation(entry);
         }
     }
 }
