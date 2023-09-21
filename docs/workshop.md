@@ -659,9 +659,15 @@ func azure functionapp publish <NAME_OF_YOUR_FUNCTION_APP>
 
 ### Test the Azure Function
 
-Now if you go to your Azure Function resource, you should see that the function is triggered when the key `products:all` is expired:
+Now if you go to your Azure Function resource, in the **Overview** tab select your function:
+
+![Azure Function overview](./assets/azure-function-overview.png)
+
+And then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
 
 ![Azure Function logs](./assets/azure-function-logs.png)
+
+You now have an Azure Function that is triggered every time the key `products:all` is expired and refresh the cache.
 
 [key-bindings]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redispubsub?tabs=in-process%2Cnode-v3%2Cpython-v1&pivots=programming-language-csharp#examples
 [key-notifications]: https://redis.io/docs/manual/keyspace-notifications/
