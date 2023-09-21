@@ -12,14 +12,13 @@ namespace Services.Redis {
 
 public class RedisService : IRedisService
 { 
-    // TODO: provide a sample with AAD authentication
     private readonly IDatabase _database;
     private readonly int _defaultTTLInSeconds = 60;
     private readonly TimeSpan _ttl; // Time To Live
 
     public RedisService()
     {
-        var connectionMultiplexer = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("AZURE_REDIS_CONNECTION_STRING"), AzureCacheForRedis.ConfigureForAzure);
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("AZURE_REDIS_CONNECTION_STRING") ?? "", AzureCacheForRedis.ConfigureForAzure);
         _database = connectionMultiplexer.GetDatabase();
         _ttl = TTL(Environment.GetEnvironmentVariable("AZURE_REDIS_TTL_IN_SECONDS"));
     }

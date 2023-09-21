@@ -27,8 +27,15 @@ public class RefreshProductsCache
 
     [Description("This function will be triggered when the EXPIRED command is executed at monitored key's expiry.")]
     [Function("ProductsEvents")]
-    public async Task ProductsEventsTrigger([RedisPubSubTrigger("TO_DEFINE", "TO_DEFINE")] string key)
+    public async Task ProductsEventsTrigger(
+        [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
     {
-        // TODO: Implement the logic to refresh the cache
+        if (key.Contains(Const.REDIS_KEY_PRODUCTS_ALL))
+        {
+            _logger.LogInformation($"{key} just EXPIRED");
+
+            var result = await _httpCatalogApiClient.GetStringAsync("products");
+            await _redisService.Set(key, result);
+        }
     }
 }
