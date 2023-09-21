@@ -12,7 +12,7 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/functions"
+        "cwd": "${workspaceFolder}"
       }
     },
     {
@@ -31,7 +31,7 @@
       },
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/functions"
+        "cwd": "${workspaceFolder}"
       }
     },
     {
@@ -47,7 +47,7 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/functions"
+        "cwd": "${workspaceFolder}"
       }
     },
     {
@@ -71,7 +71,7 @@
       "type": "func",
       "dependsOn": "build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/src/functions/bin/Debug/net7.0"
+        "cwd": "${workspaceFolder}/bin/Debug/net7.0"
       },
       "command": "host start",
       "isBackground": true,
