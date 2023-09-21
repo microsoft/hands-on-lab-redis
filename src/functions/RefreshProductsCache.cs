@@ -25,7 +25,8 @@ public class RefreshProductsCache
         _redisService = redisService;
     }
 
-    [Description("This function will be triggered when the EXPIRED command is executed at monitored key's expiry.")]
+
+    [Description("This function will be triggered when the EXPIRED command is being executed at monitored key's expiry.")]
     [Function("ProductsEvents")]
     public async Task ProductsEventsTrigger([RedisPubSubTrigger("TO_DEFINE", "TO_DEFINE")] string key)
     {
