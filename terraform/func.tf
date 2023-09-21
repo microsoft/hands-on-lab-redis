@@ -23,10 +23,12 @@ resource "azurerm_linux_function_app" "this" {
   }
 
   app_settings = {
-    FUNCTIONS_WORKER_RUNTIME = "dotnet"
-    REDIS_CONNECTION_STRING  = azurerm_redis_cache.this.primary_connection_string
-    REDIS_PRODUCT_ALL        = "products:all"
-    CATALOG_API_URL          = azurerm_linux_web_app.this.default_hostname
+    FUNCTIONS_WORKER_RUNTIME              = "dotnet"
+    REDIS_CONNECTION_STRING               = azurerm_redis_cache.this.primary_connection_string
+    REDIS_PRODUCT_ALL                     = "products:all"
+    CATALOG_API_URL                       = azurerm_linux_web_app.this.default_hostname
+    APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.this.instrumentation_key
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.this.connection_string
   }
 
   site_config {
