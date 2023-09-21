@@ -30,10 +30,7 @@
     "forwardPorts": [5076, 7071, 10000, 10001, 10002],
 
     //Static Web App Cli Install
-    "postCreateCommand": "npm install -g @azure/static-web-apps-cli",
-
-    //Restore dotnet packages to accelerate Build / Debug
-    // "postStartCommand": "cd ~/src/catalog-api && dotnet restore && cd ../functions && dotnet restore",
+    "updateContentCommand": "bash .devcontainer/setup.sh",
 
     "customizations": {
       // Configure properties specific to VS Code.
