@@ -15,10 +15,21 @@
 	],
 	"settings": {
 		"debug.internalConsoleOptions": "neverOpen",
-		// "dotnet.defaultSolution": "/src.sln",
 		"azurite.location": "/tmp",
 		"omnisharp.autoStart": true,
-		"omnisharp.useModernNet": true,
-		"dotnet.server.useOmnisharp": true
+		"omnisharp.useModernNet": true
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [],
+		"compounds": [
+			{
+				"name": "Attach API + Az Func",
+				"configurations": [
+					".NET Core Attach",
+					"Attach to .NET Functions"
+				]
+			}
+		]
 	}
 }
