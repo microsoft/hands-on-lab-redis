@@ -35,7 +35,7 @@ public class RefreshProductsCache
             _logger.LogInformation($"{key} just EXPIRED");
 
             var result = await _httpCatalogApiClient.GetStringAsync("products");
-            _redisService.Set(key, result);
+            await _redisService.Set(key, result);
         }
     }
 }
