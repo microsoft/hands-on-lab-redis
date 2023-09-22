@@ -1,12 +1,9 @@
-using System;
-using Microsoft.Azure.StackExchangeRedis;
 using StackExchange.Redis;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 public interface IRedisService {
     Task<string?> Get(string key);
     Task Set(string key, string value);
+    Task AddToStream(string streamName, Dictionary<string,string?> data);
 }
 
 public class RedisService : IRedisService
@@ -65,5 +62,17 @@ public class RedisService : IRedisService
     public async Task Set(string key, string value)
     {
         await _database.StringSetAsync(key, value, _ttl);
+    }
+
+    public async Task AddToStream(string streamName, Dictionary<string,string?> data)
+    {
+        List<NameValueEntry> entries = new();
+
+        foreach(KeyValuePair<string, string?> keyValuePair in data)
+        {
+            entries.Add(new(keyValuePair.Key, keyValuePair.Value));
+        }
+
+        await _database.StreamAddAsync(streamName, entries.ToArray());
     }
 }

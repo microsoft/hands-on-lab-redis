@@ -14,6 +14,7 @@ builder.Services.AddSingleton<ISimulatedDatabaseLatency, SimulatedDatabaseLatenc
 builder.Services.AddSingleton<IRedisService, RedisService>();
 builder.Services.AddSingleton<ICosmosService, CosmosService>();
 builder.Services.AddScoped<IProductCacheService, ProductCacheService>();
+builder.Services.AddScoped<IBrowsingHistoryCacheService, BrowsingHistoryCacheService>();
 
 var app = builder.Build();
 app.UseCors();
