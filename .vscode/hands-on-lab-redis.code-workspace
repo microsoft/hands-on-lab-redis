@@ -9,8 +9,8 @@
 			"name": "Lab 1 - API"
 		},
 		{
-			"path": "../src/functions",
-			"name": "Lab 4 - Functions Cache Refresh"
+			"path": "../src/cache-refresh-func",
+			"name": "Lab 4 - Function Cache Refresh"
 		}
 	],
 	"settings": {

@@ -10,6 +10,17 @@ resource "azurerm_api_management" "this" {
   tags = local.tags
 }
 
+resource "azurerm_api_management_logger" "this" {
+  name                = format("apimlogs-%s", local.resource_suffix_kebabcase)
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = azurerm_resource_group.this.name
+  resource_id         = azurerm_application_insights.this.id
+
+  application_insights {
+    instrumentation_key = azurerm_application_insights.this.instrumentation_key
+  }
+}
+
 resource "azurerm_api_management_product" "this" {
   product_id            = "catalog"
   api_management_name   = azurerm_api_management.this.name

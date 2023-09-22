@@ -12,11 +12,13 @@ resource "azurerm_linux_web_app" "this" {
   }
 
   app_settings = {
-    AZURE_COSMOS_CONNECTION_STRING  = azurerm_cosmosdb_account.this.connection_strings[0]
-    AZURE_COSMOS_DATABASE           = "catalogdb"
-    AZURE_REDIS_CONNECTION_STRING   = azurerm_redis_cache.this.primary_connection_string
-    PRODUCT_LIST_CACHE_DISABLE      = "0"
-    SIMULATED_DB_LATENCY_IN_SECONDS = "0"
+    AZURE_COSMOS_CONNECTION_STRING        = azurerm_cosmosdb_account.this.connection_strings[0]
+    AZURE_COSMOS_DATABASE                 = "catalogdb"
+    AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
+    PRODUCT_LIST_CACHE_DISABLE            = "0"
+    SIMULATED_DB_LATENCY_IN_SECONDS       = "0"
+    APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.this.instrumentation_key
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.this.connection_string
   }
 
   site_config {

@@ -4,7 +4,8 @@
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
         "REDIS_KEY_PRODUCTS_ALL":"products:all",
-        "AZURE_REDIS_CONNECTION_STRING" : "YOUR_REDIS_CNCT_STRING",
-        "CATALOG_APIM_URL": "https://YOUR_APP_SERVICE_NAME.azurewebsites.net/"
+        "AZURE_REDIS_CONNECTION_STRING" : "YOUR_REDIS_CONNECTION_STRING",
+        "AZURE_REDIS_TTL_IN_SECONDS":"60",
+        "CATALOG_API_URL": "https://YOUR_APP_SERVICE_NAME.azurewebsites.net/"
     }
 }

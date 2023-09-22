@@ -12,7 +12,7 @@ namespace functions;
 public class RefreshProductsCache
 {
     private readonly ILogger _logger;
-    private readonly HttpClient _httpCatalogApimClient;
+    private readonly HttpClient _httpCatalogApiClient;
     private readonly IRedisService _redisService;
 
     public RefreshProductsCache(
@@ -20,23 +20,16 @@ public class RefreshProductsCache
         ILoggerFactory loggerFactory,
         IRedisService redisService)
     {
-        _httpCatalogApimClient = httpClientFactory.CreateClient(Const.CATALOG_API_CLIENT);
+        _httpCatalogApiClient = httpClientFactory.CreateClient(Const.CATALOG_API_CLIENT);
         _logger = loggerFactory.CreateLogger<RefreshProductsCache>();
         _redisService = redisService;
     }
 
-    [Description("This function will be triggered when the EXPIRED command is being executed at monitoredKey's expiry")]
+
+    [Description("This function will be triggered when the EXPIRED command is being executed at monitored key's expiry.")]
     [Function("ProductsEvents")]
-    public async Task ProductsEventsTrigger(
-        [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
+    public async Task ProductsEventsTrigger([RedisPubSubTrigger("TO_DEFINE", "TO_DEFINE")] string key)
     {
-        if (key.Contains(Const.REDIS_KEY_PRODUCTS_ALL))
-        {
-            _logger.LogInformation($"{key} just EXPIRED");
-
-            var result = await _httpCatalogApimClient.GetStringAsync("products");
-
-            _logger.LogInformation($"Calling APIM Catalog endpoint to force products cache refreshing.");
-        }
+        // TODO: Implement the logic to refresh the cache
     }
 }

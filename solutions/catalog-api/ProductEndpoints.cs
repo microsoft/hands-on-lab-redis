@@ -4,11 +4,18 @@ public static class ProductEndpoints
     {
         app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheService productCacheService) => {
             IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
-            
-            // TODO: Add logic to return products from the cache
-            
+
+            if (cachedProducts != null) {
+                Console.WriteLine("Returning product list from the cache");
+                return Results.Ok(cachedProducts);
+            }
+
             // Fetch data from Cosmos DB
             var products = await cosmosService.RetrieveAllProductsAsync();
+
+            if (products.Any()) {
+                await productCacheService.SetProductsAsync(products);
+            }
 
             return Results.Ok(products);
         });
