@@ -560,7 +560,7 @@ To do so, you'll set the maximum level of notification possible to notify all th
 
 ## Redis Triggered Azure Function
 
-Open the Azure Function project in Visual Studio Code which is under `src/functions` and go to the `RefreshProductsCache.cs`. You will discover a method called `ProductsEventsTrigger` which is empty.
+Open the Azure Function project in Visual Studio Code which is under `src/cache-refresh-func` and go to the `RefreshProductsCache.cs`. You will discover a method called `ProductsEventsTrigger` which is empty.
 
 This methods has an attribute called `RedisPubSubTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
 
@@ -609,8 +609,7 @@ If you run this Azure Function and listen to the expired keys in the Azure Cache
 > The goal is to detect when the cache is expired and to refresh it for the `products:all` key.
 > - Only refresh the cache if the key contains `products:all`
 > - Use the `Const.cs` file to point to the `REDIS_KEY_PRODUCTS_ALL` environment variable
-> - Call the Catalog Api using the `IHttpClientFactory` object provided to retrieve the `products`
-> - Store the **string** result into Azure Redis Cache using the `IRedisService`
+> - Call the Catalog Api endpoint in APIM using the `IHttpClientFactory` object provided to retrieve the `products`
 > - Only this method should be modified
 
 </div>
@@ -620,7 +619,7 @@ If you run this Azure Function and listen to the expired keys in the Azure Cache
 
 First you need to check if the key contains `products:all` and if it does, you need to refresh the cache. 
 
-Then call the Catalog API using the `IHttpClientFactory` object provided to retrieve the `products` using the `GetStringAsync` method which will return a string of the response. Then store the result into Azure Redis Cache using the `IRedisService` with the `Set` method.
+Then call the Catalog API `/products` endpoint in APIM using the `IHttpClientFactory` object provided to retrieve the `products` using the `GetStringAsync()`. For the purpose of the lab, no need to manage the HTTP Response from APIM as the sole objective is to request a refresh of the cache, using the `Cache policy` defined in the previous lab.
 
 ```csharp
 public async Task ProductsEventsTrigger(
@@ -628,25 +627,34 @@ public async Task ProductsEventsTrigger(
 {
     if (key.Contains(Const.REDIS_KEY_PRODUCTS_ALL))
     {
-        var result = await _httpCatalogApiClient.GetStringAsync("products");
-        await _redisService.Set(key, result);
+        _logger.LogInformation($"{key} just EXPIRED");
+
+        //Calling APIM to request fresh product catalog from data source after cache expired
+        await _httpCatalogApiClient.GetStringAsync("products");
+        
+        _logger.LogInformation($"called APIM to force Redis refresh key '{key}' with fresh product catalog from data source.");
     }
 }
 ```
 
-Now, to run it locally you need to create the `local.settings.json` file and copy the content of the `local.settings.json.template` file into it. 
+Now, to test and run it locally you need to create the `local.settings.json` file and copy the content of the `local.settings.json.template` file into it. 
 
-Then you need to set the `AZURE_REDIS_CONNECTION_STRING` environment variable to the connection string of your Azure Cache for Redis and update the `CATALOG_API_URL` with the url of your Catalog API.
+Then you need to set the `AZURE_REDIS_CONNECTION_STRING` environment variable to the connection string of your Azure Cache for Redis and update the `CATALOG_API_URL` with the url of APIM endpoint for the Catalog API.
 
 The connection string for your Azure Cache for Redis can be found in the Azure Portal. Select your Azure Cache for Redis resource and in the left menu, click on **Access keys**. Then copy the value of the `Primary connection string` into your `local.settings.json` file.
 
 ![Azure Cache for Redis connection string](./assets/azure-cache-for-redis-connection-string.png)
 
-And to set the `CATALOG_API_URL` environment variable, go to your resource group, search the App service, select it and in the left menu, click on **Overview**. Then copy the **Default Domain** url of your App Service.
+To set the `CATALOG_API_URL` environment variable, go to your resource group, search the API Management resource and select it. Then copy the `Gateway URL` found in the **Overview** panel of your API Management.
 
-![App service url](./assets/app-service-url.png)
+![Apim gateway url](./assets/apim-gateway-url.png)
 
-In VS Code just run the Azure Function by clicking on the **Run** button:
+To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
+1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite : start` and select this option
+
+![Azurite Start](./assets/azurite-start.png)
+
+1. Then run the Azure Function by clicking on the **Run and Debug** panel and select `Attach to Cache Refresh Function`:
 
 ![Azure Function run](./assets/azure-function-run.png)
 
@@ -654,7 +662,7 @@ In VS Code just run the Azure Function by clicking on the **Run** button:
 
 ## Deploy the Azure Function
 
-### Deploy your function using the VS Code
+### Option 1 : Deploy with VS Code
 
 - Open the Azure extension in VS Code left panel
 - Make sure you're signed in to your Azure account
@@ -663,7 +671,7 @@ In VS Code just run the Azure Function by clicking on the **Run** button:
 
 ![Deploy to Function App](./assets/function-app-deploy.png)
 
-### Deployment via Azure Function Core Tools
+### Option 2 : Deploy with Azure Function Core Tools
 
 Deploy your function using the VS Code extension or by command line:
 
@@ -693,6 +701,39 @@ You now have an Azure Function that is triggered every time the key `products:al
 # Lab 4 : Azure Cache for Redis Governance 
 
 ## Azure Monitor 
+
+DRAFT : 
+=======
+
+[Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) installed in the devcontainer is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
+
+You can execute the following command to generate some load on the Azure Cache for Redis resource with the following command : 
+
+```bash
+# Redis Benchmark will send 1 million "SET" queries of 1kb each from 300 parallel connections
+# In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources   
+redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 1000000 -d 1024 -c 300 --threads 2 
+```
+
+![Redi-Benchmark-results](./assets/redis-benchmark-results.png)
+
+About 5 minutes after the benchmark has successfully ended, open the Azure Portal view on your Azure Cache for Redis resource and open the **Insights** panel to gain deeper knowledge of the resource health : 
+
+![Redis-Insights-Overview](./assets/redis-insights-overview.png)
+
+And check how the resource performed under load : 
+
+![Redis-Insights-Performance](./assets/redis-insights-performance.png)
+
+These metrics are available out of the box, with any Azure Cache for Redis SKU and are precious insights to take informed decisions concerning the sizing of the your caching resource.
+
+The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilities to guarantee necessary caching resources at all times. You can also enable clustering on Azure Cache for Redis `Premium` SKU and take advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node provisionning. 
+
+*Details* 
+
+Take the time to dig in the toolbox offered by the Azure Portal to help you quickly **diagnose and solve problems** with the configuration of the resource or the connected clients : 
+
+![Redis-Diagnose-Problems](./assets/redis-diagnose-solve.png)
 
 ## Scaling 
 
