@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Browsing history service (deployed as a Function App) provides an API to retrive the list of the latest products viewed by a user.
+The Browsing history service (deployed as a Function App) provides an API to retrieve the list of the latest products viewed by a user.
 
 New browsing history events get added to the service as the user views new products in the UI. The catalog API will then share these events with this service using Redis Streams (identified by `PRODUCT_VIEWS_STREAM_NAME`).
 
