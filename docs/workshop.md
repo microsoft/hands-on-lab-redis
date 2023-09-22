@@ -531,29 +531,162 @@ You can now test your API again with Postman or the HTTP REST file like previous
 
 # Lab 3 : Event-Driven Architecture 
 
-In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired.
+In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired before the data is requested by the user.
 
-The idea is to use an Azure Function triggered by an Azure Cache for Redis event to refresh the cache when the data expired.
+The idea is to use an [Azure Function][azure-function-overview] triggered by an Azure Cache for Redis event to refresh the cache when the data expired.
+
+Azure Functions is a serverless solution that provides up-to-date compute resources, so you don't need to worry about deploying and maintaining infrastructure. It offers a common function programming model for various languages, allowing you to focus on your code while Azure Functions handles the rest.
+
+Azure Functions are event-driven and triggered by events from various sources. The model uses `triggers` and `bindings` to avoid hardcoding access to other services:
+
+- Bindings connect other resources to the function declaratively
+- Triggers define how a function is invoked and provide associated data as a parameter payload.
+
+Azure Functions run on the App Service platform, which provides features such as deployment slots, continuous deployment, HTTPS support, and hybrid connections. They can be deployed in the Consumption (Serverless), dedicated App Service Plan, or Premium Plan models.
+
+## Keyspace Notifications
+
+While Azure Cache for Redis manages the wraping of Keyspace events, it's mandatory to detail the event types you're interested in.
+
+To do so, you'll set the maximum level of notification possible to notify all the existing events in the Azure Cache for Redis **Advanced Settings** and **notify-keyspace-events**:
+
+![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console-advanced-settings.png)
+
+<div class="tip" data-title="Tips">
+
+> Resources : You'll find more insights [here][key-notifications-setup] on the events type that can be notified to fine-tune the notifications' scope
+
+</div>
 
 ## Redis Triggered Azure Function
 
-Open the Azure Function project in Visual Studio Code and go to the `ProductsCacheRefresh.cs`. You will discover a method called `ProductsEventsTrigger`.
+Open the Azure Function project in Visual Studio Code which is under `src/functions` and go to the `RefreshProductsCache.cs`. You will discover a method called `ProductsEventsTrigger` which is empty.
 
-This methods as an attribute called `RedisCacheTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
+This methods has an attribute called `RedisPubSubTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
+
+<div class="task" data-title="Tasks">
+
+> - Define the conditions to trigger the function based on the expiration of a key in the Azure Cache for Redis
+> - The connection string of the Azure Cache for Redis is defined by the environment variable `AZURE_REDIS_CONNECTION_STRING`
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> You can find more information about the keys here:<br>
+> - The Azure Function here use the isolated process mode but at this time the documentation is not updated so use the in-process tab to see examples: [Key Binding][key-bindings]<br>
+> - [Redis key notification][key-notifications]<br>
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+The `RedisPubSubTrigger` attribute is used to trigger the function when an event is raised by the Azure Cache for Redis, so the first parameter is the connection string and the second one is the pattern to listen to.
+
+The connection string environment key `AZURE_REDIS_CONNECTION_STRING` can be specified directly because Azure Functions automatically understands that it is a connection string. Then based on the [Redis key notification documentation][key-notifications] you can use the `expired` event so the pattern to listen to the expiration event of a key will be `__keyevent@0__:expired`.
+
+So the definition of the function should look like this:
 
 ```csharp
-[RedisPubSubTrigger("REDIS_CONNECTION_STRING", "__keyspace@0__:*_%REDIS_PRODUCT_ALL%")] ChannelMessage channelMessage
+public async Task ProductsEventsTrigger(
+    [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
 ```
 
-This element is composed of two parts:
-- The first part is the connection string of the Azure Cache for Redis defined in the environment variables. 
-- The second part is the pattern of the event to listen to. In this case, it will listen to all the events that has a specific suffix value defined by the environment variables
+</details>
 
-Both environment variables are defined in the `local.settings.json` that you must create if you want to run this Azure Function locally (you have the template in the `local.settings.json.template` file).
+## Refresh the Redis Cache
 
-The goal is to detect when the cache is expired and to refresh it for the `products:all` key. To do this, you will use the `ChannelMessage` object that contains the information about the event and listen to the `expired` event.
+Now that we have defined the conditions to trigger the function, we need to implement the logic to refresh the cache.
 
-## Refresh caching on expired key 
+The key to listen to is defined in the `local.settings.json.template` file in the `REDIS_KEY_PRODUCTS_ALL` environment variable. This environment variable is set to `products:all` which is the key that you used in the previous lab to store the products in the cache.
+
+All environment variables are defined in the `local.settings.json` that you must create if you want to run this Azure Function locally (you just have to copy paste the template from the `local.settings.json.template` file).
+
+If you run this Azure Function and listen to the expired keys in the Azure Cache for Redis, you will see that the function is triggered when a key with a suffix of `products:all` is expired. In fact this is because APIM add a prefix to it to avoid conflicts with other keys so you can see a key like `1_products:all` for instance.
+
+<div class="task" data-title="Tasks">
+
+> The goal is to detect when the cache is expired and to refresh it for the `products:all` key.
+> - Only refresh the cache if the key contains `products:all`
+> - Use the `Const.cs` file to point to the `REDIS_KEY_PRODUCTS_ALL` environment variable
+> - Call the Catalog Api using the `IHttpClientFactory` object provided to retrieve the `products`
+> - Store the **string** result into Azure Redis Cache using the `IRedisService`
+> - Only this method should be modified
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+First you need to check if the key contains `products:all` and if it does, you need to refresh the cache. 
+
+Then call the Catalog API using the `IHttpClientFactory` object provided to retrieve the `products` using the `GetStringAsync` method which will return a string of the response. Then store the result into Azure Redis Cache using the `IRedisService` with the `Set` method.
+
+```csharp
+public async Task ProductsEventsTrigger(
+    [RedisPubSubTrigger("AZURE_REDIS_CONNECTION_STRING", "__keyevent@0__:expired")] string key)
+{
+    if (key.Contains(Const.REDIS_KEY_PRODUCTS_ALL))
+    {
+        var result = await _httpCatalogApiClient.GetStringAsync("products");
+        await _redisService.Set(key, result);
+    }
+}
+```
+
+Now, to run it locally you need to create the `local.settings.json` file and copy the content of the `local.settings.json.template` file into it. 
+
+Then you need to set the `AZURE_REDIS_CONNECTION_STRING` environment variable to the connection string of your Azure Cache for Redis and update the `CATALOG_API_URL` with the url of your Catalog API.
+
+The connection string for your Azure Cache for Redis can be found in the Azure Portal. Select your Azure Cache for Redis resource and in the left menu, click on **Access keys**. Then copy the value of the `Primary connection string` into your `local.settings.json` file.
+
+![Azure Cache for Redis connection string](./assets/azure-cache-for-redis-connection-string.png)
+
+And to set the `CATALOG_API_URL` environment variable, go to your resource group, search the App service, select it and in the left menu, click on **Overview**. Then copy the **Default Domain** url of your App Service.
+
+![App service url](./assets/app-service-url.png)
+
+In VS Code just run the Azure Function by clicking on the **Run** button:
+
+![Azure Function run](./assets/azure-function-run.png)
+
+</details>
+
+## Deploy the Azure Function
+
+### Deploy your function using the VS Code
+
+- Open the Azure extension in VS Code left panel
+- Make sure you're signed in to your Azure account
+- Open the Function App panel
+- Right click on your function app and select `Deploy to Function App...`
+
+![Deploy to Function App](./assets/function-app-deploy.png)
+
+### Deployment via Azure Function Core Tools
+
+Deploy your function using the VS Code extension or by command line:
+
+```bash
+func azure functionapp publish <NAME_OF_YOUR_FUNCTION_APP>
+```
+
+### Test the Azure Function
+
+Now if you go to your Azure Function resource, in the **Overview** tab select your function:
+
+![Azure Function overview](./assets/azure-function-overview.png)
+
+And then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
+
+![Azure Function logs](./assets/azure-function-logs.png)
+
+You now have an Azure Function that is triggered every time the key `products:all` is expired and refresh the cache.
+
+[key-bindings]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redispubsub?tabs=in-process%2Cnode-v3%2Cpython-v1&pivots=programming-language-csharp#examples
+[key-notifications]: https://redis.io/docs/manual/keyspace-notifications/
+[azure-function-overview]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp
+[key-notifications-setup]: https://redis.io/docs/manual/keyspace-notifications/#configuration
 
 ---
 
@@ -564,15 +697,3 @@ The goal is to detect when the cache is expired and to refresh it for the `produ
 ## Scaling 
 
 ## Security (RBAC + Private Endpoint ?)
-
----
-
-# Lab 5 : Cloud-Native Architectures (AKS / ACA)
-
-## TBD
-
----
-
-# Lab 6 : AI infused Caching 
-
-## TBD 
