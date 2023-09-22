@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import useLoginSimulation from './useLoginSimulation';
 
 export default function useFetch<ResponseDataType>(url: string, method?: 'GET' | 'POST', body?: object | undefined) {
     const [controller] = useState(new AbortController());
@@ -6,8 +7,13 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
     const [data, setData] = useState<ResponseDataType | undefined>();
     const [error, setError] = useState<any>();
     const [durationInMs, setDurationInMs] = useState<number | undefined>();
+    const [userId] = useLoginSimulation();
 
     useEffect(() => {
+        if (!userId) {
+            return () => {};
+        }
+
         (async () => {
             try {
                 const start = Date.now();
@@ -15,6 +21,9 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
                     signal: controller.signal,
                     method: method || 'GET',
                     body: body && !(body instanceof File) ? JSON.stringify(body) : body,
+                    headers: {
+                        'X-USER-ID': userId,
+                    },
                 };
 
                 const response = await fetch(url, options);
@@ -30,7 +39,7 @@ export default function useFetch<ResponseDataType>(url: string, method?: 'GET' |
         })();
   
         return () => controller.abort();
-    }, [url, method, body, controller]);
+    }, [url, method, body, userId, controller]);
 
     return [data, loading, error, durationInMs, controller];
 }
