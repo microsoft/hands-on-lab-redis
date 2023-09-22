@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "history_api": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7164",
+      "launchBrowser": false
+    }
+  }
+}
