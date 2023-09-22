@@ -16,7 +16,7 @@ namespace Microsoft.Azure.Functions.Worker.Redis.Samples
         }
 
         [Description("This function will be triggered when a message is published to the pubsubTest channel.")]
-        [FunctionName(nameof(PubSubTrigger))]
+        [Function(nameof(PubSubTrigger))]
         public static void PubSubTrigger(
             [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "PubSubChannelSample")] string message)
         {
@@ -24,7 +24,7 @@ namespace Microsoft.Azure.Functions.Worker.Redis.Samples
         }
 
         [Description("This function will be triggered when a message is published to the KeySpaceTest key.")]
-        [FunctionName(nameof(KeyspaceTrigger))]
+        [Function(nameof(KeyspaceTrigger))]
         public static void KeyspaceTrigger(
             [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyspace@0__:KeySample")] string message)
         {
@@ -33,7 +33,7 @@ namespace Microsoft.Azure.Functions.Worker.Redis.Samples
         }
 
         [Description("This function will be triggered when the DEL command is being executed")]
-        [FunctionName(nameof(KeyeventTrigger))]
+        [Function(nameof(KeyeventTrigger))]
         public static void KeyeventTrigger(
             [RedisPubSubTrigger(REDIS_CONNECTION_STRING, "__keyevent@0__:expired")] string message)
         {
@@ -41,7 +41,7 @@ namespace Microsoft.Azure.Functions.Worker.Redis.Samples
         }
 
         [Description("This function will be triggered when a change is being made to the listTest list.")]
-        [FunctionName(nameof(ListTrigger))]
+        [Function(nameof(ListTrigger))]
         public static void ListTrigger(
             [RedisListTrigger(REDIS_CONNECTION_STRING, "SampleList")] string entry)
         {
@@ -49,7 +49,7 @@ namespace Microsoft.Azure.Functions.Worker.Redis.Samples
         }
 
         [Description("This function will be triggered when a change is being made to the StreamTest Stream.")]
-        [FunctionName(nameof(StreamTrigger))]
+        [Function(nameof(StreamTrigger))]
         public static void StreamTrigger(
             [RedisStreamTrigger(REDIS_CONNECTION_STRING, "SampleStream")] string entry)
         {

@@ -12,7 +12,7 @@ namespace functions;
 public class RefreshProductsCache
 {
     private readonly ILogger _logger;
-    private readonly HttpClient _httpCatalogApiClient;
+    private readonly HttpClient _httpCatalogApimClient;
     private readonly IRedisService _redisService;
 
     public RefreshProductsCache(
@@ -20,7 +20,7 @@ public class RefreshProductsCache
         ILoggerFactory loggerFactory,
         IRedisService redisService)
     {
-        _httpCatalogApiClient = httpClientFactory.CreateClient(Const.CATALOG_API_CLIENT);
+        _httpCatalogApimClient = httpClientFactory.CreateClient(Const.CATALOG_API_CLIENT);
         _logger = loggerFactory.CreateLogger<RefreshProductsCache>();
         _redisService = redisService;
     }
@@ -34,8 +34,9 @@ public class RefreshProductsCache
         {
             _logger.LogInformation($"{key} just EXPIRED");
 
-            var result = await _httpCatalogApiClient.GetStringAsync("products");
-            await _redisService.Set(key, result);
+            var result = await _httpCatalogApimClient.GetStringAsync("products");
+
+            _logger.LogInformation($"Calling APIM Catalog endpoint to force products cache refreshing.");
         }
     }
 }

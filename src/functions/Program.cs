@@ -13,7 +13,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        string catalogApiUrl = Environment.GetEnvironmentVariable("CATALOG_API_URL");
+        string catalogApiUrl = Environment.GetEnvironmentVariable("CATALOG_APIM_URL");
 
         var host = new HostBuilder()
             .ConfigureFunctionsWorkerDefaults()

@@ -5,7 +5,7 @@ resource "azurerm_redis_cache" "this" {
   capacity            = 1
   family              = "P"
   sku_name            = "Premium"
-  enable_non_ssl_port = false
+  enable_non_ssl_port = true
   minimum_tls_version = "1.2"
 
   tags = local.tags
