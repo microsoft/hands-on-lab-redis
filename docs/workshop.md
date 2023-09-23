@@ -683,6 +683,58 @@ And then inside the **Monitor** tab you should see that the function was trigger
 
 You now have an Azure Function that is triggered every time the key `products:all` is expired and refresh the cache.
 
+## Tracking browsing history
+
+We have previously created a Function App which reacts to cache expiry by listening to keyspace events. In this second part of Lab3 we will create a second Function App which will consume Redis Streams and process incoming Stream entries.
+
+This new Function App will power an API for retrieving a user's browsing history, e.g. which products they have viewed recently.
+
+But before delving into the Function's code, let's first take a look the Streams we currently have at disposal.
+
+### Inspecting product views' stream
+
+TODO 1: describe how we can view the contents of the Redis Stream of productViews (where catalog-api is already publishing events) using the Console on the Azure portal, this includes the commands to execute to view steam contents.
+
+```sh
+# List streams
+SCAN 0 TYPE stream
+
+# View the list of stream items
+# We will be using the productViews stream
+XRANGE productViews - +
+```
+
+TODO 2: Add a reference to [RedisInsight](https://redis.com/redis-enterprise/redis-insight/)
+
+
+### Consuming product views' stream using Azure Functions
+
+TODO 1: introduce the history-func Function App and describe the steps needed to add the missing code responsible for triggering the function whenever a new item gets added to the stream.
+
+```csharp
+[RedisStreamTrigger("AZURE_REDIS_CONNECTION_STRING", "%PRODUCT_VIEWS_STREAM_NAME%")] string entry
+```
+
+TODO 2: describe how we can test this service using the HTTP endpoint `/history` while ensuring the `X-USER-ID` gets filled with the ID of the user for whom we want to fetch the browsing history.
+
+```sh
+curl \
+    --location 'http://localhost:7072/api/history' \
+    --header 'X-USER-ID: <Set the User ID here>'
+```
+
+### Deploying history-func to Azure
+
+```sh
+func azure functionapp publish <Function App Name>
+```
+
+### Viewing browsing history in the Web App
+
+TODO: describe that we need to fill the app setting `HISTORY_API` of the web app with the absolute url of the `/history` endpoint of `history-func` like what we previously did with the `CATALOG_API` app setting. Afterwards the candidate can view the browsing history by clicking on the UUID on the right of the web app navigation bar.
+
+
+
 [key-bindings]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redispubsub?tabs=in-process%2Cnode-v3%2Cpython-v1&pivots=programming-language-csharp#examples
 [key-notifications]: https://redis.io/docs/manual/keyspace-notifications/
 [azure-function-overview]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview?pivots=programming-language-csharp
