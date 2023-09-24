@@ -4,7 +4,7 @@
 npm install -g @azure/static-web-apps-cli
 
 # Prepare functions assets
-dotnet restore src/functions/Functions.csproj
+dotnet restore src/cache-refresh-func/CacheRefresh.Func.csproj
 
 # Prepare catalog-api assets
 cd src/catalog-api 
