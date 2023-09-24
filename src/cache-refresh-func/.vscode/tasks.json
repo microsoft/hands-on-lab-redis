@@ -64,7 +64,7 @@
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/functions"
+        "cwd": "${workspaceFolder}"
       }
     },
     {
