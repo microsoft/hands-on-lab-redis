@@ -30,15 +30,15 @@ Before starting this workshop, be sure you have:
 
 - An Azure Subscription with the **Contributor** role to create and manage the labs' resources and deploy the infrastructure as code
 - To run the different labs, you have 2 possibilities:
-    - Run everything using pre-configured GitHub Codespaces which will provide you a full environment with all the tools you need
+    - Run everything using pre-configured GitHub Codespaces which will provide you a full environment with all the tools ready to go
     - Use your own environment and install the tools needed to run the labs locally
 
 If you want's to run the labs locally, make sure you have:
-- Docker
+- [Docker Desktop][Docker-desktop]
 - [Visual Studio Code][vs-code] installed (you will use Dev Containers)
-- Git
-- A GitHub Account
-- The [Azure][azure-vs-code-extension]
+- [Git client][Git-client] 
+- [A GitHub Account][Github-account] (Free or Enterprise)
+- The [Azure Tools][azure-vs-code-extension] VS Code Extension
 
 <div class="task" data-title="Task">
 
@@ -81,7 +81,10 @@ az provider register --namespace 'Microsoft.Web'
 
 [az-cli-install]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 [az-func-core-tools]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools
+[Docker-desktop]: https://www.docker.com/products/docker-desktop/
 [vs-code]: https://code.visualstudio.com/
+[Git-client]: https://git-scm.com/downloads
+[Github-account]: https://github.com/join
 [azure-vs-code-extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack
 [az-portal]: https://portal.azure.com/signin/index/
 
