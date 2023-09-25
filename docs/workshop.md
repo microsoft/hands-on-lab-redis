@@ -733,12 +733,15 @@ There is a variety of tools which allows us to inspect Redis like the integrated
 <details>
 <summary>Toggle solution</summary>
 
-```sh
-# List streams
-SCAN 0 TYPE stream
+List all Redis keys having a type `stream`:
 
-# View the list of stream items
-# We will be using the productViews stream
+```sh
+SCAN 0 TYPE stream
+```
+
+View the list of stream items, we will be using the productViews stream:
+
+```sh
 XRANGE productViews - +
 ```
 </details>
