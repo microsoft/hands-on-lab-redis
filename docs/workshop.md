@@ -710,23 +710,22 @@ There is a variety of tools which allows us to inspect Redis like the integrated
 
 <div class="task" data-title="Task">
 
-> Locate the stream where `catalog-api` publishes product viewing events and inspect its contents using the `Redis Console` from the Azure portal.
->
-> View some products in the Web App and make sure that you see new items in the stream
+>  - Locate the stream where `catalog-api` publishes product viewing events and inspect its contents using the `Redis Console` from the Azure portal.
+>  - View some products in the Web App and make sure that you see new items in the stream
 
 </div>
 
 <div class="tip" data-title="Tips">
 
-> [Redis Console][redis-console]
-> [SCAN command][redis-scan-command]
-> [XRANGE command][redis-xrange-command]
+> - [Redis Console][redis-console]
+> - [SCAN command][redis-scan-command]
+> - [XRANGE command][redis-xrange-command]
 
 </div>
 
 [redis-console]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure#redis-console
-[scan-console]: https://redis.io/commands/scan/
-[xrange-console]: https://redis.io/commands/xrange/#--and--special-ids
+[redis-scan-command]: https://redis.io/commands/scan/
+[redis-xrange-command]: https://redis.io/commands/xrange/#--and--special-ids
 [redis-insight]: https://redis.com/redis-enterprise/redis-insight/
 
 
@@ -739,7 +738,7 @@ List all Redis keys having a type `stream`:
 SCAN 0 TYPE stream
 ```
 
-View the list of stream items, we will be using the productViews stream:
+View the list of stream items, we will be using the `productViews` stream:
 
 ```sh
 XRANGE productViews - +
@@ -759,8 +758,8 @@ Now that we have identified the product views' stream, we will need to update th
 
 <div class="tip" data-title="Tips">
 
-> [Sample of Azure Functions' triggers for Redis][redis-triggers-sample]
-> [RedisStreamTrigger][redis-stream-trigger]
+> - [Sample of Azure Functions' triggers for Redis][redis-triggers-sample]
+> - [RedisStreamTrigger][redis-stream-trigger]
 
 </div>
 
@@ -777,7 +776,12 @@ Update the method `StreamTrigger` and replace the trigger plaholder (the `TODO` 
 [RedisStreamTrigger("AZURE_REDIS_CONNECTION_STRING", "%PRODUCT_VIEWS_STREAM_NAME%")] string entry
 ```
 
+This will make the function trigger whenever there is a new item on the stream identified by the environment variable `PRODUCT_VIEWS_STREAM_NAME`.
+The environment variable `AZURE_REDIS_CONNECTION_STRING` is expected to contain the connection string of the Azure Cache for Redis instance.
+
 </details>
+
+### Testing the function locally
 
 Next, we need to ensure that our Function App works as expected and manages to process new events.
 
@@ -791,9 +795,8 @@ To do this, make sure that you have a `local.settings.json` file (a template is 
 
 <div class="tip" data-title="Tips">
 
-> Use a different port for the Function App (e.g. 7072) as the default port may already be used by the `catalog-api` or another function.
->
-> You can use [func start -p 7072][func-start] to listen on port 7072
+> - Use a different port for the Function App (e.g. 7072) as the default port may already be used by the `catalog-api` or another function.
+> - You can use [func start -p 7072][func-start] to listen on port 7072
 
 </div>
 
@@ -830,6 +833,8 @@ Once it starts, you can browse the Web App and ensure new product views' event p
 
 </details>
 
+### Retrieving user browsing history using an HTTP endpoint
+
 Lastly, let's check the HTTP endpoint of `history-func` and ensure that it returns all browsing history for a given user.
 
 <div class="task" data-title="Task">
@@ -838,12 +843,20 @@ Lastly, let's check the HTTP endpoint of `history-func` and ensure that it retur
 
 </div>
 
+<div class="tip" data-title="Tips">
+
+> The `/api/history` is expecting the user ID to be passed in the `X-USER-ID` header
+
+</div>
+
 <details>
 <summary>Toggle solution</summary>
 
 As the function app is already up and running, we can directly call the `/api/history` endpoint with a GET request and ensure the ID of the user for whom we want to get the history is defined in the `X-USER-ID` header.
 
-Before calling the endpoint, make sure to get a User ID by copying the UUID that you see on the top right of the Web App. You can also get it from the field `userId` in the stream data items. 
+![WebApp User ID](./assets/webapp-user-id.png)
+
+Before calling the endpoint, make sure to get a User ID by copying the UUID that you see on the top right of the Web App. You can also get it from the field `userId` in the stream data items.
 
 ```sh
 curl \
@@ -878,9 +891,8 @@ This will allow the Web App to communicate with our new History API to retrieve 
 
 <div class="task" data-title="Task">
 
-> Update the Web App's app setting `HISTORY_API` to point to the `/api/history` API endpoint of `history-func`.
->
-> Click on the UUID of the user on the top right of the Web App and make sure you can see your browsing history.
+> - Update the Web App's app setting `HISTORY_API` to point to the `/api/history` API endpoint of `history-func`.
+> - Click on the UUID of the user on the top right of the Web App and make sure you can see your browsing history.
 
 </div>
 
