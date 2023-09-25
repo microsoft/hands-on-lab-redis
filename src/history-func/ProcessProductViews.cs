@@ -26,6 +26,7 @@ namespace History.Api
         [Function(nameof(ProcessProductViews))]
         public async Task StreamTrigger(
             // TODO: Add the logic of the function trigger
+        )
         {
             _logger.LogInformation("Processing a new stream entry: {entry}", entry);
 
