@@ -1,14 +1,5 @@
-resource "azurerm_storage_account" "func" {
-  name                     = format("stfunc%s", local.resource_suffix_lowercase)
-  resource_group_name      = azurerm_resource_group.this.name
-  location                 = azurerm_resource_group.this.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  tags                     = local.tags
-}
-
-resource "azurerm_linux_function_app" "this" {
-  name                = format("func-%s", local.resource_suffix_kebabcase)
+resource "azurerm_linux_function_app" "func_history" {
+  name                = format("func-hist-%s", local.resource_suffix_kebabcase)
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
@@ -24,16 +15,16 @@ resource "azurerm_linux_function_app" "this" {
 
   app_settings = {
     FUNCTIONS_WORKER_RUNTIME              = "dotnet"
-    REDIS_CONNECTION_STRING               = azurerm_redis_cache.this.primary_connection_string
+    AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
     REDIS_PRODUCT_ALL                     = "products:all"
-    CATALOG_API_URL                       = azurerm_linux_web_app.this.default_hostname
+    CATALOG_API_URL                       = azurerm_api_management.this.gateway_url
     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.this.instrumentation_key
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.this.connection_string
   }
 
   site_config {
     application_stack {
-      dotnet_version = "6.0"
+      dotnet_version = "7.0"
     }
   }
 }

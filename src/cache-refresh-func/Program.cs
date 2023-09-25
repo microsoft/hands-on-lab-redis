@@ -4,10 +4,8 @@ using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.Functions.Worker.Extensions.Redis;
 using Microsoft.Extensions.DependencyInjection;
-using Services.Redis;
-using functions;
 
-namespace functions;
+namespace Func.RedisCache.Products;
 
 class Program
 {
@@ -28,7 +26,6 @@ class Program
                     }
                 )
                 .SetHandlerLifetime(TimeSpan.FromMinutes(10));
-                services.AddSingleton<IRedisService, RedisService>();
             })
 
             .Build();

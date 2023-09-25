@@ -1,4 +1,4 @@
-namespace functions;
+namespace Func.RedisCache.Products;
 
 internal class Const
 {
