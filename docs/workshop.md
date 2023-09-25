@@ -22,30 +22,50 @@ navigation_levels: 3
 
 Welcome to this Azure Cache for Redis Workshop. You will be experimenting with Azure Cache for Redis in multiple labs to discover how it's integrated to other Azure services by running a real world scenarios. Don't worry, even if the challenges will increase in difficulty, this is a step by step lab, you will be guided through the whole process.
 
-During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in provided resources and links before looking at the solutions placed under the 'Toggle solution' panel.
+During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in provided resources and links before looking at the solutions placed under the 'Toggle solution' panel for a challenged based learning experience.
 
 ## Prerequisites
 
-Before starting this workshop, be sure you have:
+Before starting this workshop, be sure to have:
 
 - An Azure Subscription with the **Contributor** role to create and manage the labs' resources and deploy the infrastructure as code
-- To run the different labs, you have 2 possibilities:
-    - Run everything using pre-configured GitHub Codespaces which will provide you a full environment with all the tools ready to go
-    - Use your own environment and install the tools needed to run the labs locally
+- Create a [fork][Repo-fork] of the repository to help you keep track of your changes
+- To run the different labs, you have 2 options: 
+    - Local Environment 
+    - Github Codespace 
+    
+### Use your own local environment 
 
-If you want's to run the labs locally, make sure you have:
+The following tools and access will be necessary to run the lab in good conditions on a local environment :  
+
 - [Docker Desktop][Docker-desktop]
 - [Visual Studio Code][vs-code] installed (you will use Dev Containers)
 - [Git client][Git-client] 
 - [A GitHub Account][Github-account] (Free or Enterprise)
-- The [Azure Tools][azure-vs-code-extension] VS Code Extension
 
-<div class="task" data-title="Task">
+### Using a pre-configured GitHub Codespace 
 
-> You will find the instructions and expected configurations for each Lab step in these yellow "Task" boxes.
-> Inputs and parameters to select will be defined, all the rest can remain as default as it has no impact on the scenario.
+Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
+The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
 
-</div>
+Every Github account (even the free ones) grants access to 120 vcpu hours per month, for free. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month!
+
+To get your codespace ready for the labs, here are a few steps to execute : 
+- After you forked the repo, click on `<> code`, `codespaces` tab and then click `+`
+
+![codespace-new](./assets/codespace-new.png)
+
+- After a few minutes, the codespace opens and you will have to open the Visual Studio Workspace to get all the tools ready. To do so, click the `burger menu` in the top left corner, `File` and then `open workspace from file...` 
+
+![codespace-workspace](./assets/codespace_terminal_new.png)
+
+- Select `.vscode/hands-on-lab-redis.code-workspace` : 
+
+![codespace-workspace-select](./assets/codespace-workspace-select.png)
+
+- You are now ready to go : For the rest of the lab, in case you lose the terminal, you can press `Ctrl + J` or open a new one here : 
+
+![codespace-terminal-new](./assets/codespace-terminal-new.png)
 
 Let's begin!
 
@@ -54,7 +74,7 @@ Let's begin!
 <div class="task" data-title="Task">
 
 > - Log into your Azure subscription locally using Azure CLI and on the [Azure Portal][az-portal] using your own credentials.
->
+> 
 > - Instructions and solutions will be given for the Azure CLI, but you can also use the Azure Portal if you prefer.
 > - Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.Web`
 
@@ -65,8 +85,13 @@ Let's begin!
 <summary>Toggle solution</summary>
 
 ```bash
-# Login to Azure
-az login
+# Login to Azure : Specifying the tenant is optional
+
+# Option 1 : Local Environment 
+az login --tenant <yourtenantid or domain.com>
+# Option 2 : Github Codespace : you might need to specify --use-device-code parameter to ease the az cli authentication process
+az login --use-device-code --tenant <yourtenantid or domain.com>
+
 # Display your account details
 az account show
 # Select your Azure subscription
@@ -79,10 +104,17 @@ az provider register --namespace 'Microsoft.Web'
 
 </details>
 
+<div class="task" data-title="Task">
+
+> You will find the instructions and expected configurations for each Lab step in these yellow "Task" boxes.
+> Inputs and parameters to select will be defined, all the rest can remain as default as it has no impact on the scenario.
+
+</div>
+
 [az-cli-install]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
-[az-func-core-tools]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools
 [Docker-desktop]: https://www.docker.com/products/docker-desktop/
 [vs-code]: https://code.visualstudio.com/
+[Repo-fork]: https://github.com/microsoft/hands-on-lab-redis/fork
 [Git-client]: https://git-scm.com/downloads
 [Github-account]: https://github.com/join
 [azure-vs-code-extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack
@@ -766,3 +798,5 @@ Take the time to dig in the toolbox offered by the Azure Portal to help you quic
 ![Redis-Diagnose-Problems](./assets/redis-diagnose-solve.png)
 
 ## Security (RBAC + Private Endpoint ?)
+
+Data Access roles 
