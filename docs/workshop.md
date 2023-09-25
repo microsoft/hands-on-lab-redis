@@ -43,7 +43,7 @@ The following tools and access will be necessary to run the lab in good conditio
 - [Git client][Git-client] 
 - [A GitHub Account][Github-account] (Free or Enterprise)
 
-TODO: DETAIL SETUP
+Once you have cloned the repository locally, open it using Visual Studio Code. You will be prompted to open the project in a Dev Container. Click on `Reopen in Container`. If you are not prompted, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it.
 
 ### Using a pre-configured GitHub Codespace 
 
