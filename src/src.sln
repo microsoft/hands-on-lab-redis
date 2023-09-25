@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Api", "catalog-api\Catalog.Api.csproj", "{507C62CC-43D0-4E40-A3DF-636C707A8518}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functions", "functions\Functions.csproj", "{239CE5CC-8D26-4E60-A245-08BD158FB48B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheRefresh.Func", "cache-refresh-func\CacheRefresh.Func.csproj", "{239CE5CC-8D26-4E60-A245-08BD158FB48B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

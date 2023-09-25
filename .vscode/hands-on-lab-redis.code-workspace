@@ -6,11 +6,11 @@
 		},
 		{
 			"path": "../src/catalog-api",
-			"name": "Lab 1 - API"
+			"name": "Web App - Catalog API"
 		},
 		{
 			"path": "../src/cache-refresh-func",
-			"name": "Lab 4 - Function Cache Refresh"
+			"name": "Function - Cache Refresh"
 		}
 	],
 	"settings": {

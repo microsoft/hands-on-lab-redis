@@ -16,7 +16,7 @@ resource "azurerm_linux_web_app" "this" {
     AZURE_COSMOS_DATABASE                 = "catalogdb"
     AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
     PRODUCT_LIST_CACHE_DISABLE            = "0"
-    SIMULATED_DB_LATENCY_IN_SECONDS       = "0"
+    SIMULATED_DB_LATENCY_IN_SECONDS       = "2"
     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.this.instrumentation_key
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.this.connection_string
   }
@@ -25,5 +25,12 @@ resource "azurerm_linux_web_app" "this" {
     application_stack {
       dotnet_version = "7.0"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      site_config["application_insights_connection_string"],
+      site_config["application_insights_key"]
+    ]
   }
 }
