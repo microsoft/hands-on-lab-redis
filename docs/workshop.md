@@ -531,6 +531,14 @@ You can now test your API again with Postman or the HTTP REST file like previous
 
 # Lab 3 : Event-Driven Architecture 
 
+In this lab we will see how to create cloud-native applications which can integrate with Azure Cache for Redis.
+
+For instance we will create 2 Function Apps which react to changes in Redis to perform an action:
+- `cache-refresh-func`: detect expired cache keys and trigger a cache warm up to re-populate them
+- `history-func`: process browsing history events from a Redis Stream and expose them via an HTTP API
+
+## Lab 3.1: cache-refresh-func
+
 In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired before the data is requested by the user.
 
 The idea is to use an [Azure Function][azure-function-overview] triggered by an Azure Cache for Redis event to refresh the cache when the data expired.
@@ -544,7 +552,7 @@ Azure Functions are event-driven and triggered by events from various sources. T
 
 Azure Functions run on the App Service platform, which provides features such as deployment slots, continuous deployment, HTTPS support, and hybrid connections. They can be deployed in the Consumption (Serverless), dedicated App Service Plan, or Premium Plan models.
 
-## Keyspace Notifications
+### Keyspace Notifications
 
 While Azure Cache for Redis manages the wraping of Keyspace events, it's mandatory to detail the event types you're interested in.
 
@@ -558,11 +566,11 @@ To do so, you'll set the maximum level of notification possible to notify all th
 
 </div>
 
-## Redis Triggered Azure Function
+### Redis Triggered Azure Function
 
 Open the Azure Function project in Visual Studio Code which is under `src/functions` and go to the `RefreshProductsCache.cs`. You will discover a method called `ProductsEventsTrigger` which is empty.
 
-This methods has an attribute called `RedisPubSubTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
+This method has an attribute called `RedisPubSubTrigger` which is used to trigger the function when an event is raised by the Azure Cache for Redis.
 
 <div class="task" data-title="Tasks">
 
@@ -594,7 +602,7 @@ public async Task ProductsEventsTrigger(
 
 </details>
 
-## Refresh the Redis Cache
+### Refresh the Redis Cache
 
 Now that we have defined the conditions to trigger the function, we need to implement the logic to refresh the cache.
 
@@ -640,7 +648,9 @@ Then you need to set the `AZURE_REDIS_CONNECTION_STRING` environment variable to
 
 The connection string for your Azure Cache for Redis can be found in the Azure Portal. Select your Azure Cache for Redis resource and in the left menu, click on **Access keys**. Then copy the value of the `Primary connection string` into your `local.settings.json` file.
 
-![Azure Cache for Redis connection string](./assets/azure-cache-for-redis-connection-string.png)
+![Azure Cache for Redis connection string][azure-cache-for-redis-connection-string]
+
+[azure-cache-for-redis-connection-string]: ./assets/azure-cache-for-redis-connection-string.png
 
 And to set the `CATALOG_API_URL` environment variable, go to your resource group, search the App service, select it and in the left menu, click on **Overview**. Then copy the **Default Domain** url of your App Service.
 
@@ -652,9 +662,9 @@ In VS Code just run the Azure Function by clicking on the **Run** button:
 
 </details>
 
-## Deploy the Azure Function
+### Deploy the Azure Function
 
-### Deploy your function using the VS Code
+#### Deploy your function using the VS Code
 
 - Open the Azure extension in VS Code left panel
 - Make sure you're signed in to your Azure account
@@ -663,7 +673,7 @@ In VS Code just run the Azure Function by clicking on the **Run** button:
 
 ![Deploy to Function App](./assets/function-app-deploy.png)
 
-### Deployment via Azure Function Core Tools
+#### Deployment via Azure Function Core Tools
 
 Deploy your function using the VS Code extension or by command line:
 
@@ -671,7 +681,7 @@ Deploy your function using the VS Code extension or by command line:
 func azure functionapp publish <NAME_OF_YOUR_FUNCTION_APP>
 ```
 
-### Test the Azure Function
+#### Test the Azure Function
 
 Now if you go to your Azure Function resource, in the **Overview** tab select your function:
 
@@ -683,7 +693,7 @@ And then inside the **Monitor** tab you should see that the function was trigger
 
 You now have an Azure Function that is triggered every time the key `products:all` is expired and refresh the cache.
 
-## Tracking browsing history
+## Lab 3.2: history-func
 
 We have previously created a Function App which reacts to cache expiry by listening to keyspace events. In this second part of Lab3 we will create a second Function App which will consume Redis Streams and process incoming Stream entries.
 
@@ -693,7 +703,35 @@ But before delving into the Function's code, let's first take a look the Streams
 
 ### Inspecting product views' stream
 
-TODO 1: describe how we can view the contents of the Redis Stream of productViews (where catalog-api is already publishing events) using the Console on the Azure portal, this includes the commands to execute to view steam contents.
+First thing first, let's take a look at the data currently available on our Azure Cache for Redis instance.
+
+There is a variety of tools which allows us to inspect Redis like the integrated [Redis Console][redis-console] and also the fully-featured GUI [RedisInsight][redis-insight].
+
+
+<div class="task" data-title="Task">
+
+> Locate the stream where `catalog-api` publishes product viewing events and inspect its contents using the `Redis Console` from the Azure portal.
+>
+> View some products in the Web App and make sure that you see new items in the stream
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Redis Console][redis-console]
+> [SCAN command][redis-scan-command]
+> [XRANGE command][redis-xrange-command]
+
+</div>
+
+[redis-console]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure#redis-console
+[scan-console]: https://redis.io/commands/scan/
+[xrange-console]: https://redis.io/commands/xrange/#--and--special-ids
+[redis-insight]: https://redis.com/redis-enterprise/redis-insight/
+
+
+<details>
+<summary>Toggle solution</summary>
 
 ```sh
 # List streams
@@ -703,35 +741,159 @@ SCAN 0 TYPE stream
 # We will be using the productViews stream
 XRANGE productViews - +
 ```
-
-TODO 2: Add a reference to [RedisInsight](https://redis.com/redis-enterprise/redis-insight/)
+</details>
 
 
 ### Consuming product views' stream using Azure Functions
 
-TODO 1: introduce the history-func Function App and describe the steps needed to add the missing code responsible for triggering the function whenever a new item gets added to the stream.
+Now that we have identified the product views' stream, we will need to update the `history-func` Function App to get triggered whenever a new event gets published to the stream.
+
+<div class="task" data-title="Task">
+
+> Update the trigger of the function defined in `src/history-func/ProcessProductViews.cs` so that it listens to news items in the product views' stream
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Sample of Azure Functions' triggers for Redis][redis-triggers-sample]
+> [RedisStreamTrigger][redis-stream-trigger]
+
+</div>
+
+[redis-triggers-sample]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-tutorial-functions-getting-started#set-up-the-example-code
+[redis-stream-trigger]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redisstream
+
+
+<details>
+<summary>Toggle solution</summary>
+
+Update the method `StreamTrigger` and replace the trigger plaholder (the `TODO` comment) with the following code: 
 
 ```csharp
 [RedisStreamTrigger("AZURE_REDIS_CONNECTION_STRING", "%PRODUCT_VIEWS_STREAM_NAME%")] string entry
 ```
 
-TODO 2: describe how we can test this service using the HTTP endpoint `/history` while ensuring the `X-USER-ID` gets filled with the ID of the user for whom we want to fetch the browsing history.
+</details>
+
+Next, we need to ensure that our Function App works as expected and manages to process new events.
+
+To do this, make sure that you have a `local.settings.json` file (a template is available in `src/history-func/local.settings.json.template`), run the function locally, then view a new product in the web app and make sure that you see a new event being processed in the Function App.
+
+<div class="task" data-title="Task">
+
+> Run the `src/history-func` Function App locally and it ensure it gets triggered whenever you view new products in the Web App
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> Use a different port for the Function App (e.g. 7072) as the default port may already be used by the `catalog-api` or another function.
+>
+> You can use [func start -p 7072][func-start] to listen on port 7072
+
+</div>
+
+[func-start]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-core-tools-reference?tabs=v2#func-start
+
+<details>
+<summary>Toggle solution</summary>
+
+First, we will start by creating a new `local.settings.json` file.
+
+```sh
+# Go to the root of the history-func Function App
+cd src/history-func
+
+# Create a local.settings.json file from the template
+cp local.settings.json.template local.settings.json
+```
+
+Then we need to update the value of `AZURE_REDIS_CONNECTION_STRING` using the same connection string from the `cache-refresh-func` Function App.
+
+![Azure Cache for Redis connection string][azure-cache-for-redis-connection-string]
+
+Now that we have the required config, we can run the function:
+
+```sh
+# Load all dependencies
+dotnet restore
+
+# Start the Function App
+func start -p 7072
+```
+
+Once it starts, you can browse the Web App and ensure new product views' event processing logs appear on your terminal.
+
+</details>
+
+Lastly, let's check the HTTP endpoint of `history-func` and ensure that it returns all browsing history for a given user.
+
+<div class="task" data-title="Task">
+
+> Call the `/api/history` endpoint and ensure it returns the latest products that you have viewed on the Web App
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+As the function app is already up and running, we can directly call the `/api/history` endpoint with a GET request and ensure the ID of the user for whom we want to get the history is defined in the `X-USER-ID` header.
+
+Before calling the endpoint, make sure to get a User ID by copying the UUID that you see on the top right of the Web App. You can also get it from the field `userId` in the stream data items. 
 
 ```sh
 curl \
     --location 'http://localhost:7072/api/history' \
     --header 'X-USER-ID: <Set the User ID here>'
 ```
+</details>
 
 ### Deploying history-func to Azure
 
+We have confirmed that our code is working fine locally, so now we can proceed to the next step: deploying it to Azure.
+
+<div class="task" data-title="Task">
+
+> Deploy the `history-func` app to Azure
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
 ```sh
-func azure functionapp publish <Function App Name>
+func azure functionapp publish <NAME_OF_YOUR_HISTORY_FUNCTION_APP>
 ```
+</details>
 
 ### Viewing browsing history in the Web App
 
-TODO: describe that we need to fill the app setting `HISTORY_API` of the web app with the absolute url of the `/history` endpoint of `history-func` like what we previously did with the `CATALOG_API` app setting. Afterwards the candidate can view the browsing history by clicking on the UUID on the right of the web app navigation bar.
+In this last part, we will wire the newly deployed `history-func` app to the Web App using the app setting `HISTORY_API`.
+
+This will allow the Web App to communicate with our new History API to retrieve and display the current user's browsing history.
+
+<div class="task" data-title="Task">
+
+> Update the Web App's app setting `HISTORY_API` to point to the `/api/history` API endpoint of `history-func`.
+>
+> Click on the UUID of the user on the top right of the Web App and make sure you can see your browsing history.
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Follow the steps below:
+- Go to the Static Web App resource in the Azure Portal
+- Navigate to the `Configuration` menu on the left
+- Add a new app setting named `HISTORY_API` and set the value to the url of the `GetBrowsingHistory` (Function defined within the `history-func` Function App)
+- Hit `Save` and wait for the Static Web App to reload
+- Open the url of the Static Web App
+- Click on the UUID of the user, which appears on the top right of the page
+- Ensure you can see the latest products that you have viewed
+
+</details>
 
 
 
