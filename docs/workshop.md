@@ -48,16 +48,16 @@ The following tools and access will be necessary to run the lab in good conditio
 Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
 The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
 
-Every Github account (even the free ones) grants access to 120 vcpu hours per month, for free. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month!
+Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
 To get your codespace ready for the labs, here are a few steps to execute : 
 - After you forked the repo, click on `<> code`, `codespaces` tab and then click `+`
 
 ![codespace-new](./assets/codespace-new.png)
 
-- After a few minutes, the codespace opens and you will have to open the Visual Studio Workspace to get all the tools ready. To do so, click the `burger menu` in the top left corner, `File` and then `open workspace from file...` 
+- After a few minutes, the codespace opens and you will have to open the Visual Studio Workspace to get all the tools ready. To do so, click the `burger menu` in the top left corner, `File` and then `Open Workspace from File...` 
 
-![codespace-workspace](./assets/codespace_terminal_new.png)
+![codespace-workspace](./assets/codespace-workspace.png)
 
 - Select `.vscode/hands-on-lab-redis.code-workspace` : 
 
