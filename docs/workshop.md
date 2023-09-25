@@ -700,20 +700,25 @@ You now have an Azure Function that is triggered every time the key `products:al
 
 # Lab 4 : Azure Cache for Redis Governance 
 
+In this lab you will discover how to retreive metrics and logs from Azure Cache for Redis to monitor the health of the resource and take informed decisions about its sizing.
+
 ## Azure Monitor 
 
-DRAFT : 
-=======
+To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) tool installed in the devcontainer.
 
-[Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) installed in the devcontainer is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
+Redis Benchmark is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
 
-You can execute the following command to generate some load on the Azure Cache for Redis resource with the following command : 
+To authenticate to your Azure Cache for Redis resource you will need an access key. Go to the Azure Portal and inside the Azure Cache for Redis resource in the left menu, click on **Access keys** and copy the `Primary` or `Secondary` key. 
+
+Next, to generate some load on the Azure Cache for Redis resource use the following command : 
 
 ```bash
-# Redis Benchmark will send 1 million "SET" queries of 1kb each from 300 parallel connections
-# In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources   
 redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 1000000 -d 1024 -c 300 --threads 2 
 ```
+
+Redis Benchmark will send 1 million `SET` queries of 1KB each from 300 parallel connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
+
+When the benchmark is done, you should see this kind of results :
 
 ![Redi-Benchmark-results](./assets/redis-benchmark-results.png)
 
@@ -721,7 +726,7 @@ About 5 minutes after the benchmark has successfully ended, open the Azure Porta
 
 ![Redis-Insights-Overview](./assets/redis-insights-overview.png)
 
-And check how the resource performed under load : 
+And then inside the **Performance** tab you can check how the resource performed under load : 
 
 ![Redis-Insights-Performance](./assets/redis-insights-performance.png)
 
