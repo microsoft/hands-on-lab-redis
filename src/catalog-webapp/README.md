@@ -12,6 +12,6 @@ npm install
 npm run swa:build
 
 # Run the web app and use the local API
-CATALOG_API=http://127.0.0.1:5076 HISTORY_API=http://127.0.0.1:7072/api npm run swa:start
+CATALOG_API=http://127.0.0.1:5076 HISTORY_API=http://127.0.0.1:7072/api/history npm run swa:start
 ```
 

@@ -889,6 +889,8 @@ In this last part, we will wire the newly deployed `history-func` app to the Web
 
 This will allow the Web App to communicate with our new History API to retrieve and display the current user's browsing history.
 
+![WebApp browsing history](./assets/webapp-browsing-history.png)
+
 <div class="task" data-title="Task">
 
 > - Update the Web App's app setting `HISTORY_API` to point to the `/api/history` API endpoint of `history-func`.
