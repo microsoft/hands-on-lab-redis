@@ -74,9 +74,8 @@ Let's begin!
 <div class="task" data-title="Task">
 
 > - Log into your Azure subscription locally using Azure CLI and on the [Azure Portal][az-portal] using your own credentials.
-> 
 > - Instructions and solutions will be given for the Azure CLI, but you can also use the Azure Portal if you prefer.
-> - Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.Web`
+> - Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.Web`, `Microsoft.OperationalInsights`, `Microsoft.Cache`, `Microsoft.ApiManagement`, `Microsoft.DocumentDB`
 
 </div>
 
@@ -98,8 +97,18 @@ az account show
 az account set --subscription <subscription-id>
 
 # Register the following Azure providers if they are not already
-# Azure Functions
+# App Service & Azure Functions
 az provider register --namespace 'Microsoft.Web'
+# Azure Monitor
+az provider register --namespace 'Microsoft.OperationalInsights'
+# Azure Cache for Redis
+az provider register --namespace 'Microsoft.Cache'
+# API Management
+az provider register --namespace 'Microsoft.ApiManagement'
+# Azure CosmosDb 
+az provider register --namespace 'Microsoft.DocumentDB'
+
+
 ```
 
 </details>
@@ -685,7 +694,7 @@ To set the `CATALOG_API_URL` environment variable, go to your resource group, se
 ![Apim gateway url](./assets/apim-gateway-url.png)
 
 To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
-1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite : start` and select this option
+1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite : start` and select this option : 
 
 ![Azurite Start](./assets/azurite-start.png)
 
