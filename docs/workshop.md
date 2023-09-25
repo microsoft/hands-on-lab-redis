@@ -22,17 +22,17 @@ navigation_levels: 3
 
 Welcome to this Azure Cache for Redis Workshop. You will be experimenting with Azure Cache for Redis in multiple labs to discover how it's integrated to other Azure services by running a real world scenarios. Don't worry, even if the challenges will increase in difficulty, this is a step by step lab, you will be guided through the whole process.
 
-During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in provided resources and links before looking at the solutions placed under the 'Toggle solution' panel for a challenged based learning experience.
+During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in the provided resources and links before looking at the solutions placed under the **Toggle solution** panel for a challenged based learning experience.
 
 ## Prerequisites
 
 Before starting this workshop, be sure to have:
 
 - An Azure Subscription with the **Contributor** role to create and manage the labs' resources and deploy the infrastructure as code
-- Create a [fork][Repo-fork] of the repository to help you keep track of your changes
+- Create a [fork][Repo-fork] of the repository from the **main** branch to help you keep track of your changes
 - To run the different labs, you have 2 options: 
-    - Local Environment 
-    - Github Codespace 
+    - Use a local environment 
+    - Use a Github Codespace
     
 ### Use your own local environment 
 
@@ -43,6 +43,8 @@ The following tools and access will be necessary to run the lab in good conditio
 - [Git client][Git-client] 
 - [A GitHub Account][Github-account] (Free or Enterprise)
 
+TODO: DETAIL SETUP
+
 ### Using a pre-configured GitHub Codespace 
 
 Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
@@ -51,7 +53,7 @@ The configuration for the environment is defined in the `.devcontainer` folder, 
 Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
 To get your codespace ready for the labs, here are a few steps to execute : 
-- After you forked the repo, click on `<> code`, `codespaces` tab and then click `+`
+- After you forked the repo, click on `<> Code`, `Codespaces` tab and then click on the `+` button:
 
 ![codespace-new](./assets/codespace-new.png)
 
@@ -63,7 +65,7 @@ To get your codespace ready for the labs, here are a few steps to execute :
 
 ![codespace-workspace-select](./assets/codespace-workspace-select.png)
 
-- You are now ready to go : For the rest of the lab, in case you lose the terminal, you can press `Ctrl + J` or open a new one here : 
+- You are now ready to go! For the rest of the lab, in case you lose the terminal, you can press `Ctrl + J` or open a new one here : 
 
 ![codespace-terminal-new](./assets/codespace-terminal-new.png)
 
@@ -107,8 +109,6 @@ az provider register --namespace 'Microsoft.Cache'
 az provider register --namespace 'Microsoft.ApiManagement'
 # Azure CosmosDb 
 az provider register --namespace 'Microsoft.DocumentDB'
-
-
 ```
 
 </details>
@@ -135,12 +135,12 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 ## Setting up the infrastructure in Azure
 
-First thing you need to do is to fork the [repository][hands-on-lab-github-fork] and clone it. Open the devcontainer or the GitHub Codespaces inside the `terraform` folder, which contains the infrastructure as code that needs to be deployed to do this Hands On Lab. This will deploy a series of Azure services that you will use in combination with Azure Cache for Redis.
+If you look at the project, you will see a `terraform` folder. It contains the infrastructure as code that you will use to deploy the infrastructure of this Hands On Lab. This will deploy a series of Azure services that you will use in combination with Azure Cache for Redis.
 
 In a terminal run the following command to initialize terraform:
 
 ```bash
-terraform init
+cd terraform && terraform init
 ```
 
 Then to deploy the infrastructure:
@@ -220,7 +220,7 @@ exists key1
 To delete a specific key in Redis, run the command:
 
 ```bash
-del key
+del key1
 ```
 
 Run the following commands to set a key with an expiration of 10 seconds in Redis:
@@ -252,7 +252,6 @@ To summarize, you can use the following basic commands to interact with Redis:
 - `ping`: Ping the server. Returns `PONG`.
 
 [database-seed-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/database-sample-data.zip
-[hands-on-lab-github-fork]: https://github.com/microsoft/hands-on-lab-redis/fork
 
 ---
 
@@ -262,16 +261,18 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 ## Run the API
 
-Open the `src/catalog-api` folder in Visual Studio Code using the devcontainer or the GitHub Codespaces.
+Open the `src/catalog-api` folder in Visual Studio Code using the devcontainer or the GitHub Codespace.
 
 For the purpose of this lab you will have to add a delay for the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds after a few calls so you wont be able to see the difference between the response time with and without the cache after a few retry.
 
-To do this, copy the entire content of the `appsettings.json.template` into the `appsettings.Developement.json` file and add set the `SIMULATED_DB_LATENCY_IN_SECONDS` value to `2`.
+To do this, copy the entire content of the `appsettings.json.template` into a new file called `appsettings.Development.json` at the same level and add set the `SIMULATED_DB_LATENCY_IN_SECONDS` value to `2`.
 
 <div class="task" data-title="Task">
 
-> - Run the API locally or use the provided GitHub Codespaces.
-> - Call the `/products` endpoints to confirm that the API is working
+> - Run the API locally or using the provided GitHub Codespace.
+> - Set the Cosmos Db connection string in the `appsettings.Development.json` file
+> - Set the Redis connection string in the `appsettings.Development.json` file
+> - Call the GET `/products` endpoints to confirm that the API is working
 
 </div>
 
@@ -291,6 +292,14 @@ Then, run the following command to run the API:
 dotnet run
 ```
 
+Inside the Azure Portal, go to your resource group, search the Cosmos DB account, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and paste it in the `appsettings.Development.json` file:
+
+![Cosmos DB Keys](./assets/cosmos-db-keys.png)
+
+Then inside the Azure Portal, go to your resource group, search the Azure Cache for Redis, select it and in the left menu, click on **Access keys**. Then copy the **Primary Connection String** and paste it in the `appsettings.Development.json` file:
+
+![Azure Cache for Redis Keys](./assets/azure-cache-for-redis-keys.png)
+
 Then go to the following url: http://localhost:5076/products and you should see the list of products.
 </details>
 
@@ -302,7 +311,7 @@ The goal of this part is to setup the Azure Cache for Redis in your API and to u
 
 If you open it you will see two methods:
 - `GetProductsAsync`: This method is used to get the products from the cache
-- `SetProductsAsync`. This method is used to set the products in the cache. 
+- `SetProductsAsync`. This method is used to set the products in the cache
 
 They both use the `IRedisService` interface to interact with the cache and use the mechanism of serialization/deserialization to store and retrieve the data.
 
@@ -310,14 +319,13 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 > - Now, open the `ProductEndpoints.cs`
 > - Use the `IProductCacheService` to setup the cache in the `/products` endpoint
-> - Don't forget to fill the missing values inside the `appsettings.Developement.json` to be able to connect to your Azure Cache for Redis **and** Cosmos Db
 
 </div>
 
 <details>
 <summary>Toggle solution</summary>
 
-Now, open the `ProductEndpoints.cs` and in the endpoint `/products` use the `IProductCacheService` to retreive the products from the cache. If some products are found in the cache, return them directly: 
+Inside the `ProductEndpoints.cs` and in the endpoint `/products` use the `IProductCacheService` to retreive the products from the cache. If some products are found in the cache, return them directly: 
 
 ```csharp
 IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
@@ -363,7 +371,7 @@ app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheServic
 });
 ```
 
-Now, if you run your API again using Postman or the HTTP REST file, and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds!
+Now, if you run your API again and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds!
 </details>
 
 ## Deploy the API to Azure
@@ -381,8 +389,6 @@ Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a
 When it's done go to your App Service resource on Azure and click on the **Browse** button. Navigate to the `/products` endpoint and you should see the list of products:
 
 ![App Service browse](./assets/app-service-browse.png)
-
-Of course you can do it using Postman or the HTTP REST file inside the `src/payloads` folder of this Hands On Lab repository.
 
 [api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 [stackexchange-redis]: https://www.nuget.org/packages/StackExchange.Redis
@@ -465,21 +471,14 @@ Now that you have your Azure Cache for Redis connected to your APIM, you need to
 
 </div>
 
-[cache-lookup-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-policy
-[cache-store-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-store-policy
-
 <details>
 <summary>Toggle solution</summary>
 
 To be able to compare the performance of your API with and without the cache, you will first call it without the cache using [Postman][postman-link] or using the `products.http` inside the `Payloads` folder.
 
-To do so, go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **APIs**. You will see a **Products** API with a **Get Products** operation:
+To do so, go to your resource group, search the API Management service (APIM) and copy the name of the resource into the `products.http`.
 
-![APIM APIs](./assets/apim-api-get-products.png)
-
-Go to the **Test** tab of the **Get Products** operation in your APIM and take the generated url inside the `Request URL` section.
-
-Now using Postman or HTTP REST file for instance you should see the response time of your API taking multiples seconds:
+Now using HTTP REST file for instance you should see the response time of your API taking multiples seconds:
 
 ![HTTP REST get products](./assets/apim-http-rest-before-caching.png)
 
@@ -519,16 +518,24 @@ Then click on the **Save** button.
 
 </div>
 
+<div class="tip" data-title="Tips">
+
+> You can find more information about the cache policies here:<br>
+> [Cache Lookup Value Policy][cache-lookup-value-policy]<br>
+> [Cache Store Value Policy][cache-store-value-policy]
+
+</div>
+
 <details>
 <summary>Toggle solution</summary>
 
-To cache only the **Get Products** operation you need to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` `cache-store-value`. They are a bit different from the previous policies as they allow you to specify the key to use in the cache.
+To cache only the **Get Products** operation you need to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` and `cache-store-value`. They are a bit different from the previous policies as they allow you to specify the key to use in the cache.
 
 This time, you will need to edit the policy manually. So go to the **Get Products** operation and click one of the **Policy code editor** button:
 
 ![APIM policy code editor](./assets/apim-policy-code-editor.png)
 
-Then, inside the editor replace the inbound block of the policy with the following content:
+Then, inside the editor replace the `inbound` block of the policy with the following content:
 
 ```xml
 <inbound>
@@ -570,6 +577,12 @@ You can now test your API again with Postman or the HTTP REST file like previous
 
 [postman-link]: https://www.postman.com/
 </details>
+
+[cache-lookup-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-policy
+[cache-store-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-store-policy
+[cache-lookup-value-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-value-policy
+[cache-store-value-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-store-value-policy
+
 
 ---
 
@@ -694,7 +707,7 @@ To set the `CATALOG_API_URL` environment variable, go to your resource group, se
 ![Apim gateway url](./assets/apim-gateway-url.png)
 
 To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
-1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite : start` and select this option : 
+1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite: Start` and select this option : 
 
 ![Azurite Start](./assets/azurite-start.png)
 
@@ -711,7 +724,7 @@ To debug the Cache Refresh Azure Function in VS Code, you will need to start Azu
 - Open the Azure extension in VS Code left panel
 - Make sure you're signed in to your Azure account
 - Open the Function App panel
-- Right click on your function app and select `Deploy to Function App...`
+- Right click on your function app that start with `func-cache` and select `Deploy to Function App...`
 
 ![Deploy to Function App](./assets/function-app-deploy.png)
 
@@ -729,7 +742,7 @@ Now if you go to your Azure Function resource, in the **Overview** tab select yo
 
 ![Azure Function overview](./assets/azure-function-overview.png)
 
-And then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
+Do a few call to set a value in the cache with your `products.http` file and then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
 
 ![Azure Function logs](./assets/azure-function-logs.png)
 

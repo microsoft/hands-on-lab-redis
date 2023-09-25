@@ -1,5 +1,5 @@
-@apimEndpoint = apim-dev-we-rds-17d3.azure-api.net/products
-@products = people
+@apimEndpoint = <YOUR-APIM-RESOURCE-NAME>.azure-api.net/products
+@products = products
 @typeJson = Accept: application/json
 
 ###

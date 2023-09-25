@@ -24,12 +24,20 @@ resource "azurerm_cosmosdb_sql_role_assignment" "app_service" {
   scope               = azurerm_cosmosdb_account.this.id
 }
 
-// Function App
+// Function Apps
 
-resource "azurerm_cosmosdb_sql_role_assignment" "function_app" {
+resource "azurerm_cosmosdb_sql_role_assignment" "function_app_cache" {
   resource_group_name = azurerm_resource_group.this.name
   account_name        = azurerm_cosmosdb_account.this.name
   role_definition_id  = azurerm_cosmosdb_sql_role_definition.this.id
-  principal_id        = azurerm_linux_function_app.this.identity[0].principal_id
+  principal_id        = azurerm_linux_function_app.func_cache.identity[0].principal_id
+  scope               = azurerm_cosmosdb_account.this.id
+}
+
+resource "azurerm_cosmosdb_sql_role_assignment" "function_app_history" {
+  resource_group_name = azurerm_resource_group.this.name
+  account_name        = azurerm_cosmosdb_account.this.name
+  role_definition_id  = azurerm_cosmosdb_sql_role_definition.this.id
+  principal_id        = azurerm_linux_function_app.func_history.identity[0].principal_id
   scope               = azurerm_cosmosdb_account.this.id
 }

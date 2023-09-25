@@ -1,14 +1,5 @@
-resource "azurerm_storage_account" "func" {
-  name                     = format("stfunc%s", local.resource_suffix_lowercase)
-  resource_group_name      = azurerm_resource_group.this.name
-  location                 = azurerm_resource_group.this.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  tags                     = local.tags
-}
-
-resource "azurerm_linux_function_app" "this" {
-  name                = format("func-%s", local.resource_suffix_kebabcase)
+resource "azurerm_linux_function_app" "func_history" {
+  name                = format("func-hist-%s", local.resource_suffix_kebabcase)
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
@@ -33,7 +24,7 @@ resource "azurerm_linux_function_app" "this" {
 
   site_config {
     application_stack {
-      dotnet_version = "6.0"
+      dotnet_version = "7.0"
     }
   }
 }
