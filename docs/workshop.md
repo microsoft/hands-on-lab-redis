@@ -735,14 +735,34 @@ And then inside the **Performance** tab you can check how the resource performed
 
 These metrics are available out of the box, with any Azure Cache for Redis SKU and are precious insights to take informed decisions concerning the sizing of the your caching resource.
 
-The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilities to guarantee necessary caching resources at all times. You can also enable clustering on Azure Cache for Redis `Premium` SKU and take advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node provisionning. 
+The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilities to guarantee necessary caching resources at all times. 
+
+Currently, only the Enterprise SKU support the `autoscaling` feature. However, you can do it manually using the `Premium` SKY with the cluster option and take advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node and shard provisionning. 
+
+## Alert scaling
+
+Let's create an alert within Azure Monitor to trigger an action when the CPU usage of the Azure Cache for Redis resource is above 40% for more than 1 minute. When the alert is triggered, you will scale your Azure Cache for Redis resource to add one more node to the cluster.
+
+In a real world scenario you will also add an alert to scale down the resource when the CPU usage is below a given percentage.
+
+Open the Azure Portal on your Azure Cache for Redis resource and open the **Alerts** panel.
+
+Then click on the **Create alert rule** button, in the condition tab select `CPU` and fill the form with the following information:
+
+*Details* 
+
+Once the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) tool like you did before.
+
+Run the following command:
+
+```bash
+redis-benchmark
+```
 
 *Details* 
 
 Take the time to dig in the toolbox offered by the Azure Portal to help you quickly **diagnose and solve problems** with the configuration of the resource or the connected clients : 
 
 ![Redis-Diagnose-Problems](./assets/redis-diagnose-solve.png)
-
-## Scaling 
 
 ## Security (RBAC + Private Endpoint ?)
