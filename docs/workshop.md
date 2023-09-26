@@ -31,7 +31,7 @@ Before starting this workshop, be sure to have:
 - An Azure Subscription with the **Contributor** role to create and manage the labs' resources and deploy the infrastructure as code
 - Create a [fork][Repo-fork] of the repository from the **main** branch to help you keep track of your changes
 - To run the different labs, you have 2 options: 
-    - Use a local environment 
+    - Use a devcontainer locally 
     - Use a Github Codespace
     
 ### Use your own local environment 
@@ -43,12 +43,23 @@ The following tools and access will be necessary to run the lab in good conditio
 - [Git client][Git-client] 
 - [A GitHub Account][Github-account] (Free or Enterprise)
 
-Once you have cloned the repository locally, open it using Visual Studio Code. You will be prompted to open the project in a Dev Container. Click on `Reopen in Container`. If you are not prompted, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it.
+Once you have cloned the repository locally, make sure Docker Desktop is up an running open your environment and open the cloned repository in Visual Studio Code. 
+You will be prompted to open the project in a Dev Container. Click on `Reopen in Container`. 
+
+If you are not prompted by Visual Studio Code, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it: 
+
+![devcontainer-reopen](./assets/devcontainer-reopen.png)
+
+<div class="tip" data-title="Tips">
+
+> To focus on the main purspose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependancies conflict.
+> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.  
+</div>
 
 ### Using a pre-configured GitHub Codespace 
 
-Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
-The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
+Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, extensions, third party tools, secure port forwarding etc.) on a dedicated virtual machine accessed via a web browser directly. 
+The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more dependancy conflict or missing tools ! 
 
 Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
@@ -57,7 +68,7 @@ To get your codespace ready for the labs, here are a few steps to execute :
 
 ![codespace-new](./assets/codespace-new.png)
 
-- After a few minutes, the codespace opens and you will have to open the Visual Studio Workspace to get all the tools ready. To do so, click the `burger menu` in the top left corner, `File` and then `Open Workspace from File...` 
+- After a few minutes, the codespace opens and you will have to enter the Visual Studio Workspace to get all the tools ready. To do so, click the **burger menu** in the top left corner, **File** and then **Open Workspace from File...** 
 
 ![codespace-workspace](./assets/codespace-workspace.png)
 
@@ -75,7 +86,7 @@ Let's begin!
 
 <div class="task" data-title="Task">
 
-> - Log into your Azure subscription locally using Azure CLI and on the [Azure Portal][az-portal] using your own credentials.
+> - Log into your Azure subscription in your environment using Azure CLI and on the [Azure Portal][az-portal] using your credentials.
 > - Instructions and solutions will be given for the Azure CLI, but you can also use the Azure Portal if you prefer.
 > - Register the Azure providers on your Azure Subscription if not done yet: `Microsoft.Web`, `Microsoft.OperationalInsights`, `Microsoft.Cache`, `Microsoft.ApiManagement`, `Microsoft.DocumentDB`
 
@@ -86,7 +97,8 @@ Let's begin!
 <summary>Toggle solution</summary>
 
 ```bash
-# Login to Azure : Specifying the tenant is optional
+# Login to Azure : 
+# --tenant : Optional | In case your Azure account has access to multiple tenants
 
 # Option 1 : Local Environment 
 az login --tenant <yourtenantid or domain.com>
@@ -95,7 +107,7 @@ az login --use-device-code --tenant <yourtenantid or domain.com>
 
 # Display your account details
 az account show
-# Select your Azure subscription
+# Select your Azure subscription Id 
 az account set --subscription <subscription-id>
 
 # Register the following Azure providers if they are not already
@@ -135,21 +147,24 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 ## Setting up the infrastructure in Azure
 
-If you look at the project, you will see a `terraform` folder. It contains the infrastructure as code that you will use to deploy the infrastructure of this Hands On Lab. This will deploy a series of Azure services that you will use in combination with Azure Cache for Redis.
+If you look at the project, you will see a `terraform` folder. It contains the infrastructure as code that you will use to deploy the infrastructure for this Hands On Lab. This will deploy a series of Azure services that you will use in combination with Azure Cache for Redis.
 
 In a terminal run the following command to initialize terraform:
 
 ```bash
-cd terraform && terraform init
+cd terraform && terraform init -upgrade
 ```
 
-Then to deploy the infrastructure:
+Then deploy the infrastructure:
 
 ```bash
 terraform apply -auto-approve
 ```
 
-The deployment take between 15 to 25 minutes depending on the Azure demands. 
+<div class="warning" data-title="Warning">
+
+> The deployment can take up to 25 minutes : Make sure to keep your codespace or local environment running during the infrastructure creation. 
+</div>
 
 ## Architecture overview
 
@@ -160,10 +175,10 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 The architecture is composed of the following elements:
 - An Azure Static Web App that will be used to display the data from the API
 - An App Service that will host an API and store the data in a Cosmos DB database
-- An APIM which will be used as a facade for the API
+- An APIM which will be used as a facade for the APIs
 - An Azure Cache for Redis that will be used to cache the data of the API
-- An Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expired
-- An Azure Monitor that will be used to monitor the Azure Cache for Redis
+- An Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expires
+- Azure Monitor that will be used to monitor the Azure Cache for Redis
 
 You will discover all these elements during this Hands On Lab.
 
@@ -192,8 +207,19 @@ You have now seeded your database with the data for this Hands On Lab.
 ## Redis basics 
 
 To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
+<!-- TODO: Add context on Redis OSS, Azure Cache for Redis, Azure Cache for Redis Enterprise -->
 
-Let's see quickly how to use Redis using the Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis, select it and in the left menu, click on **Overview** and click on the **Console** button:
+<div class="tip" data-title="Tips">
+
+> While you are going to use some of these data structures through the course of this lab, it will mainly focus on scenarios and connecting Azure Services with Azure Cache for Redis. 
+>
+> You might want to practice with another lab focused on [interacting with Azure Cache for Redis Data Structures][redis-practice-lab]. 
+
+</div>
+
+<!-- TODO : Explain how to interact with Redis and how it works concretely -->
+
+Let's see quickly how to interact with Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis resource, select it and in the left menu, click on **Overview** and click on the **Console** button:
 
 ![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console.png)
 
@@ -252,27 +278,40 @@ To summarize, you can use the following basic commands to interact with Redis:
 - `ping`: Ping the server. Returns `PONG`.
 
 [database-seed-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/database-sample-data.zip
+[redis-practice-lab]: https://azure.github.io/redis-on-azure-workshop/
 
 ---
 
 # Lab 1 : Use Azure Redis Cache in your API
 
-In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is written using .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
+In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP .Net Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
+
+<!-- TODO: Check if more context is required -->
+
+<div class="tip" data-title="Tips">
+
+> Redis Cache has a set of different clients to connect to it. For your real world scenario, pick the client that fits your preferred development language as detailed [here][redis-dev-clients] : All of these are compatible with Azure Cache for Redis instances.
+
+</div>
+
+[redis-dev-clients]: https://redis.io/docs/clients/
 
 ## Run the API
 
-Open the `src/catalog-api` folder in Visual Studio Code using the devcontainer or the GitHub Codespace.
+Open the `src/catalog-api` folder in Visual Studio Code in your active devcontainer or GitHub Codespace.
 
-For the purpose of this lab you will have to add a delay for the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds after a few calls so you wont be able to see the difference between the response time with and without the cache after a few retry.
+<!-- TODO : Check formulation ! -->
 
-To do this, copy the entire content of the `appsettings.json.template` into a new file called `appsettings.Development.json` at the same level and add set the `SIMULATED_DB_LATENCY_IN_SECONDS` value to `2`.
+For the purpose of this lab you will have to add a delay for the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds after a few calls so you won't be able to see the difference between the response time with and without the cache after a few retry.
+
+To do this, copy the entire content of the `appsettings.json.template` into a new file called `appsettings.Development.json` in `src/catalog-api` and set the `SIMULATED_DB_LATENCY_IN_SECONDS` value to `2`.
 
 <div class="task" data-title="Task">
 
-> - Run the API locally or using the provided GitHub Codespace.
 > - Set the Cosmos Db connection string in the `appsettings.Development.json` file
 > - Set the Redis connection string in the `appsettings.Development.json` file
-> - Call the GET `/products` endpoints to confirm that the API is working
+> - Run the API in your devcontainer or using the provided GitHub Codespace.
+> - Call the GET `/products` endpoint to confirm that the API is working
 
 </div>
 
@@ -280,52 +319,80 @@ To do this, copy the entire content of the `appsettings.json.template` into a ne
 
 <summary>Toggle solution</summary>
 
-Restore the dependencies of the project by running the following command:
+Start by duplicating the `appsettings.json.template` from Visual Studio Code file explorer to `appsettings.Development.json` OR by running the following command : 
 
-```bash
-dotnet restore
-```
+```bash 
+cd src/catalog-api
+cp appsettings.json.template appsettings.Development.json
+``` 
 
-Then, run the following command to run the API:
-
-```bash
-dotnet run
-```
-
-Inside the Azure Portal, go to your resource group, search the Cosmos DB account, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and paste it in the `appsettings.Development.json` file:
+Inside the Azure Portal, go to your resource group, search for the Cosmos DB account, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and replace `"AZURE_COSMOSDB_CONNECTION_STRING"` value in `appsettings.Development.json` :
 
 ![Cosmos DB Keys](./assets/cosmos-db-keys.png)
 
-Then inside the Azure Portal, go to your resource group, search the Azure Cache for Redis, select it and in the left menu, click on **Access keys**. Then copy the **Primary Connection String** and paste it in the `appsettings.Development.json` file:
+Then inside the Azure Portal, go to your resource group, search the Azure Cache for Redis, select it and in the left menu, click on **Access keys**. Then copy the **Primary Connection String** and replace `"AZURE_REDIS_CONNECTION_STRING"` value in the `appsettings.Development.json` file :
 
 ![Azure Cache for Redis Keys](./assets/azure-cache-for-redis-keys.png)
 
-Then go to the following url: http://localhost:5076/products and you should see the list of products.
+<!-- Restore the dependencies of the project by running the following command:
+
+```bash
+dotnet restore
+``` -->
+
+You can now run debug for the catalog-api by selecting **Run and Debug** in the left menu, select `.Net Core Launch (web)` and click the green arrow : 
+
+![Debug-Catalog-Api](./assets/vscode-debug-api.png)
+
+Depending on the environment you are using : 
+- Devcontainer : 
+    - Once the api is running, browse for the url: http://localhost:5076/products and you should see the list of products.
+- Github Codespace : 
+    - Once the api is running, click on the **ports** tab in the bottom part of Visual Studio Code window. You should retrieve the unique domain name generated for the combination of your codespace and the port being forwarded.
+    - Right click on port `5076` and click **Make Public**. <!-- TODO: Fix Codespace access issues -->
+    - You can now browse for http://<your-unique-domain-&-port>/products and you should see the list of products.
+
 </details>
 
 ## Add Azure Cache for Redis to your API
 
-If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your API.
+If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your .Net API.
 
-The goal of this part is to setup the Azure Cache for Redis in your API and to use it to improve the performance of the `/products` endpoint. To do this, you will use the `ProductCacheService.cs` class which is pre-configured for you.
+The goal of this part is to set up the interactions with Azure Cache for Redis in your API and to use it to improve the performance of the `/products` endpoint. To do this, you will use the `ProductCacheService.cs` class which is pre-configured for you.
 
 If you open it you will see two methods:
 - `GetProductsAsync`: This method is used to get the products from the cache
-- `SetProductsAsync`. This method is used to set the products in the cache
+- `SetProductsAsync`: This method is used to set the products in the cache
 
-They both use the `IRedisService` interface to interact with the cache and use the mechanism of serialization/deserialization to store and retrieve the data.
+They both use the `IRedisService` interface to interact with the cache and use the mechanism of serialization/deserialization to store and retrieve data.
+
+<div class="tip" data-title="Tips">
+
+> These Get & Set Async methods have been built specifically for this lab to simplify exception handling and serialization as much as possible in your interaction with Azure Cache for Redis.
+> However, the actual Get and Set queries sent to the Redis Cache reside in the simple methods provided by the StackExchange.Redis package, and that you can see in the `RedisService.cs` class as the extract below : 
+> ```csharp
+> await _database.StringGetAsync(key);
+> ...
+> await _database.StringSetAsync(key, value);  
+> ```    
+
+</div>
+
+It now is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by CosmosDb in this lab's scenario. 
+If no products list exist in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (CosmosDb) and rehydrate the cache with this fresh data. 
+This way, the next call will extract the list of products directly from the cache, improving the overall request performance, as well as freeing up resources for the database to focus on actual data persistence activities.
 
 <div class="task" data-title="Tasks">
 
-> - Now, open the `ProductEndpoints.cs`
-> - Use the `IProductCacheService` to setup the cache in the `/products` endpoint
+> - Open the `ProductEndpoints.cs` file
+> - Use the `IProductCacheService` to setup the caching system in the `/products` endpoint 
 
 </div>
 
 <details>
 <summary>Toggle solution</summary>
 
-Inside the `ProductEndpoints.cs` and in the endpoint `/products` use the `IProductCacheService` to retreive the products from the cache. If some products are found in the cache, return them directly: 
+Inside the `ProductEndpoints.cs` file and in the  `/products` endpoint use the `IProductCacheService` to retrieve the products from the cache. If some products are found in the cache, return them directly: 
 
 ```csharp
 IEnumerable<Product>? cachedProducts = await productCacheService.GetProductsAsync();
@@ -336,7 +403,7 @@ if (cachedProducts != null) {
 }
 ```
 
-If no product are found in the cache, fetch the data from Cosmos DB and store them in the cache before returning them:
+If no product is found in the cache, fetch the data from Cosmos DB and store them in the cache before returning them:
 
 ```csharp
 // Fetch data from Cosmos DB
@@ -821,4 +888,26 @@ Take the time to dig in the toolbox offered by the Azure Portal to help you quic
 
 ## Security (RBAC + Private Endpoint ?)
 
-Data Access roles 
+<!-- TODO : Add Managed Identity access rather than secret based -->
+<!-- TODO : Expand on Data Access roles and security managed by AAD -->
+
+<div class="tip" data-title="Tips">
+
+> [`Microsoft.Azure.StackExchangeRedis`][redis-dev-wrapper] is a wrapper to StackExchange.Redis client library, built to extend its capabilities and offer Azure Active Directory (secret-less) authentication.
+
+</div>
+
+[redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
+
+# Closing the workshop
+
+Once you're done with this lab you can delete the resource group you created at the beginning.
+
+To do so, click on `delete resource group` in the Azure Portal to delete all the resources and audio content at once. 
+The following Az-Cli command can also be used to delete the resource group :
+
+```bash
+# Delete the resource group with all the resources
+az group delete --name <resource-group>
+
+```
