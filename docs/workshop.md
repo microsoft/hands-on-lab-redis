@@ -769,7 +769,7 @@ The following sequence diagram illustrates how `history-func` gets data updates 
 
 First thing first, let's take a look at the Streams currently available on your Azure Cache for Redis instance.
 
-The goal is to locate the [Redis Stream][redis-streams] in which the `catalog-api` is adding new items whenever a user views a product. Afterwards we need to inspect that stream and take a look at the events/items added to it.
+The goal is to locate the [Redis Stream][redis-streams] in which the `catalog-api` is adding new items whenever a user views a product. Afterwards you need to inspect that stream and take a look at the events/items added to it.
 
 To do this, there is a variety of tools that you can use to inspect Redis data like the integrated [Redis Console][redis-console] and also the fully-featured GUI [RedisInsight][redis-insight].
 
@@ -989,9 +989,9 @@ This will allow the Web App to communicate with your new History API (`/api/hist
 <details>
 <summary>Toggle solution</summary>
 
-To configure the Static Web App to use the new `/api/history` endpoint we will first need to get its full url.
+To configure the Static Web App to use the new `/api/history` endpoint you will first need to get its full url.
 
-To do that we will first head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
+To do that, first head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
 
 ![GetBrowsingHistory in history-func](./assets/history-func-select-http-function.png)
 
@@ -999,7 +999,7 @@ Then select the `Get Function Url` button and copy the function url:
 
 ![Getting the url of GetBrowsingHistory](./assets/history-func-get-http-endpoint-url.png)
 
-Next, we need to add that url in the `HISTORY_API` app setting of the static web app:
+Next, you need to add that url in the `HISTORY_API` app setting of the static web app:
 
 ![Set HISTORY_API app setting in the Static Web App](./assets/webapp-set-history-api.png)
 
