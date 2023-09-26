@@ -785,12 +785,6 @@ There is a variety of tools which allows you to inspect Redis like the integrate
 
 </div>
 
-[redis-console]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure#redis-console
-[redis-scan-command]: https://redis.io/commands/scan/
-[redis-xrange-command]: https://redis.io/commands/xrange/#--and--special-ids
-[redis-insight]: https://redis.com/redis-enterprise/redis-insight/
-
-
 <details>
 <summary>Toggle solution</summary>
 
@@ -978,7 +972,10 @@ Follow the steps below:
 
 </details>
 
-
+[redis-console]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure#redis-console
+[redis-scan-command]: https://redis.io/commands/scan/
+[redis-xrange-command]: https://redis.io/commands/xrange/#--and--special-ids
+[redis-insight]: https://redis.com/redis-enterprise/redis-insight/
 [azure-cache-for-redis-connection-string]: ./assets/azure-cache-for-redis-connection-string.png
 [key-bindings]: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-cache-trigger-redispubsub?tabs=in-process%2Cnode-v3%2Cpython-v1&pivots=programming-language-csharp#examples
 [key-notifications]: https://redis.io/docs/manual/keyspace-notifications/
