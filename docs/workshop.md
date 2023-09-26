@@ -349,7 +349,7 @@ Depending on the environment you are using :
     - Once the api is running, browse for the url: http://localhost:5076/products and you should see the list of products.
 - Github Codespace : 
     - Once the api is running, click on the **ports** tab in the bottom part of Visual Studio Code window. You should retrieve the unique domain name generated for the combination of your codespace and the port being forwarded.
-    - Right click on port `5076` and click **Make Public**. <!-- TODO: Fix Codespace access issues -->
+    - Right click on port `5076` and click **Open in Browser**. <!-- TODO: Fix Codespace access issues -->
     - You can now browse for http://<your-unique-domain-&-port>/products and you should see the list of products.
 
 </details>
