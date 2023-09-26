@@ -14,7 +14,7 @@ resource "azurerm_linux_function_app" "func_cache" {
   }
 
   app_settings = {
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet"
+    FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
     REDIS_PRODUCT_ALL                     = "products:all"
     CATALOG_API_URL                       = azurerm_api_management.this.gateway_url
@@ -25,6 +25,7 @@ resource "azurerm_linux_function_app" "func_cache" {
   site_config {
     application_stack {
       dotnet_version = "7.0"
+      use_dotnet_isolated_runtime = true
     }
   }
 }
