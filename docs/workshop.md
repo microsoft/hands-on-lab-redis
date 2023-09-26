@@ -757,9 +757,11 @@ You now have an Azure Function that is triggered every time the key `products:al
 
 ## Lab 3.2: Browse history
 
-You have previously created an Azure Function which reacts to cache expiry by listening to keyspace events. In this second part of this lab you will create a second Azure Function which will consume Redis Streams and process incoming Stream entries.
+You have previously created an Azure Function which reacts to cache expiry by listening to keyspace events. In this second part of this lab you will create a second Azure Function called `history-func` which will consume Redis Streams and process incoming Stream entries.
 
-This new Azure Function will power an API for retrieving a user's browsing history, e.g. which products the users have viewed recently.
+This new Azure Function will power an API for retrieving a user's browsing history (which products the user viewed recently).
+
+The following sequence diagram illustrates how `history-func` gets data updates from `catalog-api` via the Redis Stream and how it serves the browsing history via the HTTP endpoint `/api/history` to the Web App:
 
 ![Example of sequence diagram to introduce history-func](./assets/history-func-usage-sequence-diagram.png)
 
@@ -774,7 +776,7 @@ To do this, there is a variety of tools that you can use to inspect Redis data l
 
 <div class="task" data-title="Task">
 
->  - View some products in the Web App (or by directly calling the `/products/:id` endpoint from the `catalog-api`) to generate items in the stream.
+>  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab1.
 >  - Locate the stream where `catalog-api` publishes product viewing events. Your hint is the name of the stream.
 >  - Inspect the items in the Stream using `Redis Console` from the Azure portal.
 >  - View more products in the Web App and make sure new items get added in the stream.
@@ -975,7 +977,7 @@ In this last part, you will wire the newly deployed `history-func` app to the We
 
 This will allow the Web App to communicate with your new History API (`/api/history`) to retrieve and display the current user's browsing history.
 
-![WebApp browsing history](./assets/webapp-browsing-history.png)
+![View recent browsing history](./assets/webapp-view-browsing-history.png)
 
 <div class="task" data-title="Task">
 
@@ -987,14 +989,25 @@ This will allow the Web App to communicate with your new History API (`/api/hist
 <details>
 <summary>Toggle solution</summary>
 
-Follow the steps below:
-- Go to the Static Web App resource in the Azure Portal
-- Navigate to the `Configuration` menu on the left
-- Add a new app setting named `HISTORY_API` and set the value to the url of the `GetBrowsingHistory` (Function defined within the `history-func` Function App)
-- Hit `Save` and wait for the Static Web App to reload
-- Open the url of the Static Web App
-- Click on the UUID of the user, which appears on the top right of the page
-- Ensure you can see the latest products that you have viewed
+To configure the Static Web App to use the new `/api/history` endpoint we will first need to get its full url.
+
+To do that we will first head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
+
+![GetBrowsingHistory in history-func](./assets/history-func-select-http-function.png)
+
+Then select the `Get Function Url` button and copy the function url:
+
+![Getting the url of GetBrowsingHistory](./assets/history-func-get-http-endpoint-url.png)
+
+Next, we need to add that url in the `HISTORY_API` app setting of the static web app:
+
+![Set HISTORY_API app setting in the Static Web App](./assets/webapp-set-history-api.png)
+
+Hit `Save` and wait for the Static Web App to reload then open the url of the Static Web App.
+
+Once it gets loaded, click on the UUID of the user on the top right of the page and ensure you can see the latest products that you have viewed
+
+![View recent browsing history](./assets/webapp-view-browsing-history.png)
 
 </details>
 
