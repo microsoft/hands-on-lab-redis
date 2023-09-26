@@ -761,19 +761,23 @@ You have previously created an Azure Function which reacts to cache expiry by li
 
 This new Azure Function will power an API for retrieving a user's browsing history, e.g. which products the users have viewed recently.
 
-But before delving into the Azure Function's code, let's first take a look at the Streams you currently have at disposal.
+![Example of sequence diagram to introduce history-func](./assets/history-func-usage-sequence-diagram.png)
 
 ### Inspecting product views' stream
 
-First thing first, let's take a look at the data currently available on your Azure Cache for Redis instance.
+First thing first, let's take a look at the Streams currently available on your Azure Cache for Redis instance.
 
-There is a variety of tools which allows you to inspect Redis like the integrated [Redis Console][redis-console] and also the fully-featured GUI [RedisInsight][redis-insight].
+The goal is to locate the [Redis Stream][redis-streams] in which the `catalog-api` is adding new items whenever a user views a product. Afterwards we need to inspect that stream and take a look at the events/items added to it.
+
+To do this, there is a variety of tools that you can use to inspect Redis data like the integrated [Redis Console][redis-console] and also the fully-featured GUI [RedisInsight][redis-insight].
 
 
 <div class="task" data-title="Task">
 
->  - Locate the stream where `catalog-api` publishes product viewing events and inspect its contents using the `Redis Console` from the Azure portal.
->  - View some products in the Web App and make sure that you see new items in the stream
+>  - View some products in the Web App (or by directly calling the `/products/:id` endpoint from the `catalog-api`) to generate items in the stream.
+>  - Locate the stream where `catalog-api` publishes product viewing events. Your hint is the name of the stream.
+>  - Inspect the items in the Stream using `Redis Console` from the Azure portal.
+>  - View more products in the Web App and make sure new items get added in the stream.
 
 </div>
 
@@ -788,18 +792,40 @@ There is a variety of tools which allows you to inspect Redis like the integrate
 <details>
 <summary>Toggle solution</summary>
 
-List all Redis keys having a type `stream`:
+Open the [Redis Console][redis-console] of your Azure Cache for Redis instance.
+
+![Azure Cache for Redis Console](./assets/azure-cache-for-redis-console.png)
+
+Then use the [SCAN command][redis-scan-command] to list all keys having a type `stream`:
 
 ```sh
 SCAN 0 TYPE stream
 ```
 
-View the list of stream items, we will be using the `productViews` stream:
+You should see a stream called `productViews`. That is the one we are interested in.
+
+![List streams in Redis Console](./assets/azure-cache-for-redis-console-list-streams.png)
+
+Next, view the list of items in the stream using the [XRANGE command][redis-xrange-command] and the special -/+ special IDs which allow us to get all items within a stream:
 
 ```sh
 XRANGE productViews - +
 ```
+
+![Inspecting the productViews stream in Redis Console](./assets/azure-cache-for-redis-view-productviews-stream.png)
+
+You should be able to see the following item fields:
+- `userId`: The ID of the user who performed the action
+- `productId`: The ID of the product which was viewed
+- `productTitle`: The title of the product which was viewed
+- `date`: The time (in ISO 8601) at which the product was viewed
 </details>
+
+[redis-streams]: https://redis.io/docs/data-types/streams/
+[redis-console]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure#redis-console
+[redis-scan-command]: https://redis.io/commands/scan/
+[redis-xrange-command]: https://redis.io/commands/xrange/#--and--special-ids
+[redis-insight]: https://redis.com/redis-enterprise/redis-insight/
 
 
 ### Consuming product views' stream using Azure Functions
@@ -947,7 +973,7 @@ func azure functionapp publish <NAME_OF_YOUR_HISTORY_FUNCTION_APP>
 
 In this last part, you will wire the newly deployed `history-func` app to the Web App using the app setting `HISTORY_API`.
 
-This will allow the Web App to communicate with your new History API to retrieve and display the current user's browsing history.
+This will allow the Web App to communicate with your new History API (`/api/history`) to retrieve and display the current user's browsing history.
 
 ![WebApp browsing history](./assets/webapp-browsing-history.png)
 
