@@ -43,7 +43,7 @@ The following tools and access will be necessary to run the lab in good conditio
 - [Git client][Git-client] 
 - [A GitHub Account][Github-account] (Free or Enterprise)
 
-Once you have cloned the repository locally, make sure Docker Desktop is up an running open your environment and open the cloned repository in Visual Studio Code. 
+Once you have cloned the repository locally, make sure Docker Desktop is up and running and open the cloned repository in Visual Studio Code. 
 You will be prompted to open the project in a Dev Container. Click on `Reopen in Container`. 
 
 If you are not prompted by Visual Studio Code, you can open the command palette (`Ctrl + Shift + P`) and search for `Reopen in Container` and select it: 
@@ -52,14 +52,14 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 
 <div class="tip" data-title="Tips">
 
-> To focus on the main purspose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependancies conflict.
+> To focus on the main purspose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
 > You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.  
 </div>
 
 ### Using a pre-configured GitHub Codespace 
 
 Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, extensions, third party tools, secure port forwarding etc.) on a dedicated virtual machine accessed via a web browser directly. 
-The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more dependancy conflict or missing tools ! 
+The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more dependency conflict or missing tools ! 
 
 Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
@@ -152,7 +152,7 @@ If you look at the project, you will see a `terraform` folder. It contains the i
 In a terminal run the following command to initialize terraform:
 
 ```bash
-cd terraform && terraform init -upgrade
+cd terraform && terraform init
 ```
 
 Then deploy the infrastructure:
@@ -284,7 +284,7 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 # Lab 1 : Use Azure Redis Cache in your API
 
-In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP .Net Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
+In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
 
 <!-- TODO: Check if more context is required -->
 
@@ -293,8 +293,6 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 > Redis Cache has a set of different clients to connect to it. For your real world scenario, pick the client that fits your preferred development language as detailed [here][redis-dev-clients] : All of these are compatible with Azure Cache for Redis instances.
 
 </div>
-
-[redis-dev-clients]: https://redis.io/docs/clients/
 
 ## Run the API
 
@@ -334,12 +332,6 @@ Then inside the Azure Portal, go to your resource group, search the Azure Cache 
 
 ![Azure Cache for Redis Keys](./assets/azure-cache-for-redis-keys.png)
 
-<!-- Restore the dependencies of the project by running the following command:
-
-```bash
-dotnet restore
-``` -->
-
 You can now run debug for the catalog-api by selecting **Run and Debug** in the left menu, select `.Net Core Launch (web)` and click the green arrow : 
 
 ![Debug-Catalog-Api](./assets/vscode-debug-api.png)
@@ -356,7 +348,7 @@ Depending on the environment you are using :
 
 ## Add Azure Cache for Redis to your API
 
-If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your .Net API.
+If you look at the `Catalog.Api.csproj` you will see that the `StackExchange.Redis` NuGet package is already referenced in the project. This is the package that will allow you to use Azure Cache for Redis in your .NET API.
 
 The goal of this part is to set up the interactions with Azure Cache for Redis in your API and to use it to improve the performance of the `/products` endpoint. To do this, you will use the `ProductCacheService.cs` class which is pre-configured for you.
 
@@ -370,6 +362,7 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 > These Get & Set Async methods have been built specifically for this lab to simplify exception handling and serialization as much as possible in your interaction with Azure Cache for Redis.
 > However, the actual Get and Set queries sent to the Redis Cache reside in the simple methods provided by the StackExchange.Redis package, and that you can see in the `RedisService.cs` class as the extract below : 
+
 > ```csharp
 > await _database.StringGetAsync(key);
 > ...
@@ -378,8 +371,8 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 </div>
 
-It now is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by CosmosDb in this lab's scenario. 
-If no products list exist in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (CosmosDb) and rehydrate the cache with this fresh data. 
+Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by CosmosDb in this lab's scenario. 
+If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (CosmosDb) and rehydrate the cache with this fresh data. 
 This way, the next call will extract the list of products directly from the cache, improving the overall request performance, as well as freeing up resources for the database to focus on actual data persistence activities.
 
 <div class="task" data-title="Tasks">
@@ -457,6 +450,7 @@ When it's done go to your App Service resource on Azure and click on the **Brows
 
 ![App Service browse](./assets/app-service-browse.png)
 
+[redis-dev-clients]: https://redis.io/docs/clients/
 [api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 [stackexchange-redis]: https://www.nuget.org/packages/StackExchange.Redis
 
@@ -1100,7 +1094,7 @@ In this lab you will discover how to retreive metrics and logs from Azure Cache 
 
 ## Azure Monitor 
 
-To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) tool installed in the devcontainer.
+To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [Redis-Benchmark][redis-benchmark] tool installed in the devcontainer.
 
 Redis Benchmark is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
 
@@ -1144,7 +1138,7 @@ Then click on the **Create alert rule** button, in the condition tab select `CPU
 
 *Details* 
 
-Once the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark](https://redis.io/docs/management/optimization/benchmarks/) tool like you did before.
+Once the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark][redis-benchmark] tool like you did before.
 
 Run the following command:
 
@@ -1169,8 +1163,6 @@ Take the time to dig in the toolbox offered by the Azure Portal to help you quic
 
 </div>
 
-[redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
-
 # Closing the workshop
 
 Once you're done with this lab you can delete the resource group you created at the beginning.
@@ -1181,5 +1173,7 @@ The following Az-Cli command can also be used to delete the resource group :
 ```bash
 # Delete the resource group with all the resources
 az group delete --name <resource-group>
-
 ```
+
+[redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
+[redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
