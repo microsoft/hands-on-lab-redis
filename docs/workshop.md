@@ -213,9 +213,9 @@ We have created a Static Web App to help you assess your progress on this Hands-
 
 Deploying the Web App is optional but it is highly recommended as it will simplify the testing process so that you can focus on the fun stuff.
 
-A [Static Web App](https://github.com/microsoft/hands-on-lab-redis/tree/main/src/catalog-webapp) resource was already provisioned by Terraform so the next step would be to use [Azure Static Web Apps CLI](https://aka.ms/swa/cli-local-development) to deploy the app code to it.
+A [Static Web App][static-web-app-overview] resource was already provisioned by Terraform so the next step would be to use [Azure Static Web Apps CLI][static-web-app-cli] to deploy the [app code][static-web-app-code] to it.
 
-As per the naming convention defined in the Hands-on-Lab, the SWA resource name follows the pattern `stapp-<environment>-<location>-<domain>-<random-suffix>`.
+As per the naming convention defined in the Hands-on-Lab, the Static Web App resource name follows the pattern `stapp-<environment>-<location>-<domain>-<random-suffix>`.
 
 Now, you can follow these steps to deploy the static web app `catalog-webapp`:
 
@@ -224,15 +224,15 @@ Now, you can follow these steps to deploy the static web app `catalog-webapp`:
 cd src/catalog-webapp
 
 # 2. Install project dependencies
-# You need to have NodeJS 18 installed
+# You need to have NodeJS 18 installed (which is the case if you use the devcontainer or the codespace)
 npm install
 
 # 3. Build the Web App
 npm run swa:build
 
-# 4. Deploy the web app code into the Static Web App
-# Replace <resource-group-provisioned-by-terraform> with the name of your resource group
-# Replace <static-web-app-name-provisioned-by-terraform> with the name of your SWA
+# 4. Deploy the web app code into the Static Web App and update the configuration
+# with your resource group and the name of your Static Web App that you can find in the Azure Portal inside the resource group
+
 npm run swa:deploy -- \
   --resource-group <resource-group-provisioned-by-terraform> \
   --app-name <static-web-app-name-provisioned-by-terraform> \
@@ -242,9 +242,9 @@ npm run swa:deploy -- \
 Great, now you should have a running Web App which you can use during the workshop to check your progress.
 
 It will allow you to:
-- View the list of products by calling `catalog-api` (Lab1)
-- View http call durations to assess caching policies (Lab 1 and Lab2) 
-- View the browsing history by calling `history-func` (Lab3)
+- View the list of products by calling `catalog-api`
+- View http call durations to assess caching policies
+- View the browsing history by calling `history-func`
 
 ## Redis basics 
 
@@ -319,6 +319,9 @@ To summarize, you can use the following basic commands to interact with Redis:
 - `expire` [key] [value in seconds]: Expires the key after the specified number of seconds.
 - `ping`: Ping the server. Returns `PONG`.
 
+[static-web-app-overview]: https://learn.microsoft.com/en-us/azure/static-web-apps/overview
+[static-web-app-cli]: https://aka.ms/swa/cli-local-development
+[static-web-app-code]: https://github.com/microsoft/hands-on-lab-redis/tree/main/src/catalog-webapp
 [database-seed-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/database-sample-data.zip
 [redis-practice-lab]: https://azure.github.io/redis-on-azure-workshop/
 
@@ -494,7 +497,7 @@ When it's done go to your App Service resource on Azure and click on the **Brows
 
 ## View products in the Web App
 
-Now that we have a running API we can start consuming it from the Static Web App that you deployed in Lab 0 in order to view the product catalog in a web interface.
+Now that you have a running API you can start consuming it from the Static Web App that you deployed in the previous lab, this will allow you to view the products catalog in a web interface.
 
 To do this, you will need to set the `CATALOG_API` app setting of the Static Web App to point to the url of your API deployed in App Service.
 
@@ -507,7 +510,7 @@ To do this, you will need to set the `CATALOG_API` app setting of the Static Web
 <details>
 <summary>Toggle solution</summary>
 
-Go to your App Service resource of the catalog-api on Azure and take note of the url of the app:
+Go to your App Service resource of the `catalog-api` on Azure and take note of the url of the app:
 
 ![Get the url of catalog-api](./assets/catalog-api-get-url.png)
 
@@ -517,7 +520,7 @@ Next, enter `CATALOG_API` in the name of the setting, and set the value to the u
 
 ![Set CATALOG_API in the Web App config](./assets/webapp-set-catalog-api.png)
 
-Now click on the `Browse` button in the overview of your static web app to open it and make sure you can see a list of products.
+Now click on the **Browse** button in the **Overview** of your static web app to open it and make sure you can see a list of products:
 
 ![Viewing products in the Web App](./assets/webapp-view-products.png)
 
@@ -741,9 +744,11 @@ Now that you have moved the caching logic of the list of products from the appli
 
 Similarly to what you did at the end of Lab 1, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
 
+![APIM Url](./assets/apim-gateway-url.png)
+
 Reload the Web App and make sure the duration of the last call (bottom left corner of the Web App) gets lower after the first call.
 
-You will be able to get more metrics about the performance of your cache in Lab 4 using Azure monitor.
+You will be able to get more metrics about the performance of your cache in Lab 4 using Azure Monitor.
 
 </details>
 
