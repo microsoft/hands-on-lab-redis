@@ -58,8 +58,8 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 
 ### Using a pre-configured GitHub Codespace 
 
-Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, extensions, third party tools, secure port forwarding etc.) on a dedicated virtual machine accessed via a web browser directly. 
-The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more dependency conflict or missing tools ! 
+Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
+The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
 
 Every Github account (even the free ones) grants access to 120 vcpu hours per month, _**for free**_. A 2 vcpu dedicated environment is enough for the purpose of the lab, meaning you could run such environment for 60 hours a month at no cost!
 
