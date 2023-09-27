@@ -1018,7 +1018,7 @@ You have confirmed that your code is working fine locally, so now you can procee
 
 <div class="task" data-title="Task">
 
-> Deploy the `history-func` app to Azure on  the Azure Function that start with `func-hist`
+> Deploy the `history-func` app to Azure on the Azure Function that start with `func-hist`
 
 </div>
 
@@ -1129,11 +1129,21 @@ Currently, only the Enterprise SKU support the `autoscaling` feature. However, y
 
 ## Usage Trend monitoring
 
-Let's create an alert with Azure Monitor to send an email notification when the CPU average usage of the Azure Cache for Redis resource is above `40%` for more than `1` minute. When the alert is triggered, you will send an email to notify the Ops team that the usage trend on Redis increased.
+Let's create an [alert rule][alert-rule-creation] with Azure Monitor to send an email notification when the CPU average usage of the Azure Cache for Redis resource is above `40%` for more than `1` minute. When the alert is triggered, you will send an email to notify the Ops team that the usage trend on Redis increased.
 
 In a real world scenario this alert could be coupled with a request to increase the number of nodes in the cluster to help you respond to usage increase, as well as scale down rule to reduce the number of nodes when demand drops. For simplicity and to avoid scaling delay for the lab, we'll limit to a simple email notification here.
 
+<div class="task" data-title="Task">
+
+> - Create a `static alert rule` to trigger when CPU reaches `40%` on `average` during `1` minute
+> - Create an [`action group`][action-group-creation] that will be executed by this alert rule 
+> - The `action group` must send an `email` notification to your email address 
+> - Execute a new benchmark of `10 Million` requests to load the Azure Cache for Redis CPU and trigger the alert
+
+</div>
+
 <details>
+
 <summary>Toggle solution</summary>
 
 To do so, open the Azure Portal on your Azure Cache for Redis resource and open the **Metrics** panel.
@@ -1182,6 +1192,9 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 ![Redis-Diagnose-Problems](./assets/redis-diagnose-solve.png)
 
 </details>
+
+[alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
+[action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
 
 ## Security (RBAC + Private Endpoint ?)
 
