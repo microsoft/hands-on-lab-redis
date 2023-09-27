@@ -213,59 +213,17 @@ We have created a Static Web App to help you assess your progress on this Hands-
 
 Deploying the Web App is optional but it is highly recommended as it will simplify the testing process so that you can focus on the fun stuff.
 
-You can deploy the [Static Web App](https://github.com/microsoft/hands-on-lab-redis/tree/main/src/catalog-webapp) using either Github Actions (recommended) or [Azure Static Web Apps CLI](https://aka.ms/swa/cli-local-development).
+A [Static Web App](https://github.com/microsoft/hands-on-lab-redis/tree/main/src/catalog-webapp) resource was already provisioned by Terraform so the next step would be to use [Azure Static Web Apps CLI](https://aka.ms/swa/cli-local-development) to deploy the app code to it.
 
-You need to choose a unique name for your Static Web App.
-If you follow the naming convention used in this lab then you would call your Static Web App `stapp-<environment>-<location>-<domain>-<random-suffix>`, we recommend that you do so (use other resources in the resource group as a reference).
+As per the naming convention defined in the Hands-on-Lab, the SWA resource name follows the pattern `stapp-<environment>-<location>-<domain>-<random-suffix>`.
 
-### Option 1: using Github Actions
-
-You can rely on Github Actions to build and deploy the code of the Web app into a Static Web App in Azure.
-
-To do this, you need to [fork the project](https://github.com/microsoft/hands-on-lab-redis/fork) on Github and then run the following command:
+Now, you can follow these steps to deploy the static web app `catalog-webapp`:
 
 ```sh
-# Replace the following settings with your own:
-# - <unique-web-app-name>: unique  Static Web App name
-# - <github-username> : your username or organisation in Github where you forked the project
-# - <resource-group> : name of the resource group which was provisioned by Terraform
-# - westeurope : you can use a different location if you want to deploy the web app somewhere else. Static Web App might not be available in every Azure Region but selecting another one that the default defined above will not be an issue for the rest of the lab. 
+# 1. Go to the SWA directory
+cd src/catalog-webapp
 
-az staticwebapp create \
-    --name <unique-web-app-name> \
-    --resource-group <resource-group-provisioned-by-terraform> \
-    --source https://github.com/<github-username>/hands-on-lab-redis \
-    --location "westeurope" \
-    --branch main \
-    --app-location "./src/catalog-webapp"  \
-    --api-location "./src/catalog-webapp/api"  \
-    --output-location "build" \
-    --login-with-github
-```
-
-This command will create the Static Web App in Azure and will then prompt you for permissions in Github so that it can add a Github Action to your forked project. This action will then build and deploy the code of the static web app on your behalf.
-
-### Option 2: using Azure Static Web Apps CLI
-
-You can also opt for building and deploying the web app from your machine without having to fork the project and give permissions to [AzureAppServiceCLI](https://learn.microsoft.com/en-us/azure/static-web-apps/get-started-cli?tabs=react) to access the code.
-
-First let's clone the [project](https://github.com/microsoft/hands-on-lab-redis) locally and go inside the `src/catalog-webapp` folder.
-
-Now, you can follow these steps to create the static web app:
-
-```sh
-# 1. Create the Static Web App in Azure
-# Replace the following settings with your own:
-# - <unique-web-app-name>: unique Static Web App name
-# - <resource-group> : name of your resource group provisioned by Terraform in Lab 0
-# - westeurope : you can use a different location if you want to deploy the web app somewhere else
-
-az staticwebapp create \
-    --name <unique-web-app-name> \
-    --resource-group <resource-group-provisioned-by-terraform> \
-    --location "westeurope"
-
-# 2. Go to the root of the downloaded app and install project dependencies
+# 2. Install project dependencies
 # You need to have NodeJS 18 installed
 npm install
 
@@ -274,10 +232,10 @@ npm run swa:build
 
 # 4. Deploy the web app code into the Static Web App
 # Replace <resource-group-provisioned-by-terraform> with the name of your resource group
-# Back to the root repository
+# Replace <static-web-app-name-provisioned-by-terraform> with the name of your SWA
 npm run swa:deploy -- \
   --resource-group <resource-group-provisioned-by-terraform> \
-  --app-name <unique-web-app-name> \
+  --app-name <static-web-app-name-provisioned-by-terraform> \
   --no-use-keychain
 ```
 
