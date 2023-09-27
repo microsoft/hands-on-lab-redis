@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
@@ -12,6 +13,7 @@ public class CosmosService : ICosmosService
     private readonly CosmosClient _cosmosClient;
     private readonly ISimulatedDatabaseLatency _simulatedDatabaseLatency;
     private readonly string _databaseName;
+    private readonly Stopwatch _stopwatch;
 
     public CosmosService(IConfiguration configuration, ISimulatedDatabaseLatency simulatedDatabaseLatency)
     {
@@ -20,6 +22,7 @@ public class CosmosService : ICosmosService
         );
         _simulatedDatabaseLatency = simulatedDatabaseLatency;
         _databaseName = configuration["AZURE_COSMOS_DATABASE"]!;
+        _stopwatch = new Stopwatch();
     }
 
     private Container productContainer
@@ -30,6 +33,8 @@ public class CosmosService : ICosmosService
     public async Task<IEnumerable<Product>> RetrieveAllProductsAsync()
     {
         await _simulatedDatabaseLatency.Wait();
+        
+        _stopwatch.Start();
 
         var queryable = productContainer.GetItemLinqQueryable<Product>();
 
@@ -44,6 +49,12 @@ public class CosmosService : ICosmosService
             var response = await feed.ReadNextAsync();
             results.AddRange(response);
         }
+
+        _stopwatch.Stop();
+        
+        Console.WriteLine ($"Call to CosmosDb elapsed time : {_stopwatch.ElapsedMilliseconds} ms");
+
+        _stopwatch.Reset();
 
         return results;
     }

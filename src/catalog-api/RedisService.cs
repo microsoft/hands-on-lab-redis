@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using StackExchange.Redis;
 
 public interface IRedisService {
@@ -13,11 +14,14 @@ public class RedisService : IRedisService
     private readonly int _defaultTTLInSeconds = 60;
     private readonly TimeSpan _ttl; // Time To Live
 
+    private readonly Stopwatch _stopwatch;
+
     public RedisService(IConfiguration configuration)
     {
         var connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["AZURE_REDIS_CONNECTION_STRING"], AzureCacheForRedis.ConfigureForAzure);
         _database = connectionMultiplexer.GetDatabase();
         _ttl = TTL(configuration["AZURE_REDIS_TTL_IN_SECONDS"]);
+        _stopwatch = new Stopwatch();
     }
 
     private TimeSpan TTL(string? ttlInSecondsAsString)
@@ -44,7 +48,16 @@ public class RedisService : IRedisService
     {
         try
         {
+            _stopwatch.Start();
+            
             var value = await _database.StringGetAsync(key);
+
+            _stopwatch.Stop();
+
+            Console.WriteLine($"GET | Call to Redis elapsed time : {_stopwatch.ElapsedMilliseconds} ms");
+
+            _stopwatch.Reset();
+
             var stringValue = value.ToString();
 
             if (stringValue == string.Empty) {
@@ -61,7 +74,13 @@ public class RedisService : IRedisService
 
     public async Task Set(string key, string value)
     {
+        _stopwatch.Start();
+
         await _database.StringSetAsync(key, value, _ttl);
+        
+        _stopwatch.Stop();
+        Console.WriteLine($"SET | Call to Redis elapsed time : {_stopwatch.ElapsedMilliseconds} ms");
+        _stopwatch.Reset();        
     }
 
     public async Task AddToStream(string streamName, Dictionary<string,string?> data)
