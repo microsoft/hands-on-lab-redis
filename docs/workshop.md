@@ -177,7 +177,8 @@ The architecture is composed of the following elements:
 - An App Service that will host an API and store the data in a Cosmos DB database
 - An APIM which will be used as a facade for the APIs
 - An Azure Cache for Redis that will be used to cache the data of the API
-- An Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expires
+- A first Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expires
+- A second Azure Function that will be used to retrieve and store the navigation history of a specific user in Azure Cache for Redis
 - Azure Monitor that will be used to monitor the Azure Cache for Redis
 
 You will discover all these elements during this Hands On Lab.
