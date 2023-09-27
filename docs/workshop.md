@@ -1196,21 +1196,6 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
 [action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
 
----
-
-## Lab 5: Integration with Microsoft Entra Id
-
-<!-- TODO : Add Managed Identity access rather than secret based -->
-<!-- TODO : Expand on Data Access roles and security managed by AAD -->
-
-<div class="tip" data-title="Tips">
-
-> [`Microsoft.Azure.StackExchangeRedis`][redis-dev-wrapper] is a wrapper to StackExchange.Redis client library, built to extend its capabilities and offer Azure Active Directory (secret-less) authentication.
-
-</div>
-
----
-
 # Closing the workshop
 
 Once you're done with this lab you can delete the resource group you created at the beginning.
