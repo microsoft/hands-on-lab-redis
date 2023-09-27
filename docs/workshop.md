@@ -205,6 +205,47 @@ Now, if you close the **Upload Item** window and click on the **Refresh** button
 
 You have now seeded your database with the data for this Hands On Lab.
 
+## Deploy the Web App
+
+We have created a Static Web App to help you assess your progress on this Hands-on-Lab by viewing products, browsing history, and the duration of the last HTTP call.
+
+![Viewing products in the Web App](./assets/webapp-view-products.png)
+
+Deploying the Web App is optional but it is highly recommended as it will simplify the testing process so that you can focus on the fun stuff.
+
+A [Static Web App][static-web-app-overview] resource was already provisioned by Terraform so the next step would be to use [Azure Static Web Apps CLI][static-web-app-cli] to deploy the [app code][static-web-app-code] to it.
+
+As per the naming convention defined in the Hands-on-Lab, the Static Web App resource name follows the pattern `stapp-<environment>-<location>-<domain>-<random-suffix>`.
+
+Now, you can follow these steps to deploy the static web app `catalog-webapp`:
+
+```sh
+# 1. Go to the SWA directory
+cd src/catalog-webapp
+
+# 2. Install project dependencies
+# You need to have NodeJS 18 installed (which is the case if you use the devcontainer or the codespace)
+npm install
+
+# 3. Build the Web App
+npm run swa:build
+
+# 4. Deploy the web app code into the Static Web App and update the configuration
+# with your resource group and the name of your Static Web App that you can find in the Azure Portal inside the resource group
+
+npm run swa:deploy -- \
+  --resource-group <resource-group-provisioned-by-terraform> \
+  --app-name <static-web-app-name-provisioned-by-terraform> \
+  --no-use-keychain
+```
+
+Great, now you should have a running Web App which you can use during the workshop to check your progress.
+
+It will allow you to:
+- View the list of products by calling `catalog-api`
+- View http call durations to assess caching policies
+- View the browsing history by calling `history-func`
+
 ## Redis basics 
 
 To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
@@ -278,6 +319,9 @@ To summarize, you can use the following basic commands to interact with Redis:
 - `expire` [key] [value in seconds]: Expires the key after the specified number of seconds.
 - `ping`: Ping the server. Returns `PONG`.
 
+[static-web-app-overview]: https://learn.microsoft.com/en-us/azure/static-web-apps/overview
+[static-web-app-cli]: https://aka.ms/swa/cli-local-development
+[static-web-app-code]: https://github.com/microsoft/hands-on-lab-redis/tree/main/src/catalog-webapp
 [database-seed-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/database-sample-data.zip
 [redis-practice-lab]: https://azure.github.io/redis-on-azure-workshop/
 
@@ -451,6 +495,38 @@ When it's done go to your App Service resource on Azure and click on the **Brows
 
 ![App Service browse](./assets/app-service-browse.png)
 
+## View products in the Web App
+
+Now that you have a running API you can start consuming it from the Static Web App that you deployed in the previous lab, this will allow you to view the products catalog in a web interface.
+
+To do this, you will need to set the `CATALOG_API` app setting of the Static Web App to point to the url of your API deployed in App Service.
+
+<div class="task" data-title="Tasks">
+
+> Set the `CATALOG_API` app setting of your Static Web App to the url of your API
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Go to your App Service resource of the `catalog-api` on Azure and take note of the url of the app:
+
+![Get the url of catalog-api](./assets/catalog-api-get-url.png)
+
+Then go to the Static Web App, select the `Configuration` menu on the left and click on the `Add` button to add a new app setting.
+
+Next, enter `CATALOG_API` in the name of the setting, and set the value to the url of `catalog-api` which you retrieved previously from App Service.
+
+![Set CATALOG_API in the Web App config](./assets/webapp-set-catalog-api.png)
+
+Now click on the **Browse** button in the **Overview** of your static web app to open it and make sure you can see a list of products:
+
+![Viewing products in the Web App](./assets/webapp-view-products.png)
+
+</details>
+
+
 [redis-dev-clients]: https://redis.io/docs/clients/
 [api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 [stackexchange-redis]: https://www.nuget.org/packages/StackExchange.Redis
@@ -480,11 +556,17 @@ You will see the `PRODUCT_LIST_CACHE_DISABLE` environment variable, select the e
 
 and set the value to `1` and click on the **OK** button.
 
-Now if you try to call your API on the `/products` endpoints you should see the response time of your API taking multiples seconds again.
+Now if you try to refresh the list of products in the Web App (by refreshing the page) or calling the `/products` endpoint of the Catalog API (see Lab 1) you should see the response time of your API taking multiples seconds again.
+
+You can check the response time of the last request (e.g. GET `/products`) in the green box on the bottom left of the Web App.
+
+![Last HTTP request duration](./assets/webapp-last-http-request-duration.png)
 
 ## Setup APIM External 
 
-First things you need to do, is to connect your Azure Cache for Redis to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
+After disabling the caching of the list of products in the application code, it is time to enable it on the APIM level.
+
+The first thing that you need to do, is to connect your Azure Cache for Redis to your APIM by adding it as an external cache in APIM configuration.
 
 <div class="task" data-title="Tasks">
 
@@ -516,7 +598,9 @@ You should now see your Azure Cache for Redis in the list of external cache:
 
 ### Setup APIM Cache Policy globally
 
-Now that you have your Azure Cache for Redis connected to your APIM, you need to configure it to use it. To do this, you will use policy.
+In order to get your Azure Cache for Redis connected to your APIM, you need to configure it so that it can use it for caching.
+
+To do this, you will use caching policies.
 
 <div class="task" data-title="Tasks">
 
@@ -638,6 +722,36 @@ Then, click on the **Save** button.
 You can now test your API again with Postman or the HTTP REST file like previously and you should see the response time of this particular operation reduced to a few milliseconds, but this time only for the **Get Products** operation.
 
 </details>
+
+## Retesting product caching
+
+Now that you have moved the caching logic of the list of products from the application code (e.g. Catalog API) to APIM, it is time to retrieve products again in the Web App and ensure the list gets served from cache.
+
+<div class="task" data-title="Tasks">
+
+> Update the `CATALOG_API` app setting of your Static Web App to point to the url of your API in APIM and ensure data fetching is fast again.
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> `CATALOG_API` must point to the root of your API, not to the `/products` endpoint. 
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Similarly to what you did at the end of Lab 1, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
+
+![APIM Url](./assets/apim-gateway-url.png)
+
+Reload the Web App and make sure the duration of the last call (bottom left corner of the Web App) gets lower after the first call.
+
+You will be able to get more metrics about the performance of your cache in Lab 4 using Azure Monitor.
+
+</details>
+
 
 [postman-link]: https://www.postman.com/
 [cache-lookup-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-policy
