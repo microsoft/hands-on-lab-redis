@@ -41,7 +41,8 @@
           "ms-dotnettools.csharp", 
           "ms-vscode.vscode-node-azure-pack",
           "humao.rest-client", 
-          "azurite.azurite"
+          "azurite.azurite",
+          "ms-azurecache.vscode-azurecache"
         ]
       }
     },

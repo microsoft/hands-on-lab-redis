@@ -18,7 +18,7 @@ tags: azure, azure cache for redis, database, serverless, apim, cache, csu
 navigation_levels: 3
 ---
 
-# Azure Cache for Redis Workshop
+# Azure Cache for Redis in the Azure World
 
 Welcome to this Azure Cache for Redis Workshop. You will be experimenting with Azure Cache for Redis in multiple labs to discover how it's integrated to other Azure services by running a real world scenarios. Don't worry, even if the challenges will increase in difficulty, this is a step by step lab, you will be guided through the whole process.
 
@@ -1207,6 +1207,8 @@ The following Az-Cli command can also be used to delete the resource group :
 # Delete the resource group with all the resources
 az group delete --name <resource-group>
 ```
+
+
 
 [redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
 [redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
