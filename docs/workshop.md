@@ -473,6 +473,38 @@ When it's done go to your App Service resource on Azure and click on the **Brows
 
 ![App Service browse](./assets/app-service-browse.png)
 
+## View products in the Web App
+
+Now that we have a running API we can start consuming it from the Static Web App that you deployed in Lab 0 in order to view the product catalog in a web interface.
+
+To do this, you will need to set the `CATALOG_API` app setting of the Static Web App to point to the url of your API deployed in App Service.
+
+<div class="task" data-title="Tasks">
+
+> Set the `CATALOG_API` app setting of your Static Web App to the url of your API
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Go to your App Service resource of the catalog-api on Azure and take note of the url of the app:
+
+![Get the url of catalog-api](./assets/catalog-api-get-url.png)
+
+Then go to the Static Web App, select the `Configuration` menu on the left and click on the `Add` button to add a new app setting.
+
+Next, enter `CATALOG_API` in the name of the setting, and set the value to the url of `catalog-api` which you retrieved previously from App Service.
+
+![Set CATALOG_API in the Web App config](./assets/webapp-set-catalog-api.png)
+
+Now click on the `Browse` button in the overview of your static web app to open it and make sure you can see a list of products.
+
+![Viewing products in the Web App](./assets/webapp-view-products.png)
+
+</details>
+
+
 [api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 [stackexchange-redis]: https://www.nuget.org/packages/StackExchange.Redis
 
