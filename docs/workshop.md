@@ -1184,8 +1184,8 @@ redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a
 After the benchmark ended, you will be able to check the trigger history by clicking **Alerts** and then **Alert Rules** in the Azure Cache for Redis resource and select the Alert Rule you built in this lab, and open the **history** panel where you should see the alert trigger details  :
 
 ![monitor-alerts-select](./assets/monitor-alerts-select.png)
-![monitor-alert-rules](./assets/Monitor-alert-rules.png)
-![monitor-alert-history](./assets/Monitor-alert-history.png)
+![monitor-alert-rules](./assets/monitor-alert-rules.png)
+![monitor-alert-history](./assets/monitor-alert-history.png)
 
 As a side note, we really encourage you to take the time to dig in the toolbox offered by the Azure Portal to help you quickly **diagnose and solve problems** with the configuration of the resource or the connected clients : 
 
@@ -1196,7 +1196,9 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
 [action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
 
-## Security (RBAC + Private Endpoint ?)
+---
+
+## Lab 5: Integration with Microsoft Entra Id
 
 <!-- TODO : Add Managed Identity access rather than secret based -->
 <!-- TODO : Expand on Data Access roles and security managed by AAD -->
@@ -1206,6 +1208,8 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 > [`Microsoft.Azure.StackExchangeRedis`][redis-dev-wrapper] is a wrapper to StackExchange.Redis client library, built to extend its capabilities and offer Azure Active Directory (secret-less) authentication.
 
 </div>
+
+---
 
 # Closing the workshop
 
