@@ -17,6 +17,7 @@ builder.Services.AddScoped<IProductCacheService, ProductCacheService>();
 builder.Services.AddScoped<IBrowsingHistoryCacheService, BrowsingHistoryCacheService>();
 
 var app = builder.Build();
+
 app.UseCors();
 
 app.MapProductEndpoints();
