@@ -533,11 +533,17 @@ You will see the `PRODUCT_LIST_CACHE_DISABLE` environment variable, select the e
 
 and set the value to `1` and click on the **OK** button.
 
-Now if you try to call your API on the `/products` endpoints you should see the response time of your API taking multiples seconds again.
+Now if you try to refresh the list of products in the Web App (by refreshing the page) or calling the `/products` endpoint of the Catalog API (see Lab 1) you should see the response time of your API taking multiples seconds again.
+
+You can check the response time of the last request (e.g. GET `/products`) in the green box on the bottom left of the Web App.
+
+![Last HTTP request duration](./assets/webapp-last-http-request-duration.png)
 
 ## Setup APIM External 
 
-First things you need to do, is to connect your Azure Cache for Redis to your APIM. To do this, you need to add it as an external cache in your APIM configuration.
+After disabling the caching of the list of products in the application code, it is time to enable it on the APIM level.
+
+The first thing that you need to do, is to connect your Azure Cache for Redis to your APIM by adding it as an external cache in APIM configuration.
 
 <div class="task" data-title="Tasks">
 
@@ -569,7 +575,9 @@ You should now see your Azure Cache for Redis in the list of external cache:
 
 ### Setup APIM Cache Policy globally
 
-Now that you have your Azure Cache for Redis connected to your APIM, you need to configure it to use it. To do this, you will use policy.
+In order to get your Azure Cache for Redis connected to your APIM, you need to configure it so that it can use it for caching.
+
+To do this, you will use caching policies.
 
 <div class="task" data-title="Tasks">
 
@@ -691,6 +699,34 @@ Then, click on the **Save** button.
 You can now test your API again with Postman or the HTTP REST file like previously and you should see the response time of this particular operation reduced to a few milliseconds, but this time only for the **Get Products** operation.
 
 </details>
+
+## Retesting product caching
+
+Now that you have moved the caching logic of the list of products from the application code (e.g. Catalog API) to APIM, it is time to retrieve products again in the Web App and ensure the list gets served from cache.
+
+<div class="task" data-title="Tasks">
+
+> Update the `CATALOG_API` app setting of your Static Web App to point to the url of your API in APIM and ensure data fetching is fast again.
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> `CATALOG_API` must point to the root of your API, not to the `/products` endpoint. 
+
+</div>
+
+<details>
+<summary>Toggle solution</summary>
+
+Similarly to what you did at the end of Lab 1, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
+
+Reload the Web App and make sure the duration of the last call (bottom left corner of the Web App) gets lower after the first call.
+
+You will be able to get more metrics about the performance of your cache in Lab 4 using Azure monitor.
+
+</details>
+
 
 [postman-link]: https://www.postman.com/
 [cache-lookup-policy]: https://learn.microsoft.com/en-us/azure/api-management/cache-lookup-policy
