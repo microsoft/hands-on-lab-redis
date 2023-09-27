@@ -1104,10 +1104,10 @@ To authenticate to your Azure Cache for Redis resource you will need an access k
 Next, to generate some load on the Azure Cache for Redis resource use the following command : 
 
 ```bash
-redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 1000000 -d 1024 -c 300 --threads 2 
+redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
 ```
 
-Redis Benchmark will send 1 million `SET` queries of 1KB each from 300 parallel connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
+Redis Benchmark will send 10 million `SET` queries of 1KB each from 300 parallel connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
 
 When the benchmark is done, you should see this kind of results :
 
@@ -1121,37 +1121,67 @@ And then inside the **Performance** tab you can check how the resource performed
 
 ![Redis-Insights-Performance](./assets/redis-insights-performance.png)
 
-These metrics are available out of the box, with any Azure Cache for Redis SKU and are precious insights to take informed decisions concerning the sizing of the your caching resource.
+These metrics are available out of the box, with any Azure Cache for Redis SKU and are precious insights to take informed decisions concerning the sizing of your caching resource.
 
 The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilities to guarantee necessary caching resources at all times. 
 
-Currently, only the Enterprise SKU support the `autoscaling` feature. However, you can do it manually using the `Premium` SKY with the cluster option and take advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node and shard provisionning. 
+Currently, only the Enterprise SKU support the `autoscaling` feature. However, you can do it manually using the `Premium` SKU, enabling the `cluster` option and taking advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node and shard provisionning. 
 
-## Alert scaling
+## Usage Trend monitoring
 
-Let's create an alert within Azure Monitor to trigger an action when the CPU usage of the Azure Cache for Redis resource is above 40% for more than 1 minute. When the alert is triggered, you will scale your Azure Cache for Redis resource to add one more node to the cluster.
+Let's create an alert with Azure Monitor to send an email notification when the CPU average usage of the Azure Cache for Redis resource is above `40%` for more than `1` minute. When the alert is triggered, you will send an email to notify the Ops team that the usage trend on Redis increased.
 
-In a real world scenario you will also add an alert to scale down the resource when the CPU usage is below a given percentage.
+In a real world scenario this alert could be coupled with a request to increase the number of nodes in the cluster to help you respond to usage increase, as well as scale down rule to reduce the number of nodes when demand drops. For simplicity and to avoid scaling delay for the lab, we'll limit to a simple email notification here.
 
-Open the Azure Portal on your Azure Cache for Redis resource and open the **Alerts** panel.
+<details>
+<summary>Toggle solution</summary>
 
-Then click on the **Create alert rule** button, in the condition tab select `CPU` and fill the form with the following information:
+To do so, open the Azure Portal on your Azure Cache for Redis resource and open the **Metrics** panel.
 
-*Details* 
+In the **Metric** dropdown, select `CPU` and set **Aggregation** to `Avg` and click on **New alert rule** :
 
-Once the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark][redis-benchmark] tool like you did before.
+![monitor-alert-new](./assets/monitor-alert-new.png)
 
-Run the following command:
+In the **Condition** panel you just opened, make sure to fill in the trigger conditions as follows and click **Next: Actions >** : 
+
+![monitor-alert-condition](./assets/monitor-alert-condition.png)
+
+Now you have the rules set to trigger the notification, it's time to set the actual action that will send the notification.
+To do so, click **Create action group**, set the action group to your `resource group`, give it a `name` and `Display name` and click **Next: Notifications >**:
+
+![monitor-alert-action-group](./assets/monitor-alert-action-group.png)
+
+Select the **Notification Type** `Email/SMS message/Push/Voice`, tick **Email** in the panel that just opened and fill in your `email address`, then save by clicking **OK**. Once done, you'll have to give a **Name** to the notification type you just set and click **Review + Create** : 
+
+![monitor-alert-notification](./assets/monitor-alert-notification.png)
+
+Check the action group you just created is added in the Action Group list and click **Next: Details >**: 
+
+![monitor-alert-action-group-select](./assets/monitor-alert-action-group-select.png)
+
+Now is time to finalize the configuration of the alert rule, giving it a `resource group` save location, defining the **Severity** to `2 - Warning` and an `Alert rule name`. When done, hit **Review + Create** : 
+
+![monitor-alert-details](./assets/monitor-alert-details.png)
+
+Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark][redis-benchmark] tool like you did before.
+
+Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier :
 
 ```bash
-redis-benchmark
+redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
 ```
 
-*Details* 
+After the benchmark ended, you will be able to check the trigger history by clicking **Alerts** and then **Alert Rules** in the Azure Cache for Redis resource and select the Alert Rule you built in this lab, and open the **history** panel where you should see the alert trigger details  :
 
-Take the time to dig in the toolbox offered by the Azure Portal to help you quickly **diagnose and solve problems** with the configuration of the resource or the connected clients : 
+![monitor-alerts-select](./assets/monitor-alerts-select.png)
+![monitor-alert-rules](./assets/Monitor-alert-rules.png)
+![monitor-alert-history](./assets/Monitor-alert-history.png)
+
+As a side note, we really encourage you to take the time to dig in the toolbox offered by the Azure Portal to help you quickly **diagnose and solve problems** with the configuration of the resource or the connected clients : 
 
 ![Redis-Diagnose-Problems](./assets/redis-diagnose-solve.png)
+
+</details>
 
 ## Security (RBAC + Private Endpoint ?)
 
