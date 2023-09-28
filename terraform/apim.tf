@@ -1,7 +1,7 @@
 resource "azurerm_api_management" "this" {
   name                = format("apim-%s", local.resource_suffix_kebabcase)
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
   publisher_name      = "My Company"
   publisher_email     = "company@me.io"
 
@@ -13,7 +13,7 @@ resource "azurerm_api_management" "this" {
 resource "azurerm_api_management_logger" "this" {
   name                = format("apimlogs-%s", local.resource_suffix_kebabcase)
   api_management_name = azurerm_api_management.this.name
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = local.resource_group_name
   resource_id         = azurerm_application_insights.this.id
 
   application_insights {
@@ -24,7 +24,7 @@ resource "azurerm_api_management_logger" "this" {
 resource "azurerm_api_management_product" "this" {
   product_id            = "catalog"
   api_management_name   = azurerm_api_management.this.name
-  resource_group_name   = azurerm_resource_group.this.name
+  resource_group_name   = local.resource_group_name
   display_name          = "Catalog API"
   description           = "Catalog API for demo purposes."
   subscription_required = false
@@ -34,7 +34,7 @@ resource "azurerm_api_management_product" "this" {
 
 resource "azurerm_api_management_api" "products" {
   name                  = "products"
-  resource_group_name   = azurerm_resource_group.this.name
+  resource_group_name   = local.resource_group_name
   api_management_name   = azurerm_api_management.this.name
   subscription_required = azurerm_api_management_product.this.subscription_required
   revision              = "1"
