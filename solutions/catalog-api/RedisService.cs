@@ -34,7 +34,9 @@ public class RedisService : IRedisService
 
         Console.WriteLine("Initializing Redis database connection");
 
-        var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(_connectionString!, AzureCacheForRedis.ConfigureForAzure);
+        // var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(_connectionString!, AzureCacheForRedis.ConfigureForAzure);
+        var configurationOptions = await ConfigurationOptions.Parse($"{_hostname}:{_port}").ConfigureForAzureWithSystemAssignedManagedIdentityAsync(_managedIdentityPrincipalId!);
+        var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurationOptions);
 
         _database = connectionMultiplexer.GetDatabase();
 
