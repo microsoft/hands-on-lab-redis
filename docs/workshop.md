@@ -1097,7 +1097,7 @@ func start -p 7072
 
 Once it starts, you can browse the Web App and ensure new product views' event processing logs appear on your terminal:
 
-![Azure Function logs](./assets/azure-function-product-views-logs.png)
+![Logs of processing productViews stream](./assets/history-func-processed-event-logs.png)
 
 </details>
 
