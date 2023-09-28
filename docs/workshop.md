@@ -32,7 +32,7 @@ Before starting this workshop, be sure to have:
 - Create a [fork][Repo-fork] of the repository from the **main** branch to help you keep track of your changes
 - To run the different labs, you have 2 options: 
     - Use a devcontainer locally 
-    - Use a Github Codespace
+    - Use a GitHub Codespace
     
 ### Use your own local environment 
 
@@ -52,7 +52,7 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 
 <div class="tip" data-title="Tips">
 
-> To focus on the main purspose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
+> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
 > You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.  
 </div>
 
