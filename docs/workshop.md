@@ -53,7 +53,7 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 <div class="tip" data-title="Tips">
 
 > To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
-> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.  
+> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.
 </div>
 
 ### Using a pre-configured GitHub Codespace 
@@ -249,7 +249,13 @@ It will allow you to:
 ## Redis basics 
 
 To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
+
 <!-- TODO: Add context on Redis OSS, Azure Cache for Redis, Azure Cache for Redis Enterprise -->
+
+Redis OSS is an open-source in-memory data structure store that can be used as a database, cache, and message broker. Azure Cache for Redis is a fully-managed caching service offered by Microsoft Azure that provides enterprise-level features such as automatic scaling, high availability, and advanced security. Azure Cache for Redis Enterprise is a premium tier of Azure Cache for Redis that offers additional enterprise-grade features such as active-active geo-replication, data persistence, and enhanced security features, designed for mission-critical applications that require high availability, disaster recovery, and fast data access.
+
+<!-- /TODO: -->
+
 
 <div class="tip" data-title="Tips">
 
@@ -258,8 +264,6 @@ To be able to use Azure Cache for Redis, you need to understand the basics of Re
 > You might want to practice with another lab focused on [interacting with Azure Cache for Redis Data Structures][redis-practice-lab]. 
 
 </div>
-
-<!-- TODO : Explain how to interact with Redis and how it works concretely -->
 
 Let's see quickly how to interact with Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis resource, select it and in the left menu, click on **Overview** and click on the **Console** button:
 
@@ -331,8 +335,6 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
 
-<!-- TODO: Check if more context is required -->
-
 <div class="tip" data-title="Tips">
 
 > Redis Cache has a set of different clients to connect to it. For your real world scenario, pick the client that fits your preferred development language as detailed [here][redis-dev-clients] : All of these are compatible with Azure Cache for Redis instances.
@@ -341,13 +343,19 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 ## Run the API
 
+<div class="info" data-title="Note">
+
+This lab relies on two different data store systems : CosmosDb and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless CosmosDb instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
+In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless CosmosDb Instance will respond in a few milliseconds.  
+
+Between the performance optimizations at a Serverless CosmosDb Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in CosmosDb, the end to end api response time discrepancy between Azure Cache for Redis and CosmosDb can be reduced.
+
+To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure CosmosDb.
+To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
+
+</div>
+
 Open the `src/catalog-api` folder in Visual Studio Code in your active devcontainer or GitHub Codespace.
-
-<!-- TODO : Remove this part and the delay if agreed ! -->
-
-For the purpose of this lab you will have to add a delay for the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds after a few calls so you won't be able to see the difference between the response time with and without the cache after a few retry.
-
-<!-- Check if remove-->
 
 For the moment, the API is only connecting to Azure CosmosDB to retrieve the products list persisted in the `products` container. To have this interaction with CosmosDb work, you will need to configure your catalog-api.
 
@@ -383,8 +391,7 @@ Then inside the Azure Portal, go to your resource group, search the Azure Cache 
 
 ![Azure Cache for Redis Keys](./assets/azure-cache-for-redis-keys.png)
 
-<!-- TODO : Check formulation -->
-You can set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"` to artificially represent a larger CosmosDB size
+You can set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"` to create artificial latency to ease perception over cache/no cache data retrieval response time.
 
 You can now run debug for the catalog-api by selecting **Run and Debug** in the left menu, select `.Net Core Launch (web)` and click the green arrow : 
 
@@ -395,7 +402,7 @@ Depending on the environment you are using :
     - Once the api is running, browse for the url: http://localhost:5076/products and you should see the list of products.
 - Github Codespace : 
     - Once the api is running, click on the **ports** tab in the bottom part of Visual Studio Code window. You should retrieve the unique domain name generated for the combination of your codespace and the port being forwarded.
-    - Right click on port `5076` and click **Open in Browser**. <!-- TODO: Fix Codespace access issues -->
+    - Right click on port `5076` and click **Open in Browser**.
     - You can now browse for http://<your-unique-domain-&-port>/products and you should see the list of products.
 
 </details>
@@ -1179,7 +1186,7 @@ This will allow the Web App to communicate with your new History API (`/api/hist
 
 To configure the Static Web App to use the new `/api/history` endpoint you will first need to get its full url.
 
-To do that, first head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
+To do that, head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
 
 ![GetBrowsingHistory in history-func](./assets/history-func-select-http-function.png)
 
