@@ -10,6 +10,11 @@
           "version":"latest"
         },
 
+        "ghcr.io/devcontainers/features/docker-in-docker":{
+          "version":"latest",
+          "moby":"false"
+        },
+
         // //Azure Function Core tools + Visual Studio Extension install
         "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1":{},
 
