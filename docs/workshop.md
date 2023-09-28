@@ -1324,7 +1324,7 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 </details>
 
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
-[action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
+[action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal 
 [redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
 [redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
 
