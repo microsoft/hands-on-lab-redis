@@ -122,7 +122,7 @@ az provider register --namespace 'Microsoft.OperationalInsights'
 az provider register --namespace 'Microsoft.Cache'
 # API Management
 az provider register --namespace 'Microsoft.ApiManagement'
-# Azure CosmosDb 
+# Azure Cosmos DB  
 az provider register --namespace 'Microsoft.DocumentDB'
 ```
 
@@ -348,19 +348,19 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 <div class="info" data-title="Note">
 
-> This lab relies on two different data store systems : CosmosDb and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless CosmosDb instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
-> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless CosmosDb Instance will respond in a few milliseconds.  
+> This lab relies on two different data store systems : Cosmos DB  and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless Cosmos DB  instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
+> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless Cosmos DB  Instance will respond in a few milliseconds.  
 >
-> Between the performance optimizations at a Serverless CosmosDb Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in CosmosDb, the end to end api response time discrepancy between Azure Cache for Redis and CosmosDb can be reduced.
+> Between the performance optimizations at a Serverless Cosmos DB  Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in Cosmos DB , the end to end api response time discrepancy between Azure Cache for Redis and Cosmos DB  can be reduced.
 >
-> To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure CosmosDb.
+> To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure Cosmos DB .
 > To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
 
 </div>
 
 Open the `src/catalog-api` folder in Visual Studio Code in your active devcontainer or GitHub Codespace.
 
-For the moment, the API is only connecting to Azure CosmosDB to retrieve the products list persisted in the `products` container. To have this interaction with CosmosDb work, you will need to configure your catalog-api.
+For the moment, the API is only connecting to Azure Cosmos DB  to retrieve the products list persisted in the `products` container. To have this interaction with Cosmos DB  work, you will need to configure your catalog-api.
 
 The configuration file format is provided in `src/catalog-api/appsettings.json.template` and will need to be duplicated in a new file called `src/catalog-api/appsettings.Development.json`. 
 Once duplicated, you will need to fill in the missing values in this new file to configure the app.  
@@ -434,9 +434,9 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 </div>
 
-Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by CosmosDb in this lab's scenario. 
+Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by Cosmos DB  in this lab's scenario. 
 
-If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (CosmosDb) and rehydrate the cache with this fresh data. 
+If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (Cosmos DB ) and rehydrate the cache with this fresh data. 
 This way, the next call will extract the list of products directly from the cache, improving the overall request performance, as well as freeing up resources for the database to focus on actual data persistence activities.
 
 <div class="task" data-title="Tasks">
