@@ -31,9 +31,10 @@
     //PORT Forward config : 
     //5076 : Asp Net Core HTTP Debug port 
     //7062 : Asp Net Core HTTPS Debug port
-    //7071 : Azure Function Debug port
+    //7071 : Azure Function Cache-Refresh-Func Debug port
+    //7072 : Azure Function History-Func Debug port
     //1000[0,1,2] : Azurite storage emulator used with Azure Function
-    "forwardPorts": [5076, 7062, 7071, 10000, 10001, 10002],
+    "forwardPorts": [5076, 7062, 7071, 7072, 10000, 10001, 10002],
 
     //Static Web App Cli Install
     "updateContentCommand": "bash .devcontainer/setup.sh",

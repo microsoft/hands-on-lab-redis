@@ -1325,8 +1325,18 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
 [action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
+[redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
+[redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
+
+---
 
 # Closing the workshop
+
+The **Product Hands on Lab : Azure Cache for Redis in Azure World** comes to an end : We hope you liked practicing with Azure solutions and that this lab will help you kick start your journey to caching in Azure. 
+Most of the solution that were quickly presented as a cloud native application integrated with Azure Cache for Redis have their dedicated lab to help you practice in depth way with these products. 
+You can find dedicated labs here : 
+- [Products hands on lab : Azure Serverless][hol-serverless]
+- [Product hands on lab : API Management][hol-apim]
 
 Once you're done with this lab you can delete the resource group you created at the beginning.
 
@@ -1338,7 +1348,5 @@ The following Az-Cli command can also be used to delete the resource group :
 az group delete --name <resource-group>
 ```
 
-
-
-[redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
-[redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
+[hol-serverless]: https://moaw.dev/workshop/gh:microsoft/hands-on-lab-serverless/main/docs/
+[hol-apim]: https://azure.github.io/apim-lab/
