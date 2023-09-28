@@ -1335,8 +1335,8 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 The **Product Hands on Lab : Azure Cache for Redis in Azure World** comes to an end : We hope you liked practicing with Azure solutions and that this lab will help you kick start your journey to caching in Azure. 
 Most of the solution that were quickly presented as a cloud native application integrated with Azure Cache for Redis have their dedicated lab to help you practice in depth way with these products. 
 You can find dedicated labs here : 
-- [Products hands on lab : Azure Serverless][hol-serverless]
-- [Product hands on lab : API Management][hol-apim]
+- [Product Hands-on lab : Azure Serverless Architecture][hol-serverless]
+- [Product Hands-on lab : API Management][hol-apim]
 
 Once you're done with this lab you can delete the resource group you created at the beginning.
 
