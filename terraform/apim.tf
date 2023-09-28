@@ -39,7 +39,7 @@ resource "azurerm_api_management_api" "products" {
   subscription_required = azurerm_api_management_product.this.subscription_required
   revision              = "1"
   display_name          = "Products"
-  path                  = "products"
+  path                  = ""
   protocols             = ["https"]
   service_url           = format("https://%s", azurerm_linux_web_app.this.default_hostname)
 }
