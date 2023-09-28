@@ -10,6 +10,11 @@
           "version":"latest"
         },
 
+        "ghcr.io/devcontainers/features/docker-in-docker":{
+          "version":"latest",
+          "moby":"false"
+        },
+
         // //Azure Function Core tools + Visual Studio Extension install
         "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1":{},
 
@@ -26,9 +31,10 @@
     //PORT Forward config : 
     //5076 : Asp Net Core HTTP Debug port 
     //7062 : Asp Net Core HTTPS Debug port
-    //7071 : Azure Function Debug port
-    //1000[0,1,2] : Azurite storage emulator
-    "forwardPorts": [5076, 7071, 10000, 10001, 10002],
+    //7071 : Azure Function Cache-Refresh-Func Debug port
+    //7072 : Azure Function History-Func Debug port
+    //1000[0,1,2] : Azurite storage emulator used with Azure Function
+    "forwardPorts": [5076, 7062, 7071, 7072, 10000, 10001, 10002],
 
     //Static Web App Cli Install
     "updateContentCommand": "bash .devcontainer/setup.sh",
@@ -41,7 +47,8 @@
           "ms-dotnettools.csharp", 
           "ms-vscode.vscode-node-azure-pack",
           "humao.rest-client", 
-          "azurite.azurite"
+          "azurite.azurite",
+          "ms-azurecache.vscode-azurecache"
         ]
       }
     },
