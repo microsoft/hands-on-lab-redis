@@ -973,8 +973,8 @@ To do this, there is a variety of tools that you can use to inspect Redis data l
 
 <div class="task" data-title="Task">
 
->  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab1.
->  - Locate the stream where `catalog-api` publishes product viewing events. Your hint is the name of the stream.
+>  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab 1.
+>  - Locate the stream where `catalog-api` publishes product viewing events, named `productViews`.
 >  - Inspect the items in the Stream using `Redis Console` from the Azure portal.
 >  - View more products in the Web App and make sure new items get added in the stream.
 
@@ -1244,7 +1244,7 @@ docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>
 
 Redis Benchmark will send a few million queries (SET and GET) each from various parallel client connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
 
-When the benchmark is done, you should see this kind of results :
+When the benchmark is done, you should see the following results table (latency will depend on the benchmark's source location):
 
 ![Redis-Benchmark-results](./assets/redis-benchmark-results.png)
 
@@ -1262,7 +1262,7 @@ The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilit
 
 Currently, only the Enterprise SKU support the `autoscaling` feature. However, you can do it manually using the `Premium` SKU, enabling the `cluster` option and taking advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node and shard provisionning. 
 
-## Usage Trend monitoring
+## Usage trend monitoring
 
 Let's create an [alert rule][alert-rule-creation] with Azure Monitor to send an email notification when the CPU average usage of the Azure Cache for Redis resource is above `30%` for more than `1` minute. When the alert is triggered, you will send an email to notify the Ops team that the usage trend on Redis increased.
 
