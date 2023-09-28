@@ -58,6 +58,9 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 
 ### Using a pre-configured GitHub Codespace 
 
+To use a Github Codespace, you will need : 
+- [A GitHub Account][Github-account] (Free or Enterprise)
+
 Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
 The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
 
@@ -127,7 +130,7 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 <div class="task" data-title="Task">
 
-> You will find the instructions and expected configurations for each Lab step in these yellow "Task" boxes.
+> You will find the instructions and expected configurations for each Lab step in these yellow **Task** boxes.
 > Inputs and parameters to select will be defined, all the rest can remain as default as it has no impact on the scenario.
 
 </div>
@@ -345,13 +348,13 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 <div class="info" data-title="Note">
 
-This lab relies on two different data store systems : CosmosDb and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless CosmosDb instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
-In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless CosmosDb Instance will respond in a few milliseconds.  
-
-Between the performance optimizations at a Serverless CosmosDb Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in CosmosDb, the end to end api response time discrepancy between Azure Cache for Redis and CosmosDb can be reduced.
-
-To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure CosmosDb.
-To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
+> This lab relies on two different data store systems : CosmosDb and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless CosmosDb instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
+> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless CosmosDb Instance will respond in a few milliseconds.  
+>
+> Between the performance optimizations at a Serverless CosmosDb Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in CosmosDb, the end to end api response time discrepancy between Azure Cache for Redis and CosmosDb can be reduced.
+>
+> To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure CosmosDb.
+> To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
 
 </div>
 
@@ -1224,27 +1227,27 @@ Once it gets loaded, click on the UUID of the user on the top right of the page 
 
 # Lab 4 : Azure Cache for Redis Governance 
 
-In this lab you will discover how to retreive metrics and logs from Azure Cache for Redis to monitor the health of the resource and take informed decisions about its sizing.
+In this lab you will discover how to retrieve metrics and logs from Azure Cache for Redis to monitor the health of your instance and take informed decisions about its sizing.
 
 ## Azure Monitor 
 
-To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [Redis-Benchmark][redis-benchmark] tool installed in the devcontainer.
+To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [RedisLabs/memtier_benchmark][redis-benchmark] tool as a docker image (Docker is already set up in the devcontainer/codespace).
 
-Redis Benchmark is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
+RedisLabs Memtier_benchmark is a command-line utility designed to load test based on a default or custom load scenario. 
 
-To authenticate to your Azure Cache for Redis resource you will need an access key. Go to the Azure Portal and inside the Azure Cache for Redis resource in the left menu, click on **Access keys** and copy the `Primary` or `Secondary` key. 
+To authenticate to your Azure Cache for Redis resource you will need one of the access keys. Go to the your Azure Cache for Redis resource and select the **Access Keys** panel, then copy the  `Primary` or `Secondary` key. 
 
 Next, to generate some load on the Azure Cache for Redis resource use the following command : 
 
 ```bash
-redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
+docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --tls --tls-skip-verify
 ```
 
-Redis Benchmark will send 10 million `SET` queries of 1KB each from 300 parallel connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
+Redis Benchmark will send a few million queries (SET and GET) each from various parallel client connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
 
 When the benchmark is done, you should see this kind of results :
 
-![Redi-Benchmark-results](./assets/redis-benchmark-results.png)
+![Redis-Benchmark-results](./assets/redis-benchmark-results.png)
 
 About 5 minutes after the benchmark has successfully ended, open the Azure Portal view on your Azure Cache for Redis resource and open the **Insights** panel to gain deeper knowledge of the resource health : 
 
@@ -1271,7 +1274,7 @@ In a real world scenario this alert could be coupled with a request to increase 
 > - Create a `static alert rule` to trigger when CPU reaches `30%` on `average` during `1` minute
 > - Create an [`action group`][action-group-creation] that will be executed by this alert rule 
 > - The `action group` must send an `email` notification to your email address 
-> - Execute a new benchmark of `10 Million` requests to load the Azure Cache for Redis CPU and trigger the alert
+> - Execute the memtier_benchmark utility to load the Azure Cache for Redis CPU and trigger the alert
 
 </div>
 
@@ -1306,12 +1309,12 @@ Now is time to finalize the configuration of the alert rule: Giving it a `resour
 
 ![monitor-alert-details](./assets/monitor-alert-details.png)
 
-Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark][redis-benchmark] tool like you did before.
+Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [RedisLabs/memtier_benchmark][redis-benchmark] tool like you did before.
 
 Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier :
 
 ```bash
-redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
+docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --tls --tls-skip-verify
 ```
 
 After a few minutes, a notification like the following should be sent to your email address :
@@ -1332,7 +1335,7 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
 [action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal 
-[redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
+[redis-benchmark]: (https://github.com/RedisLabs/memtier_benchmark)
 [redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
 
 ---
