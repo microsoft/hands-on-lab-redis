@@ -253,13 +253,6 @@ It will allow you to:
 
 To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
 
-<!-- TODO: Add context on Redis OSS, Azure Cache for Redis, Azure Cache for Redis Enterprise -->
-
-Redis OSS is an open-source in-memory data structure store that can be used as a database, cache, and message broker. Azure Cache for Redis is a fully-managed caching service offered by Microsoft Azure that provides enterprise-level features such as automatic scaling, high availability, and advanced security. Azure Cache for Redis Enterprise is a premium tier of Azure Cache for Redis that offers additional enterprise-grade features such as active-active geo-replication, data persistence, and enhanced security features, designed for mission-critical applications that require high availability, disaster recovery, and fast data access.
-
-<!-- /TODO: -->
-
-
 <div class="tip" data-title="Tips">
 
 > While you are going to use some of these data structures through the course of this lab, it will mainly focus on scenarios and connecting Azure Services with Azure Cache for Redis. 
@@ -267,6 +260,13 @@ Redis OSS is an open-source in-memory data structure store that can be used as a
 > You might want to practice with another lab focused on [interacting with Azure Cache for Redis Data Structures][redis-practice-lab]. 
 
 </div>
+
+These structures are available with any of the pricing tiers available for an Azure Cache for Redis:
+- **Basic**: An OSS Redis cache running on a single VM. This tier has no service-level agreement (SLA) and is ideal for development/test and noncritical workloads.
+- **Standard**: An OSS Redis cache running on two VMs in a replicated configuration.
+- **Premium**: High-performance OSS Redis caches. This tier offers higher throughput, lower latency, better availability, and more features. Premium caches are deployed on more powerful VMs compared to the VMs for Basic or Standard caches.
+- **Enterprise**: High-performance caches **powered by Redis Inc.’s Redis Enterprise software**. This tier supports Redis modules including RediSearch, RedisBloom, RedisJSON, and RedisTimeSeries. Also, it offers even higher availability than the Premium tier.
+- **Enterprise Flash**: Cost-effective large caches powered by Redis Inc.’s Redis Enterprise software. This tier extends Redis data storage to nonvolatile memory, which is cheaper than DRAM, on a VM. It reduces the overall per-GB memory cost.
 
 Let's see quickly how to interact with Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis resource, select it and in the left menu, click on **Overview** and click on the **Console** button:
 
