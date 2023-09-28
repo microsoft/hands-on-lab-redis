@@ -1270,10 +1270,10 @@ In a real world scenario this alert could be coupled with a request to increase 
 
 <div class="task" data-title="Task">
 
-> - Create a `static alert rule` to trigger when CPU reaches `30%` on `average` during `1` minute
+> - Create a `static alert rule` to trigger when CPU reaches `30%` on `average` for the past `1` minute
 > - Create an [`action group`][action-group-creation] that will be executed by this alert rule 
 > - The `action group` must send an `email` notification to your email address 
-> - Execute the memtier_benchmark utility to load the Azure Cache for Redis CPU and trigger the alert
+> - Execute the memtier_benchmark utility during `5 minutes` to load the Azure Cache for Redis CPU and trigger the alert
 
 </div>
 
@@ -1310,10 +1310,10 @@ Now is time to finalize the configuration of the alert rule: Giving it a `resour
 
 Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [RedisLabs/memtier_benchmark][redis-benchmark] tool like you did before.
 
-Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier :
+Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier, for a 5 minutes benchmark duration :
 
 ```bash
-docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --tls --tls-skip-verify
+docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --test-time=300 --tls --tls-skip-verify 
 ```
 
 After a few minutes, a notification like the following should be sent to your email address :
