@@ -177,7 +177,7 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 The architecture is composed of the following elements:
 - An Azure Static Web App that will be used to display the data from the API
-- An App Service that will host an API and store the data in a Cosmos DB database
+- An App Service that will host an API and store the data in a Azure Cosmos DBdatabase
 - An APIM which will be used as a facade for the APIs
 - An Azure Cache for Redis that will be used to cache the data of the API
 - A first Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expires
@@ -188,11 +188,11 @@ You will discover all these elements during this Hands On Lab.
 
 ## Seed the database
 
-In this Hands On Lab, you will use a Cosmos DB database to store and retrieve your data. To save time, you will seed it with some data.
+In this Hands On Lab, you will use a Azure Cosmos DBdatabase to store and retrieve your data. To save time, you will seed it with some data.
 
 To do this, download the [zip file][database-seed-zip] that contains the data to seed your database, then unzip it and you will find a `products.json` file.
 
-Go to your resource group, search the Cosmos DB account, select it and in the left menu, click on **Data Explorer**. Then on the database called `catalogdb` and click on the `products` container and select `Items` like below:
+Go to your resource group, search the Azure Cosmos DBaccount, select it and in the left menu, click on **Data Explorer**. Then on the database called `catalogdb` and click on the `products` container and select `Items` like below:
 
 ![Cosmos DB Data Explorer](./assets/cosmos-db-data-explorer.png)
 
@@ -348,10 +348,10 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 <div class="info" data-title="Note">
 
-> This lab relies on two different data store systems : Cosmos DB  and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless Cosmos DB  instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
-> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless Cosmos DB  Instance will respond in a few milliseconds.  
+> This lab relies on two different data store systems : Azure Cosmos DB and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless Azure Cosmos DB instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end api call might not be so clearly noticeable.
+> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless Azure Cosmos DB Instance will respond in a few milliseconds.  
 >
-> Between the performance optimizations at a Serverless Cosmos DB  Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in Cosmos DB , the end to end api response time discrepancy between Azure Cache for Redis and Cosmos DB  can be reduced.
+> Between the performance optimizations at a Serverless Azure Cosmos DB Instance doors, the scenario with a single user calling the api combined with such a small volume of `products` data persisted in Azure Cosmos DB, the end to end api response time discrepancy between Azure Cache for Redis and Cosmos DB  can be reduced.
 >
 > To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure Cosmos DB .
 > To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
@@ -360,14 +360,14 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 Open the `src/catalog-api` folder in Visual Studio Code in your active devcontainer or GitHub Codespace.
 
-For the moment, the API is only connecting to Azure Cosmos DB  to retrieve the products list persisted in the `products` container. To have this interaction with Cosmos DB  work, you will need to configure your catalog-api.
+For the moment, the API is only connecting to Azure Cosmos DB  to retrieve the products list persisted in the `products` container. To have this interaction with Azure Cosmos DB work, you will need to configure your catalog-api.
 
 The configuration file format is provided in `src/catalog-api/appsettings.json.template` and will need to be duplicated in a new file called `src/catalog-api/appsettings.Development.json`. 
 Once duplicated, you will need to fill in the missing values in this new file to configure the app.  
 
 <div class="task" data-title="Task">
 
-> - Set the Cosmos Db connection string in the `appsettings.Development.json` file
+> - Set the Azure Cosmos DBconnection string in the `appsettings.Development.json` file
 > - Set the Redis connection string in the `appsettings.Development.json` file (in preparation for the next lab)
 > - Set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"`
 > - Run the API in your devcontainer or using the provided GitHub Codespace.
@@ -386,7 +386,7 @@ cd src/catalog-api
 cp appsettings.json.template appsettings.Development.json
 ``` 
 
-Inside the Azure Portal, go to your resource group, search for the Cosmos DB account, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and replace `"AZURE_COSMOSDB_CONNECTION_STRING"` value in `appsettings.Development.json` :
+Inside the Azure Portal, go to your resource group, search for the Azure Cosmos DBaccount, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and replace `"AZURE_COSMOSDB_CONNECTION_STRING"` value in `appsettings.Development.json` :
 
 ![Cosmos DB Keys](./assets/cosmos-db-keys.png)
 
@@ -434,9 +434,9 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 </div>
 
-Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by Cosmos DB  in this lab's scenario. 
+Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by Azure Cosmos DB in this lab's scenario. 
 
-If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (Cosmos DB ) and rehydrate the cache with this fresh data. 
+If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (Azure Cosmos DB) and rehydrate the cache with this fresh data. 
 This way, the next call will extract the list of products directly from the cache, improving the overall request performance, as well as freeing up resources for the database to focus on actual data persistence activities.
 
 <div class="task" data-title="Tasks">
@@ -460,7 +460,7 @@ if (cachedProducts != null) {
 }
 ```
 
-If no product is found in the cache, fetch the data from Cosmos DB and store them in the cache before returning them:
+If no product is found in the cache, fetch the data from Azure Cosmos DBand store them in the cache before returning them:
 
 ```csharp
 // Fetch data from Cosmos DB
@@ -511,7 +511,7 @@ Search your App Service in the Visual Studio Code Azure extension and click on t
 
 ![Deploy to Web App](./assets/app-service-deploy-to-web-app.png)
 
-Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Cosmos Db was already configured in the Azure App Service for you by the infrastructure as code.
+Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Azure Cosmos DBwas already configured in the Azure App Service for you by the infrastructure as code.
 
 When it's done go to your App Service resource on Azure and click on the **Browse** button. Navigate to the `/products` endpoint and you should see the list of products:
 
