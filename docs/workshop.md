@@ -443,12 +443,13 @@ app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheServic
 
 Now, if you run your API again and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds! 
 
-Thanks Redis ! ;)
+Thanks Redis! ;)
+
 </details>
 
 ## Deploy the API to Azure
 
-Now that you have your API working locally, you will deploy it to Azure. To do this, you will use the Azure App Service provided by the Terraform IaC applied earlier. This service allows you to host your API in the cloud.
+Now that you have your API working locally, you will deploy it to Azure. To do this, you will use the Azure App Service provided by the Terraform infrastructure as code applied earlier. This service allows you to host your API in the cloud.
 
 To deploy your API directly from Visual Studio Code, you will use the Visual Studio Code Azure extension.
 
