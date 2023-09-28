@@ -14,8 +14,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Azure Functions zip
-      run:  cd src/functions && zip -r ../../functions.zip .
+    - name: cache-refresh-func zip
+      run:  cd src/cache-refresh-func && zip -r ../../cache-refresh-func.zip .
+
+    - name: history-func zip
+      run:  cd src/history-func && zip -r ../../history-func.zip .
 
     - name: API zip
       run:  cd src/catalog-api && zip -r ../../catalog-api.zip .
