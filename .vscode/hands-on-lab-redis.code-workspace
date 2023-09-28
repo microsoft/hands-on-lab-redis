@@ -11,6 +11,10 @@
 		{
 			"path": "../src/cache-refresh-func",
 			"name": "Function - Cache Refresh"
+		},
+		{
+			"path": "../src/history-func",
+			"name": "Function - History Func"
 		}
 	],
 	"settings": {

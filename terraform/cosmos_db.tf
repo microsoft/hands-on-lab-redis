@@ -1,7 +1,7 @@
 resource "azurerm_cosmosdb_account" "this" {
   name                = format("cosmos-%s", local.resource_suffix_kebabcase)
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
   tags                = local.tags
@@ -17,7 +17,7 @@ resource "azurerm_cosmosdb_account" "this" {
   }
 
   geo_location {
-    location          = azurerm_resource_group.this.location
+    location          = local.resource_group_location
     failover_priority = 0
   }
 }

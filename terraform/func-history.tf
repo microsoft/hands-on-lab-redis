@@ -1,7 +1,7 @@
 resource "azurerm_linux_function_app" "func_history" {
   name                = format("func-hist-%s", local.resource_suffix_kebabcase)
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
+  resource_group_name = local.resource_group_name
+  location            = local.resource_group_location
 
   storage_account_name       = azurerm_storage_account.func.name
   storage_account_access_key = azurerm_storage_account.func.primary_access_key
@@ -23,7 +23,7 @@ resource "azurerm_linux_function_app" "func_history" {
 
   site_config {
     application_stack {
-      dotnet_version = "7.0"
+      dotnet_version              = "7.0"
       use_dotnet_isolated_runtime = true
     }
   }

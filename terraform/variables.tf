@@ -1,3 +1,9 @@
+variable "resource_group_name" {
+  type        = string
+  default     = ""
+  description = "The resource group name to override default naming convention"
+}
+
 variable "environment" {
   type        = string
   default     = "dev"
@@ -37,4 +43,5 @@ variable "apim_sku" {
   default     = "Consumption_0"
   description = "The API Management SKU"
 }
+
 

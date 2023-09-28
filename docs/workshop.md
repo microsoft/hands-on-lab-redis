@@ -32,7 +32,7 @@ Before starting this workshop, be sure to have:
 - Create a [fork][Repo-fork] of the repository from the **main** branch to help you keep track of your changes
 - To run the different labs, you have 2 options: 
     - Use a devcontainer locally 
-    - Use a Github Codespace
+    - Use a GitHub Codespace
     
 ### Use your own local environment 
 
@@ -52,11 +52,14 @@ If you are not prompted by Visual Studio Code, you can open the command palette 
 
 <div class="tip" data-title="Tips">
 
-> To focus on the main purspose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
-> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.  
+> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
+> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites you could find in the `.devcontainer` folder.
 </div>
 
 ### Using a pre-configured GitHub Codespace 
+
+To use a Github Codespace, you will need : 
+- [A GitHub Account][Github-account] (Free or Enterprise)
 
 Github Codespace offers the ability to run a complete dev environment (Visual Studio Code, Extensions, Tools, Secure port forwarding etc.) on a dedicated virtual machine. 
 The configuration for the environment is defined in the `.devcontainer` folder, making sure everyone gets to develop and practice on identical environments : No more conflict on dependencies or missing tools ! 
@@ -119,7 +122,7 @@ az provider register --namespace 'Microsoft.OperationalInsights'
 az provider register --namespace 'Microsoft.Cache'
 # API Management
 az provider register --namespace 'Microsoft.ApiManagement'
-# Azure CosmosDb 
+# Azure Cosmos DB  
 az provider register --namespace 'Microsoft.DocumentDB'
 ```
 
@@ -127,7 +130,7 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 <div class="task" data-title="Task">
 
-> You will find the instructions and expected configurations for each Lab step in these yellow "Task" boxes.
+> You will find the instructions and expected configurations for each Lab step in these yellow **Task** boxes.
 > Inputs and parameters to select will be defined, all the rest can remain as default as it has no impact on the scenario.
 
 </div>
@@ -174,7 +177,7 @@ While you are deploying the infrastructure of the labs, let's discover it togeth
 
 The architecture is composed of the following elements:
 - An Azure Static Web App that will be used to display the data from the API
-- An App Service that will host an API and store the data in a Cosmos DB database
+- An App Service that will host an API and store the data in a Azure Cosmos DB
 - An APIM which will be used as a facade for the APIs
 - An Azure Cache for Redis that will be used to cache the data of the API
 - A first Azure Function that will be triggered by an event of the Azure Cache for Redis to refresh the cache when the data expires
@@ -185,11 +188,11 @@ You will discover all these elements during this Hands On Lab.
 
 ## Seed the database
 
-In this Hands On Lab, you will use a Cosmos DB database to store and retrieve your data. To save time, you will seed it with some data.
+In this Hands On Lab, you will use a Azure Cosmos DB to store and retrieve your data. To save time, you will seed it with some data.
 
 To do this, download the [zip file][database-seed-zip] that contains the data to seed your database, then unzip it and you will find a `products.json` file.
 
-Go to your resource group, search the Cosmos DB account, select it and in the left menu, click on **Data Explorer**. Then on the database called `catalogdb` and click on the `products` container and select `Items` like below:
+Go to your resource group, search the Azure Cosmos DB account, select it and in the left menu, click on **Data Explorer**. Then on the database called `catalogdb` and click on the `products` container and select `Items` like below:
 
 ![Cosmos DB Data Explorer](./assets/cosmos-db-data-explorer.png)
 
@@ -249,7 +252,6 @@ It will allow you to:
 ## Redis basics 
 
 To be able to use Azure Cache for Redis, you need to understand the basics of Redis. Redis is an open source, in-memory data structure store, used as a database, cache, and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and streams.
-<!-- TODO: Add context on Redis OSS, Azure Cache for Redis, Azure Cache for Redis Enterprise -->
 
 <div class="tip" data-title="Tips">
 
@@ -259,7 +261,12 @@ To be able to use Azure Cache for Redis, you need to understand the basics of Re
 
 </div>
 
-<!-- TODO : Explain how to interact with Redis and how it works concretely -->
+These structures are available with any of the pricing tiers available for an Azure Cache for Redis:
+- **Basic**: An OSS Redis cache running on a single VM. This tier has no service-level agreement (SLA) and is ideal for development/test and noncritical workloads.
+- **Standard**: An OSS Redis cache running on two VMs in a replicated configuration.
+- **Premium**: High-performance OSS Redis caches. This tier offers higher throughput, lower latency, better availability, and more features. Premium caches are deployed on more powerful VMs compared to the VMs for Basic or Standard caches.
+- **Enterprise**: High-performance caches **powered by Redis Inc.’s Redis Enterprise software**. This tier supports Redis modules including RediSearch, RedisBloom, RedisJSON, and RedisTimeSeries. Also, it offers even higher availability than the Premium tier.
+- **Enterprise Flash**: Cost-effective large caches powered by Redis Inc.’s Redis Enterprise software. This tier extends Redis data storage to nonvolatile memory, which is cheaper than DRAM, on a VM. It reduces the overall per-GB memory cost.
 
 Let's see quickly how to interact with Azure Cache for Redis. Go to your resource group, search the Azure Cache for Redis resource, select it and in the left menu, click on **Overview** and click on the **Console** button:
 
@@ -331,8 +338,6 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
 
-<!-- TODO: Check if more context is required -->
-
 <div class="tip" data-title="Tips">
 
 > Redis Cache has a set of different clients to connect to it. For your real world scenario, pick the client that fits your preferred development language as detailed [here][redis-dev-clients] : All of these are compatible with Azure Cache for Redis instances.
@@ -341,22 +346,28 @@ In this lab, you will see how to use Azure Cache for Redis in your API to improv
 
 ## Run the API
 
+<div class="info" data-title="Note">
+
+> This lab relies on two different data store systems : Azure Cosmos DB and Azure Cache for Redis. While Redis queries are faster than the ones sent to a Serverless Azure Cosmos DB instance (mainly thanks to the **In-Memory data storage**), the overall latency difference on end to end API call might not be so clearly noticeable.
+> In average, pure Azure Cache for Redis calls come back under 1 ms, while a Serverless Azure Cosmos DB Instance will respond in a few milliseconds.  
+>
+> Between the performance optimizations at a Serverless Azure Cosmos DB Instance doors, the scenario with a single user calling the API combined with such a small volume of `products` data persisted in Azure Cosmos DB, the end to end API response time discrepancy between Azure Cache for Redis and Cosmos DB  can be reduced.
+>
+> To clearly identify calls' response with or without cache, you'll add an artificial high latency while interacting with Azure Cosmos DB .
+> To do so, you'll find an environment variable in appsettings.json.template named `SIMULATED_DB_LATENCY_IN_SECONDS` that you'll have to fill in : The rest of the application code is ready to take this value into account.
+
+</div>
+
 Open the `src/catalog-api` folder in Visual Studio Code in your active devcontainer or GitHub Codespace.
 
-<!-- TODO : Remove this part and the delay if agreed ! -->
-
-For the purpose of this lab you will have to add a delay for the response of the API to be able to see the difference between the response time with and without the cache. This is because a database like Cosmos Db is able to return the data in a few milliseconds after a few calls so you won't be able to see the difference between the response time with and without the cache after a few retry.
-
-<!-- Check if remove-->
-
-For the moment, the API is only connecting to Azure CosmosDB to retrieve the products list persisted in the `products` container. To have this interaction with CosmosDb work, you will need to configure your catalog-api.
+For the moment, the API is only connecting to Azure Cosmos DB  to retrieve the products list persisted in the `products` container. To have this interaction with Azure Cosmos DB work, you will need to configure your catalog-api.
 
 The configuration file format is provided in `src/catalog-api/appsettings.json.template` and will need to be duplicated in a new file called `src/catalog-api/appsettings.Development.json`. 
 Once duplicated, you will need to fill in the missing values in this new file to configure the app.  
 
 <div class="task" data-title="Task">
 
-> - Set the Cosmos Db connection string in the `appsettings.Development.json` file
+> - Set the Azure Cosmos DBconnection string in the `appsettings.Development.json` file
 > - Set the Redis connection string in the `appsettings.Development.json` file (in preparation for the next lab)
 > - Set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"`
 > - Run the API in your devcontainer or using the provided GitHub Codespace.
@@ -375,7 +386,7 @@ cd src/catalog-api
 cp appsettings.json.template appsettings.Development.json
 ``` 
 
-Inside the Azure Portal, go to your resource group, search for the Cosmos DB account, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and replace `"AZURE_COSMOSDB_CONNECTION_STRING"` value in `appsettings.Development.json` :
+Inside the Azure Portal, go to your resource group, search for the Azure Cosmos DBaccount, select it and in the left menu, click on **Keys**. Then copy the **Primary Connection String** and replace `"AZURE_COSMOSDB_CONNECTION_STRING"` value in `appsettings.Development.json` :
 
 ![Cosmos DB Keys](./assets/cosmos-db-keys.png)
 
@@ -383,8 +394,7 @@ Then inside the Azure Portal, go to your resource group, search the Azure Cache 
 
 ![Azure Cache for Redis Keys](./assets/azure-cache-for-redis-keys.png)
 
-<!-- TODO : Check formulation -->
-You can set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"` to artificially represent a larger CosmosDB size
+You can set `SIMULATED_DB_LATENCY_IN_SECONDS` to `"1"` to create artificial latency to ease perception over cache/no cache data retrieval response time.
 
 You can now run debug for the catalog-api by selecting **Run and Debug** in the left menu, select `.Net Core Launch (web)` and click the green arrow : 
 
@@ -392,10 +402,10 @@ You can now run debug for the catalog-api by selecting **Run and Debug** in the 
 
 Depending on the environment you are using : 
 - Devcontainer : 
-    - Once the api is running, browse for the url: http://localhost:5076/products and you should see the list of products.
+    - Once the API is running, browse for the url: http://localhost:5076/products and you should see the list of products.
 - Github Codespace : 
-    - Once the api is running, click on the **ports** tab in the bottom part of Visual Studio Code window. You should retrieve the unique domain name generated for the combination of your codespace and the port being forwarded.
-    - Right click on port `5076` and click **Open in Browser**. <!-- TODO: Fix Codespace access issues -->
+    - Once the API is running, click on the **ports** tab in the bottom part of Visual Studio Code window.
+    - Right click on port `5076` and click **Open in Browser**.
     - You can now browse for http://<your-unique-domain-&-port>/products and you should see the list of products.
 
 </details>
@@ -415,7 +425,7 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 > These Get & Set Async methods have been built specifically for this lab to simplify exception handling and serialization as much as possible in your interaction with Azure Cache for Redis.
 > However, the actual Get and Set queries sent to the Redis Cache reside in the simple methods provided by the StackExchange.Redis package, and that you can see in the `RedisService.cs` class as the extract below : 
-
+> 
 > ```csharp
 > await _database.StringGetAsync(key);
 > ...
@@ -424,9 +434,9 @@ They both use the `IRedisService` interface to interact with the cache and use t
 
 </div>
 
-Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by CosmosDb in this lab's scenario. 
+Now it is time to work with Azure Cache for Redis to retrieve and return the list of products provided by the persistence tier played by Azure Cosmos DB in this lab's scenario. 
 
-If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (CosmosDb) and rehydrate the cache with this fresh data. 
+If no product exists in your Azure Cache for Redis Instance, then you will need to retrieve a fresh list of products from your persisting database (Azure Cosmos DB) and rehydrate the cache with this fresh data. 
 This way, the next call will extract the list of products directly from the cache, improving the overall request performance, as well as freeing up resources for the database to focus on actual data persistence activities.
 
 <div class="task" data-title="Tasks">
@@ -450,7 +460,7 @@ if (cachedProducts != null) {
 }
 ```
 
-If no product is found in the cache, fetch the data from Cosmos DB and store them in the cache before returning them:
+If no product is found in the cache, fetch the data from Azure Cosmos DBand store them in the cache before returning them:
 
 ```csharp
 // Fetch data from Cosmos DB
@@ -495,13 +505,13 @@ Thanks Redis! ;)
 
 Now that you have your API working locally, you will deploy it to Azure. To do this, you will use the Azure App Service provided by the Terraform infrastructure as code applied earlier. This service allows you to host your API in the cloud.
 
-To deploy your API directly from Visual Studio Code, you will use the Visual Studio Code Azure extension.
+To deploy your API directly from Visual Studio Code, you will use the Visual Studio Code Azure extension panel.
 
-Search your App Service in the Visual Studio Code Azure extension and click on the **Deploy to Web App...** button:
+Right click on your App Service in the Visual Studio Code Azure extension panel and select **Deploy to Web App...** :
 
 ![Deploy to Web App](./assets/app-service-deploy-to-web-app.png)
 
-Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Cosmos Db was already configured in the Azure App Service for you by the infrastructure as code.
+Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Azure Cosmos DBwas already configured in the Azure App Service for you by the infrastructure as code.
 
 When it's done go to your App Service resource on Azure and click on the **Browse** button. Navigate to the `/products` endpoint and you should see the list of products:
 
@@ -540,7 +550,6 @@ Now click on the **Browse** button in the **Overview** of your static web app to
 
 
 [redis-dev-clients]: https://redis.io/docs/clients/
-[api-zip]: https://github.com/microsoft/hands-on-lab-redis/releases/download/latest/catalog-api.zip
 [stackexchange-redis]: https://www.nuget.org/packages/StackExchange.Redis
 
 ---
@@ -902,13 +911,13 @@ To set the `CATALOG_API_URL` environment variable, go to your resource group, se
 ![Apim gateway url](./assets/apim-gateway-url.png)
 
 To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
-1. In VS Code, Press `Ctrl + Shift + P`, then search `Azurite: Start` and select this option : 
+- In VS Code, Press `Ctrl + Shift + P`, then search `Azurite: Start` and select this option : 
 
-![Azurite Start](./assets/azurite-start.png)
+    ![Azurite Start](./assets/azurite-start.png)
 
-1. Then run the Azure Function by clicking on the **Run and Debug** panel and select `Attach to Cache Refresh Function`:
+- Then run the Azure Function by clicking on the **Run and Debug** panel and select `Attach to Cache Refresh Function`:
 
-![Azure Function run](./assets/azure-function-run.png)
+    ![Azure Function run](./assets/azure-function-run.png)
 
 </details>
 
@@ -964,8 +973,8 @@ To do this, there is a variety of tools that you can use to inspect Redis data l
 
 <div class="task" data-title="Task">
 
->  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab1.
->  - Locate the stream where `catalog-api` publishes product viewing events. Your hint is the name of the stream.
+>  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab 1.
+>  - Locate the stream where `catalog-api` publishes product viewing events, named `productViews`.
 >  - Inspect the items in the Stream using `Redis Console` from the Azure portal.
 >  - View more products in the Web App and make sure new items get added in the stream.
 
@@ -1163,7 +1172,7 @@ func azure functionapp publish <NAME_OF_YOUR_HISTORY_FUNCTION_APP>
 
 In this last part, you will wire the newly deployed `history-func` app to the Web App using the app setting `HISTORY_API`.
 
-This will allow the Web App to communicate with your new History API (`/api/history`) to retrieve and display the current user's browsing history.
+This will allow the Web App to communicate with your new History api (`/api/history`) to retrieve and display the current user's browsing history.
 
 ![View recent browsing history](./assets/webapp-view-browsing-history.png)
 
@@ -1179,7 +1188,7 @@ This will allow the Web App to communicate with your new History API (`/api/hist
 
 To configure the Static Web App to use the new `/api/history` endpoint you will first need to get its full url.
 
-To do that, first head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
+To do that, head to the `history-func` Function App in the Azure Portal, then select the function `GetBrowsingHistory`.
 
 ![GetBrowsingHistory in history-func](./assets/history-func-select-http-function.png)
 
@@ -1217,27 +1226,27 @@ Once it gets loaded, click on the UUID of the user on the top right of the page 
 
 # Lab 4 : Azure Cache for Redis Governance 
 
-In this lab you will discover how to retreive metrics and logs from Azure Cache for Redis to monitor the health of the resource and take informed decisions about its sizing.
+In this lab you will discover how to retrieve metrics and logs from Azure Cache for Redis to monitor the health of your instance and take informed decisions about its sizing.
 
 ## Azure Monitor 
 
-To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [Redis-Benchmark][redis-benchmark] tool installed in the devcontainer.
+To simulate a real world scenario, the first thing to do is to generate some load on the Azure Cache for Redis resource. To be able to do this, you will use the [RedisLabs/memtier_benchmark][redis-benchmark] tool as a docker image (Docker is already set up in the devcontainer/codespace).
 
-Redis Benchmark is a simple command-line utility designed to simulate running a certain number of queries from a defined set of parallel clients. 
+RedisLabs Memtier_benchmark is a command-line utility designed to load test based on a default or custom load scenario. 
 
-To authenticate to your Azure Cache for Redis resource you will need an access key. Go to the Azure Portal and inside the Azure Cache for Redis resource in the left menu, click on **Access keys** and copy the `Primary` or `Secondary` key. 
+To authenticate to your Azure Cache for Redis resource you will need one of the access keys. Go to the your Azure Cache for Redis resource and select the **Access Keys** panel, then copy the  `Primary` or `Secondary` key. 
 
 Next, to generate some load on the Azure Cache for Redis resource use the following command : 
 
 ```bash
-redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
+docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --tls --tls-skip-verify
 ```
 
-Redis Benchmark will send 10 million `SET` queries of 1KB each from 300 parallel connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
+Redis Benchmark will send a few million queries (SET and GET) each from various parallel client connections. In this lab's use case, the duration of the operation will mainly be influenced by the codespace/dev environment CPU, RAM and network bandwidth resources.
 
-When the benchmark is done, you should see this kind of results :
+When the benchmark is done, you should see the following results table (latency will depend on the benchmark's source location):
 
-![Redi-Benchmark-results](./assets/redis-benchmark-results.png)
+![Redis-Benchmark-results](./assets/redis-benchmark-results.png)
 
 About 5 minutes after the benchmark has successfully ended, open the Azure Portal view on your Azure Cache for Redis resource and open the **Insights** panel to gain deeper knowledge of the resource health : 
 
@@ -1253,7 +1262,7 @@ The Azure Cache for Redis Enterprise SKU also comes with `autoscaling` capabilit
 
 Currently, only the Enterprise SKU support the `autoscaling` feature. However, you can do it manually using the `Premium` SKU, enabling the `cluster` option and taking advantage of Azure Monitor Alerts to respond to increasing usage trends and trigger additional node and shard provisionning. 
 
-## Usage Trend monitoring
+## Usage trend monitoring
 
 Let's create an [alert rule][alert-rule-creation] with Azure Monitor to send an email notification when the CPU average usage of the Azure Cache for Redis resource is above `30%` for more than `1` minute. When the alert is triggered, you will send an email to notify the Ops team that the usage trend on Redis increased.
 
@@ -1261,10 +1270,10 @@ In a real world scenario this alert could be coupled with a request to increase 
 
 <div class="task" data-title="Task">
 
-> - Create a `static alert rule` to trigger when CPU reaches `30%` on `average` during `1` minute
+> - Create a `static alert rule` to trigger when CPU reaches `30%` on `average` for the past `1` minute
 > - Create an [`action group`][action-group-creation] that will be executed by this alert rule 
 > - The `action group` must send an `email` notification to your email address 
-> - Execute a new benchmark of `10 Million` requests to load the Azure Cache for Redis CPU and trigger the alert
+> - Execute the memtier_benchmark utility during `5 minutes` to load the Azure Cache for Redis CPU and trigger the alert
 
 </div>
 
@@ -1299,12 +1308,12 @@ Now is time to finalize the configuration of the alert rule: Giving it a `resour
 
 ![monitor-alert-details](./assets/monitor-alert-details.png)
 
-Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [Redis-Benchmark][redis-benchmark] tool like you did before.
+Now the alert is created, you can test it by generating some load on the Azure Cache for Redis resource using the [RedisLabs/memtier_benchmark][redis-benchmark] tool like you did before.
 
-Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier :
+Run the same **redis-benchmark** command from your devcontainer/copdespace terminal as earlier, for a 5 minutes benchmark duration :
 
 ```bash
-redis-benchmark -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6379 -a <YOUR REDIS_ACCESS_KEY> -t GET -n 10000000 -d 1024 -c 300 --threads 2 
+docker run --rm redislabs/memtier_benchmark:latest -h <YOUR_REDIS_RESOURCE_NAME>.redis.cache.windows.net -p 6380 -a <YOUR_REDIS_ACCESS_KEY> --test-time=300 --tls --tls-skip-verify 
 ```
 
 After a few minutes, a notification like the following should be sent to your email address :
@@ -1325,7 +1334,7 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 [alert-rule-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule?tabs=metric 
 [action-group-creation]: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal 
-[redis-benchmark]: (https://redis.io/docs/management/optimization/benchmarks/)
+[redis-benchmark]: (https://github.com/RedisLabs/memtier_benchmark)
 [redis-dev-wrapper]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis/
 
 ---

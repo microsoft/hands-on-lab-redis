@@ -1,7 +1,7 @@
 resource "azurerm_redis_cache" "this" {
   name                = format("redis-%s", local.resource_suffix_kebabcase)
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
   capacity            = 1
   family              = "P"
   sku_name            = "Premium"
