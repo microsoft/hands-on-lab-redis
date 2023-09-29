@@ -12,8 +12,8 @@ public class SimulatedDatabaseLatency : ISimulatedDatabaseLatency
 
     public SimulatedDatabaseLatency(IConfiguration configuration)
     {
-        _simulatedDBLatencyInSeconds = SimulatedLatencyInSeconds();
         _configuration = configuration;
+        _simulatedDBLatencyInSeconds = SimulatedLatencyInSeconds();
     }
 
     private int SimulatedLatencyInSeconds()
