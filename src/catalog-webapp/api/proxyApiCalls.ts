@@ -20,7 +20,11 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
 
         console.log(`Proxying ${req.url} to ${url}`);
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                'X-USER-ID': req.headers['X-USER-ID'],
+            },
+        });
 
         const data = await response.json();
         
