@@ -244,7 +244,7 @@ npm run swa:deploy -- \
   --api-version 18
 ```
 
-Great, now yous should have a running Web App which you can use during the workshop to check your progress.
+Great, now you should have a running Web App which you can use during the workshop to check your progress.
 
 It will allow you to:
 - View the list of products by calling `catalog-api`
@@ -922,11 +922,11 @@ CATALOG_API_URL = "https://<APIM_GATEWAY_NAME>.azure-api.net"
 To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
 - In VS Code, Press `Ctrl + Shift + P`, then search `Azurite: Start` and select this option : 
 
-    ![Azurite Start](./assets/azurite-start.png)
+![Azurite Start](./assets/azurite-start.png)
 
 - Then run the Azure Function by clicking on the **Run and Debug** panel and select `Attach to Cache Refresh Function`:
 
-    ![Azure Function run](./assets/azure-function-run.png)
+![Azure Function run](./assets/azure-function-run.png)
 
 - You can now call the `products` endpoint of your APIM Gateway (GET "https://<APIM_GATEWAY_NAME>.azure-api.net/products") to trigger the initial caching.
 
