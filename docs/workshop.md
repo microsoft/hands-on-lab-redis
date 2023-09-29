@@ -34,7 +34,7 @@ Before starting this workshop, be sure to have:
     - Use a devcontainer locally 
     - Use a GitHub Codespace
     
-### Use your own local environment 
+### Using your own local environment 
 
 The following tools and access will be necessary to run the lab in good conditions on a local environment :  
 
@@ -71,7 +71,9 @@ To get your codespace ready for the labs, here are a few steps to execute :
 
 ![codespace-new](./assets/codespace-new.png)
 
-- After a few minutes, the codespace opens and you will have to enter the Visual Studio Workspace to get all the tools ready. To do so, click the **burger menu** in the top left corner, **File** and then **Open Workspace from File...** 
+### Load the Workspace
+
+After a few minutes, the codespace or the devcontainer opens and you will have to enter the Visual Studio Workspace to get all the tools ready. To do so, click the **burger menu** in the top left corner (visible only with codespace), **File** and then **Open Workspace from File...** 
 
 ![codespace-workspace](./assets/codespace-workspace.png)
 
@@ -1355,34 +1357,34 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 ---
 
-# Lab 5 : AAD + RBAC
+# Lab 5 : Integration with Microsoft Entra ID
 
-In this Lab you will focus on securing connections to Azure Cache for Redis by replacing secrets (e.g. connection strings) with [AAD-integration and RBAC][redis-aad-auth].
+In this Lab you will focus on securing connections to Azure Cache for Redis by replacing secrets (e.g. connection strings) with [ Azure Active Directory integration and RBAC][redis-aad-auth]. Notice that the new name for Azure Active Directory is Microsoft Entra ID.
 
 ![Using AAD to connect to Azure Cache for Redis](./assets/azure-ad-token.png)
 
-Here are the steps for securing your application with AAD and RBAC:
+Here are the steps for securing your application with Azure Active Directory (AAD) and Role Based Access Control (RBAC):
 - You enable the AAD-integration in your Azure Cache for Redis resource.
 - You assign a role to your application's identity (e.g. System assigned identity) to allow it to access data in Redis.
-- Your application requests a token from Azure AD. This can be done automatically using a Redis client library (if it supports AAD-integration) otherwise you need to use an authentication library like [Microsoft Authentication Library][msal] to get the token.
+- Your application requests a token from Azure Active Directory. This can be done automatically using a Redis client library (if it supports AAD-integration) otherwise you need to use an authentication library like [Microsoft Authentication Library][msal] (also known as MSAL) to get a token.
 - The application then uses that token as a password to establish a connection to Azure Cache for Redis.
 - The application uses the connection to communicate with Redis.
 - Before the expiry of the AAD token, your application needs to refresh the token (e.g. via [MSAL][msal]) to avoid losing access to the Azure Cache for Redis instance.
 
 The goal of this lab is to update `catalog-api` to use AAD and RBAC instead of a Connection String.
-`catalog-api` is already using [Microsoft.Azure.StackExchangeRedis][microsoft-azure-stackexchangeredis] which extends the Redis client [StackExchange.Redis][stackexchange-redis] to support AAD-integration by handling AAD token fetching and refreshing.
+`catalog-api` is already using [Microsoft.Azure.StackExchangeRedis][microsoft-azure-stackexchangeredis] which extends the Redis client [StackExchange.Redis][stackexchange-redis] to support AAD-integration.
 
-## Enabling AAD-integration
+## Enabling Azure Active Directory integration
 
 <div class="task" data-title="Task">
 
-> Enable `AAD access authorization` on your Azure Cache for Redis resource from the `Advanced settings` menu
+> Enable `Azure Active Directory access authorization` on your Azure Cache for Redis resource from the `Advanced settings` menu
 
 </div>
 
 <div class="tip" data-title="Tips">
 
-> This operation may take few minutes to take effect in a real-life scenario but in this lab it should be fairly quick
+> This operation may take a few minutes to take effect in a real-life scenario but in this lab it should be fairly quick
 
 </div>
 
@@ -1422,7 +1424,7 @@ Select the `Data Contributor` policy, click on the `Redis Users` tab and select 
 
 ![Assigning a role to the user](./assets/redis-assign-role-to-user.png)
 
-Select `App Service` in the type of Managed Identity, then select your App Service Web App in which `catalog-api` is deployed, and validate your selection by clicking the `Select` button.
+Select `App Service` in the type of Managed Identity, then select your Web App in which `catalog-api` is deployed, and validate your selection by clicking the `Select` button.
 
 Finally click on `Review + assign` to crate the new Redis user:
 
@@ -1471,13 +1473,13 @@ Replace the `connectionMultiplexer` variable initialization logic in the first c
 
 Next, you need to re-deploy your code to App Service like what you did in Lab 1 using the Visual Studio Code Azure extension and the `Deploy to Web App...` option.
 
-Afterwards, go to the `Identity` menu on your App Service resource, and copy the value of `Object (principal) ID`.
+Afterwards, go to the **Identity** menu on your App Service resource, and copy the value of `Object (principal) ID`.
 
 ![Managed identity of catalog-api](./assets/catalog-api-managed-identity.png)
 
-Finally, go to the `Configuration` menu of your App Service resource and set the app setting `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` to the value of `Object (principal) ID`.
+Finally, go to the **Configuration** menu of your App Service resource and set the app setting `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` to the value of `Object (principal) ID`.
 
-Validate the change by clicking `Ok`, then `Save` and you should be all set now.
+Validate the change by clicking **Ok**, then **Save** and you should be all set now.
 
 </details>
 
