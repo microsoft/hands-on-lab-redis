@@ -51,7 +51,7 @@ resource "azurerm_api_management_product_api" "catalog_products" {
   resource_group_name = azurerm_api_management.this.resource_group_name
 }
 
-resource "azurerm_api_management_api_operation" "get_people" {
+resource "azurerm_api_management_api_operation" "get_products" {
   operation_id        = "get-products"
   api_name            = azurerm_api_management_api.products.name
   api_management_name = azurerm_api_management_api.products.api_management_name
@@ -60,6 +60,27 @@ resource "azurerm_api_management_api_operation" "get_people" {
   method              = "GET"
   url_template        = "/products"
   description         = "Get products."
+
+  response {
+    status_code = 200
+  }
+}
+
+resource "azurerm_api_management_api_operation" "get_product" {
+  operation_id        = "get-product-id"
+  api_name            = azurerm_api_management_api.products.name
+  api_management_name = azurerm_api_management_api.products.api_management_name
+  resource_group_name = azurerm_api_management_api.products.resource_group_name
+  display_name        = "Get Product by id"
+  method              = "GET"
+  url_template        = "/products/{id}"
+  description         = "Get product id."
+
+  template_parameter {
+    name     = "id"
+    type     = "number"
+    required = true
+  }
 
   response {
     status_code = 200
