@@ -31,7 +31,7 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
         });
 
         const data = await response.json();
-
+        
         return {
             status: response.status,
             body: JSON.stringify(data),
