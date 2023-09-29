@@ -914,7 +914,8 @@ To set the `CATALOG_API_URL` environment variable, go to your resource group, se
 
 ![Apim gateway url](./assets/apim-gateway-url.png)
 
-Your `CATALOG_API_URL`, so it should look like that : 
+Your `CATALOG_API_URL` should look like that: 
+
 ```bash
 CATALOG_API_URL = "https://<APIM_GATEWAY_NAME>.azure-api.net" 
 ```
@@ -930,9 +931,9 @@ To debug the Cache Refresh Azure Function in VS Code, you will need to start Azu
 
 - You can now call the `products` endpoint of your APIM Gateway (GET "https://<APIM_GATEWAY_NAME>.azure-api.net/products") to trigger the initial caching.
 
-- After 60 seconds, you should see your Azure Function process the expiration and calling the APIM `/products` endpoint again : Your cache auto-refresher is now working !
+- After 60 seconds, you should see your Azure Function process the expiration and calling the APIM `/products` endpoint again : Your cache auto-refresher is now working!
 
-    ![Azure Func Execution](./assets/azure-function-exec.png)
+![Azure Func Execution](./assets/azure-function-exec.png)
 
 </details>
 
