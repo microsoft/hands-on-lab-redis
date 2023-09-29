@@ -1339,6 +1339,158 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 ---
 
+# Lab 5 : AAD + RBAC
+
+In this Lab you will focus on securing connections to Azure Cache for Redis by replacing secrets (e.g. connection strings) with [AAD-integration and RBAC][redis-aad-auth].
+
+![Using AAD to connect to Azure Cache for Redis](./assets/azure-ad-token.png)
+
+Here are the steps for securing your application with AAD and RBAC:
+- You enable the AAD-integration in your Azure Cache for Redis resource.
+- You assign a role to your application's identity (e.g. System assigned identity) to allow it to access data in Redis.
+- Your application requests a token from Azure AD. This can be done automatically using a Redis client library (if it supports AAD-integration) otherwise you need to use an authentication library like [Microsoft Authentication Library][msal] to get the token.
+- The application then uses that token as a password to establish a connection to Azure Cache for Redis.
+- The application uses the connection to communicate with Redis.
+- Before the expiry of the AAD token, your application needs to refresh the token (e.g. via [MSAL][msal]) to avoid losing access to the Azure Cache for Redis instance.
+
+The goal of this lab is to update `catalog-api` to use AAD and RBAC instead of a Connection String.
+`catalog-api` is already using [Microsoft.Azure.StackExchangeRedis][microsoft-azure-stackexchangeredis] which extends the Redis client [StackExchange.Redis][stackexchange-redis] to support AAD-integration by handling AAD token fetching and refreshing.
+
+## Enabling AAD-integration
+
+<div class="task" data-title="Task">
+
+> Enable `AAD access authorization` on your Azure Cache for Redis resource from the `Advanced settings` menu
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> This operation may take few minutes to take effect in a real-life scenario but in this lab it should be fairly quick
+
+</div>
+
+<details>
+
+<summary>Toggle solution</summary>
+
+Head to the `Advanced settings` menu and then check the checkbox of `AAD access authorization`:
+
+![Enabling AAD access authorization](./assets/redis-enable-aad.png)
+
+</details>
+
+## Assigning a role
+
+<div class="task" data-title="Task">
+
+> Assign the `Data Contributor` role to the system-assigned identity of your `catalog-api`
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> [Configure RBAC with Data Access Policy][configure-rbac-with-data-access-policy]
+
+</div>
+
+<details>
+
+<summary>Toggle solution</summary>
+
+Head to the `Data Access Configuration` menu, then click on the `Add` button, and choose `New Redis User`:
+
+![Adding a new Redis user](./assets/redis-add-new-user.png)
+
+Select the `Data Contributor` policy, click on the `Redis Users` tab and select `Managed Identity`, and then click on the `Select member` button.
+
+![Assigning a role to the user](./assets/redis-assign-role-to-user.png)
+
+Select `App Service` in the type of Managed Identity, then select your App Service Web App in which `catalog-api` is deployed, and validate your selection by clicking the `Select` button.
+
+Finally click on `Review + assign` to crate the new Redis user:
+
+![Validating user creation](./assets/redis-validate-user-creation.png)
+
+</details>
+
+
+## Updating catalog-api to use the AAD-integration
+
+So far, you were using a Connection String to connect to the Azure Cache for Redis resource.
+
+Connections are currently established using the following code:
+
+```csharp
+var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(_connectionString!, AzureCacheForRedis.ConfigureForAzure);
+```
+
+To use system-assigned identities, the code above needs to be replaced with:
+
+```csharp
+var configurationOptions = await ConfigurationOptions.Parse($"{_hostname}:{_port}").ConfigureForAzureWithSystemAssignedManagedIdentityAsync(_managedIdentityPrincipalId!);
+var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurationOptions);
+```
+
+<div class="task" data-title="Task">
+
+> - Update the code of the `GetDatabaseAsync` method in `src/catalog-api/RedisService.cs` to use system-assigned identity of the App Service Web App
+> - Set the value of the `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` app setting to the system-assigned identity of the App Service Web App (`Object (principal) ID`)
+
+</div>
+
+<div class="tip" data-title="Tips">
+
+> The variables `_hostname`, `_port`, and `_managedIdentityPrincipalId` were already defined in `src/catalog-api/RedisService.cs`
+
+</div>
+
+<details>
+
+<summary>Toggle solution</summary>
+
+Open the file `src/catalog-api/RedisService.cs` and locate the `GetDatabaseAsync` method.
+
+Replace the `connectionMultiplexer` variable initialization logic in the first code block above (which uses a connection string) with the contents of the second code block (which uses a managed identity principal ID).
+
+Next, you need to re-deploy your code to App Service like what you did in Lab 1 using the Visual Studio Code Azure extension and the `Deploy to Web App...` option.
+
+Afterwards, go to the `Identity` menu on your App Service resource, and copy the value of `Object (principal) ID`.
+
+![Managed identity of catalog-api](./assets/catalog-api-managed-identity.png)
+
+Finally, go to the `Configuration` menu of your App Service resource and set the app setting `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` to the value of `Object (principal) ID`.
+
+Validate the change by clicking `Ok`, then `Save` and you should be all set now.
+
+</details>
+
+## Testing the new setup
+
+<div class="task" data-title="Task">
+
+> Use the Web App to view some products and ensure `catalog-api` can still use your Azure Cache for Redis instance
+
+</div>
+
+<details>
+
+<summary>Toggle solution</summary>
+
+Open the Static Web App and make sure you can still see a list of products:
+
+![Viewing products in the Web App](./assets/webapp-view-products.png)
+
+</details>
+
+[redis-aad-auth]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-azure-active-directory-for-authentication
+[microsoft-azure-stackexchangeredis]: https://github.com/Azure/Microsoft.Azure.StackExchangeRedis
+[stackexchange-redis]: https://github.com/StackExchange/StackExchange.Redis
+[configure-rbac-with-data-access-policy]: https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure-role-based-access-control
+[msal]: https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-overview
+
+---
+
 # Closing the workshop
 
 The **Product Hands on Lab : Azure Cache for Redis in Azure World** comes to an end : We hope you liked practicing with Azure solutions and that this lab will help you kick start your journey to caching in Azure. 
