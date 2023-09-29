@@ -30,7 +30,7 @@
     "eject": "react-scripts eject",
     "swa:build": "swa build",
     "swa:start": "swa start ./build --api-location ./api",
-    "swa:deploy": "swa deploy ./build --api-location ./api --env production"
+    "swa:deploy": "swa deploy ./build --api-location ./api --env production --api-language node --api-version 18"
   },
   "eslintConfig": {
     "extends": [
