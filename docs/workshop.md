@@ -239,10 +239,12 @@ npm run swa:build
 npm run swa:deploy -- \
   --resource-group <resource-group-provisioned-by-terraform> \
   --app-name <static-web-app-name-provisioned-by-terraform> \
-  --no-use-keychain
+  --no-use-keychain \
+  --api-language node \
+  --api-version 18
 ```
 
-Great, now you should have a running Web App which you can use during the workshop to check your progress.
+Great, now yous should have a running Web App which you can use during the workshop to check your progress.
 
 It will allow you to:
 - View the list of products by calling `catalog-api`
