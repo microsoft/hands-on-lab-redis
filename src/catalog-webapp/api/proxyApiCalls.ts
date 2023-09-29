@@ -18,13 +18,9 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
             url = new URL(relativeUrl, baseUrl);
         }
 
-        // Removing the connection header as per https://github.com/nodejs/undici/issues/1470
-        const headers = {...req.headers};
-        delete headers.connection;
+        console.log(`Proxying ${req.url} to ${url}`);
 
-        const response = await fetch(url, {
-            headers,
-        });
+        const response = await fetch(url);
 
         const data = await response.json();
 
