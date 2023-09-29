@@ -23,7 +23,7 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
         const response = await fetch(url);
 
         const data = await response.json();
-
+        
         return {
             status: response.status,
             body: JSON.stringify(data),

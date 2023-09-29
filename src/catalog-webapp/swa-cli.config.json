@@ -3,6 +3,8 @@
     "configurations": {
         "redis-workshop-demo": {
             "appLocation": ".",
+            "apiVersion":"18",
+            "apiLanguage":"node",
             "apiPort": 7071,
             "apiLocation": "api",
             "outputLocation": "build",

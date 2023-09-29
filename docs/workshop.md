@@ -239,7 +239,9 @@ npm run swa:build
 npm run swa:deploy -- \
   --resource-group <resource-group-provisioned-by-terraform> \
   --app-name <static-web-app-name-provisioned-by-terraform> \
-  --no-use-keychain
+  --no-use-keychain \
+  --api-language node \
+  --api-version 18
 ```
 
 Great, now you should have a running Web App which you can use during the workshop to check your progress.
@@ -872,6 +874,7 @@ If you run this Azure Function and listen to the expired keys in the Azure Cache
 > - Use the `Const.cs` file to point to the `REDIS_KEY_PRODUCTS_ALL` environment variable
 > - Call the Catalog Api endpoint in APIM using the `IHttpClientFactory` object provided to retrieve the `products`
 > - Only this method should be modified
+> - Send a GET request on your APIM `/products` endpoint to trigger the first cache hydration
 
 </div>
 
@@ -902,6 +905,7 @@ Now, to test and run it locally you need to create the `local.settings.json` fil
 
 Then you need to set the `AZURE_REDIS_CONNECTION_STRING` environment variable to the connection string of your Azure Cache for Redis and update the `CATALOG_API_URL` with the url of APIM endpoint for the Catalog API.
 
+
 The connection string for your Azure Cache for Redis can be found in the Azure Portal. Select your Azure Cache for Redis resource and in the left menu, click on **Access keys**. Then copy the value of the `Primary connection string` into your `local.settings.json` file.
 
 ![Azure Cache for Redis connection string][azure-cache-for-redis-connection-string]
@@ -910,14 +914,26 @@ To set the `CATALOG_API_URL` environment variable, go to your resource group, se
 
 ![Apim gateway url](./assets/apim-gateway-url.png)
 
+Your `CATALOG_API_URL` should look like that: 
+
+```bash
+CATALOG_API_URL = "https://<APIM_GATEWAY_NAME>.azure-api.net" 
+```
+
 To debug the Cache Refresh Azure Function in VS Code, you will need to start Azurite (an Azure Storage Account emulator required to debug Azure Functions locally) :  
 - In VS Code, Press `Ctrl + Shift + P`, then search `Azurite: Start` and select this option : 
 
-    ![Azurite Start](./assets/azurite-start.png)
+![Azurite Start](./assets/azurite-start.png)
 
 - Then run the Azure Function by clicking on the **Run and Debug** panel and select `Attach to Cache Refresh Function`:
 
-    ![Azure Function run](./assets/azure-function-run.png)
+![Azure Function run](./assets/azure-function-run.png)
+
+- You can now call the `products` endpoint of your APIM Gateway (GET "https://<APIM_GATEWAY_NAME>.azure-api.net/products") to trigger the initial caching.
+
+- After 60 seconds, you should see your Azure Function process the expiration and calling the APIM `/products` endpoint again : Your cache auto-refresher is now working!
+
+![Azure Func Execution](./assets/azure-function-exec.png)
 
 </details>
 
@@ -946,7 +962,7 @@ Now if you go to your Azure Function resource, in the **Overview** tab select yo
 
 ![Azure Function overview](./assets/azure-function-overview.png)
 
-Do a few call to set a value in the cache with your `products.http` file and then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
+Do a few calls to set a value in the cache with your `products.http` file and then inside the **Monitor** tab you should see that the function was triggered when the key `products:all` is expired:
 
 ![Azure Function logs](./assets/azure-function-logs.png)
 

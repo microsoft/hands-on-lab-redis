@@ -1,4 +1,4 @@
-@apimEndpoint = <YOUR-APIM-RESOURCE-NAME>.azure-api.net/products
+@apimEndpoint = <YOUR-APIM-RESOURCE-NAME>.azure-api.net
 @products = products
 @typeJson = Accept: application/json
 
