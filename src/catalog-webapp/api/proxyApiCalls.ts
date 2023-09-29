@@ -15,7 +15,7 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
             url = new URL(apiUrl);
         }
         else {
-            const relativeUrl = './' + req.url.split('/api/')[1]; // e.g. /products or /products/1?param=value
+            const relativeUrl = '/' + req.url.split('/api/')[1]; // e.g. /products or /products/1?param=value
             const baseUrl = apiBaseUrl.endsWith('/') ? apiBaseUrl : apiBaseUrl + '/';
             console.log('baseUrl ready :', baseUrl);
             console.log("relativeUrl ready:",relativeUrl);
