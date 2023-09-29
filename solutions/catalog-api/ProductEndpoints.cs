@@ -20,7 +20,7 @@ public static class ProductEndpoints
             return Results.Ok(products);
         });
 
-        app.MapGet("/products/{id}", async (ICosmosService cosmosService, IProductCacheService productCacheService, string id) => {
+        app.MapGet("/products/{id}", async (ICosmosService cosmosService, IProductCacheService productCacheService, IBrowsingHistoryCacheService browsingHistoryCacheService, string id, [FromHeader(Name = "X-USER-ID")] string? userId) => {
             Product? cachedProduct = await productCacheService.GetProductAsync(id);
 
             if (cachedProduct != null) {
