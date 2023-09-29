@@ -27,6 +27,8 @@ public static class ProductEndpoints
                 Console.WriteLine("Returning a product description from the cache:");
                 Console.WriteLine(cachedProduct?.Id);
 
+                await browsingHistoryCacheService.AddViewedProductAsync(userId, cachedProduct);
+
                 return Results.Ok(cachedProduct);
             }
 
@@ -37,6 +39,7 @@ public static class ProductEndpoints
             }
 
             await productCacheService.SetProductAsync(product);
+            await browsingHistoryCacheService.AddViewedProductAsync(userId, product);
 
             return Results.Ok(product);
         });
