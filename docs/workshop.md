@@ -429,9 +429,9 @@ They both use the `IRedisService` interface to interact with the cache and use t
 > However, the actual Get and Set queries sent to the Redis Cache reside in the simple methods provided by the StackExchange.Redis package, and that you can see in the `RedisService.cs` class as the extract below : 
 > 
 > ```csharp
-> await _database.StringGetAsync(key);
+> await database.StringGetAsync(key);
 > ...
-> await _database.StringSetAsync(key, value);  
+> await database.StringSetAsync(key, value);  
 > ```    
 
 </div>
