@@ -22,7 +22,7 @@ navigation_levels: 3
 
 Welcome to this Azure Cache for Redis Workshop. You will be experimenting with Azure Cache for Redis in multiple labs to discover how it's integrated to other Azure services by running a real world scenarios. Don't worry, even if the challenges will increase in difficulty, this is a step by step lab, you will be guided through the whole process.
 
-During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in the provided resources and links before looking at the solutions placed under the **Toggle solution** panel for a challenged based learning experience.
+During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in the provided resources and links before looking at the solutions placed under the **📚 Toggle solution** panel for a challenged based learning experience.
 
 ## Prerequisites
 
@@ -99,7 +99,7 @@ Let's begin!
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 ```bash
 # Login to Azure : 
@@ -381,7 +381,7 @@ Once duplicated, you will need to fill in the missing values in this new file to
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Start by duplicating the `appsettings.json.template` from Visual Studio Code file explorer to `appsettings.Development.json` OR by running the following command : 
 
@@ -451,7 +451,7 @@ This way, the next call will extract the list of products directly from the cach
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Inside the `ProductEndpoints.cs` file and in the  `/products` endpoint use `IProductCacheService` to retrieve the products from the cache. If some products are found in the cache, return them directly: 
 
@@ -534,7 +534,7 @@ To do this, you will need to set the `CATALOG_API` app setting of the Static Web
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Go to your App Service resource of the `catalog-api` on Azure and take note of the url of the app:
 
@@ -601,7 +601,7 @@ The first thing that you need to do, is to connect your Azure Cache for Redis to
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Go to your resource group, search the API Management service (APIM), select it and in the left menu, click on **External cache**.
 
@@ -643,7 +643,7 @@ To do this, you will use caching policies.
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 To be able to compare the performance of your API with and without the cache, you will first call it without the cache using [Postman][postman-link] or using the `products.http` inside the `Payloads` folder.
 
@@ -698,7 +698,7 @@ Then click on the **Save** button.
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 To cache only the **Get Products** operation you need to specify the redis cache key. To be able to do this you will use two policies: `cache-lookup-value` and `cache-store-value`. They are a bit different from the previous policies as they allow you to specify the key to use in the cache.
 
@@ -765,7 +765,7 @@ Now that you have moved the caching logic of the list of products from the appli
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Similarly to what you did at the end of Lab 1, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
 
@@ -844,7 +844,7 @@ This method has an attribute called `RedisPubSubTrigger` which is used to trigge
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 The `RedisPubSubTrigger` attribute is used to trigger the function when an event is raised by the Azure Cache for Redis, so the first parameter is the connection string and the second one is the pattern to listen to.
 
@@ -881,7 +881,7 @@ If you run this Azure Function and listen to the expired keys in the Azure Cache
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 First you need to check if the key contains `products:all` and if it does, you need to refresh the cache. 
 
@@ -1007,7 +1007,7 @@ To do this, there is a variety of tools that you can use to inspect Redis data l
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Open the [Redis Console][redis-console] of your Azure Cache for Redis instance.
 
@@ -1063,7 +1063,7 @@ Now that you have identified the product views' stream, you will need to update 
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Update the method `StreamTrigger` and replace the trigger placeholder (the `TODO` comment) with the following code: 
 
@@ -1096,7 +1096,7 @@ To do this, make sure that you have a `local.settings.json` file (a template is 
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 First, you will start by creating a new `local.settings.json` file.
 
@@ -1145,7 +1145,7 @@ Lastly, let's check the HTTP endpoint of `history-func` and ensure that it retur
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 As the Azure Function is already up and running, you can directly call the `/api/history` endpoint with a GET request and ensure the ID of the user for whom you want to get the history is defined in the `X-USER-ID` header.
 
@@ -1176,7 +1176,7 @@ You have confirmed that your code is working fine locally, so now you can procee
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 You can do this using the Visual Studio Code extension like you saw in the previous section of this lab or by command line using the Azure Function Core Tools:
 
@@ -1202,7 +1202,7 @@ This will allow the Web App to communicate with your new History api (`/api/hist
 </div>
 
 <details>
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 To configure the Static Web App to use the new `/api/history` endpoint you will first need to get its full url.
 
@@ -1297,7 +1297,7 @@ In a real world scenario this alert could be coupled with a request to increase 
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 To do so, open the Azure Portal on your Azure Cache for Redis resource and open the **Metrics** panel.
 
@@ -1390,7 +1390,7 @@ The goal of this lab is to update `catalog-api` to use AAD and RBAC instead of a
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Head to the `Advanced settings` menu and then check the checkbox of `AAD access authorization`:
 
@@ -1414,7 +1414,7 @@ Head to the `Advanced settings` menu and then check the checkbox of `AAD access 
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Head to the `Data Access Configuration` menu, then click on the `Add` button, and choose `New Redis User`:
 
@@ -1465,7 +1465,7 @@ var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurati
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Open the file `src/catalog-api/RedisService.cs` and locate the `GetDatabaseAsync` method.
 
@@ -1493,7 +1493,7 @@ Validate the change by clicking **Ok**, then **Save** and you should be all set 
 
 <details>
 
-<summary>Toggle solution</summary>
+<summary>📚 Toggle solution</summary>
 
 Open the Static Web App and make sure you can still see a list of products:
 
