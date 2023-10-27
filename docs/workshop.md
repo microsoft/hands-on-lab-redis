@@ -499,7 +499,7 @@ app.MapGet("/products", async (ICosmosService cosmosService, IProductCacheServic
 });
 ```
 
-Now, if you run your API again and call the `/products` endpoint, you should see the response time of your API reduced to a few milliseconds! 
+Now, if you run your API again (with the same method used in the previous step) and call the `/products` endpoint, you should see the response time of your local API reduced to a few milliseconds! 
 
 Thanks Redis! ;)
 
