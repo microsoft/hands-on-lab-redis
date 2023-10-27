@@ -515,7 +515,7 @@ Right click on your App Service in the Visual Studio Code Azure extension panel 
 
 ![Deploy to Web App](./assets/app-service-deploy-to-web-app.png)
 
-Then, select the `catalog-api` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Azure Cosmos DBwas already configured in the Azure App Service for you by the infrastructure as code.
+Then, select the `catalog-api/bin/Debug/net7.0` folder and click on the **Deploy** button. Wait a few minutes for the deployment to finish. All the environment variables such as the connection string to Azure Cache for Redis and Azure Cosmos DBwas already configured in the Azure App Service for you by the infrastructure as code.
 
 When it's done go to your App Service resource on Azure and click on the **Browse** button. Navigate to the `/products` endpoint and you should see the list of products:
 
