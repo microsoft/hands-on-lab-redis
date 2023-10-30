@@ -955,7 +955,7 @@ To debug the Cache Refresh Azure Function in VS Code, you will need to start Azu
 Deploy your function using the VS Code extension or by command line:
 
 ```bash
-func azure functionapp publish <NAME_OF_YOUR_FUNCTION_APP>
+func azure functionapp publish <NAME_OF_YOUR_FUNCTION_APP> --csharp
 ```
 
 #### Test the Azure Function
