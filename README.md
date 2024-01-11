@@ -2,10 +2,6 @@
 
 This Hands On Lab will let you discover and practice the Azure Cache for Redis
 
-## Prerequisites
-
-TO BE DEFINED
-
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
