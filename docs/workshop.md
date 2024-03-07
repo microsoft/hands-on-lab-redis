@@ -148,7 +148,7 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 ---
 
-# Lab 0 : Azure Cache for Redis
+# Lab 1 : Azure Cache for Redis
 
 ## Setting up the infrastructure in Azure
 
@@ -160,7 +160,18 @@ In a terminal run the following command to initialize terraform:
 cd terraform && terraform init
 ```
 
-Then deploy the infrastructure:
+You can deploy the infrastructure in a specific resource group in your subscription or in a new one:
+
+To deploy the infrastructure to a specific resource group, run the following commands:
+
+```bash
+# Run plan to see the resources that will be created
+terraform plan -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" -out plan.out
+# Apply the plan
+terraform apply plan.out
+```
+
+To deploy the infrastructure to a new resource group, run the following command:
 
 ```bash
 terraform apply -auto-approve
@@ -338,7 +349,7 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 ---
 
-# Lab 1 : Use Azure Redis Cache in your API
+# Lab 2 : Use Azure Cache for Redis in your API
 
 In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
 
@@ -558,7 +569,7 @@ Now click on the **Browse** button in the **Overview** of your static web app to
 
 ---
 
-# Lab 2 : Add cache to your API with APIM
+# Lab 3 : Add cache to your API with APIM
 
 In the previous lab, you saw how to add code in your API to be able to use an Azure Cache for Redis. In this lab, you will see how to add a cache to your API without modifing its code.
 
@@ -581,7 +592,7 @@ You will see the `PRODUCT_LIST_CACHE_DISABLE` environment variable, select the e
 
 and set the value to `1` and click on the **OK** button.
 
-Now if you try to refresh the list of products in the Web App (by refreshing the page) or calling the `/products` endpoint of the Catalog API (see Lab 1) you should see the response time of your API taking multiples seconds again.
+Now if you try to refresh the list of products in the Web App (by refreshing the page) or calling the `/products` endpoint of the Catalog API (see Lab 2) you should see the response time of your API taking multiples seconds again.
 
 You can check the response time of the last request (e.g. GET `/products`) in the green box on the bottom left of the Web App.
 
@@ -767,13 +778,13 @@ Now that you have moved the caching logic of the list of products from the appli
 <details>
 <summary>📚 Toggle solution</summary>
 
-Similarly to what you did at the end of Lab 1, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
+Similarly to what you did at the end of Lab 2, set the value of the `CATALOG_API` app setting of the Static Web App to the root url of the API in APIM (without `/products` at the end). 
 
 ![APIM Url](./assets/apim-gateway-url.png)
 
 Reload the Web App and make sure the duration of the last call (bottom left corner of the Web App) gets lower after the first call.
 
-You will be able to get more metrics about the performance of your cache in Lab 4 using Azure Monitor.
+You will be able to get more metrics about the performance of your cache in Lab 5 using Azure Monitor.
 
 </details>
 
@@ -786,7 +797,7 @@ You will be able to get more metrics about the performance of your cache in Lab 
 
 ---
 
-# Lab 3 : Event-Driven Architecture 
+# Lab 4 : Event-Driven Architecture 
 
 In this lab you will see how to create cloud-native applications which can integrate with Azure Cache for Redis.
 
@@ -794,7 +805,7 @@ You will have to create 2 Function Apps which react to changes in Redis to perfo
 - `cache-refresh-func`: detect expired cache keys and trigger a cache warm up to re-populate them
 - `history-func`: process browsing history events from a Redis Stream and expose them via an HTTP API
 
-## Lab 3.1: Refresh the cache
+## Lab 4.1: Refresh the cache
 
 In the previous lab about APIM you saw how to add a cache to your API without modifying its code. In this lab you will see how to refresh the cache when the data expired before the data is requested by the user.
 
@@ -970,7 +981,7 @@ Do a few calls to set a value in the cache with your `products.http` file and th
 
 You now have an Azure Function that is triggered every time the key `products:all` is expired and refresh the cache.
 
-## Lab 3.2: Browse history
+## Lab 4.2: Browse history
 
 You have previously created an Azure Function which reacts to cache expiry by listening to keyspace events. In this second part of this lab you will create a second Azure Function called `history-func` which will consume Redis Streams and process incoming Stream entries.
 
@@ -991,7 +1002,7 @@ To do this, there is a variety of tools that you can use to inspect Redis data l
 
 <div class="task" data-title="Task">
 
->  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab 1.
+>  - View some products in the Web App to generate items in the stream. You can alternatively call the `/products/:id` endpoint from `catalog-api` like you did in Lab 2.
 >  - Locate the stream where `catalog-api` publishes product viewing events, named `productViews`.
 >  - Inspect the items in the Stream using `Redis Console` from the Azure portal.
 >  - View more products in the Web App and make sure new items get added in the stream.
@@ -1242,7 +1253,7 @@ Once it gets loaded, click on the UUID of the user on the top right of the page 
 
 ---
 
-# Lab 4 : Azure Cache for Redis Governance 
+# Lab 5 : Azure Cache for Redis Governance 
 
 In this lab you will discover how to retrieve metrics and logs from Azure Cache for Redis to monitor the health of your instance and take informed decisions about its sizing.
 
@@ -1357,13 +1368,13 @@ As a side note, we really encourage you to take the time to dig in the toolbox o
 
 ---
 
-# Lab 5 : Integration with Microsoft Entra ID
+# Lab 6 : Integration with Microsoft Entra ID
 
 In this Lab you will focus on securing connections to Azure Cache for Redis by replacing secrets (e.g. connection strings) with [ Azure Active Directory integration and RBAC][redis-aad-auth]. Notice that the new name for Azure Active Directory is Microsoft Entra ID.
 
 ![Using AAD to connect to Azure Cache for Redis](./assets/azure-ad-token.png)
 
-Here are the steps for securing your application with Azure Active Directory (AAD) and Role Based Access Control (RBAC):
+Here are the steps for securing your application with Microsoft Entra ID (new name for Azure Active Directory (AAD)) and Role Based Access Control (RBAC):
 - You enable the AAD-integration in your Azure Cache for Redis resource.
 - You assign a role to your application's identity (e.g. System assigned identity) to allow it to access data in Redis.
 - Your application requests a token from Azure Active Directory. This can be done automatically using a Redis client library (if it supports AAD-integration) otherwise you need to use an authentication library like [Microsoft Authentication Library][msal] (also known as MSAL) to get a token.
@@ -1471,7 +1482,7 @@ Open the file `src/catalog-api/RedisService.cs` and locate the `GetDatabaseAsync
 
 Replace the `connectionMultiplexer` variable initialization logic in the first code block above (which uses a connection string) with the contents of the second code block (which uses a managed identity principal ID).
 
-Next, you need to re-deploy your code to App Service like what you did in Lab 1 using the Visual Studio Code Azure extension and the `Deploy to Web App...` option.
+Next, you need to re-deploy your code to App Service like what you did in Lab 2 using the Visual Studio Code Azure extension and the `Deploy to Web App...` option.
 
 Afterwards, go to the **Identity** menu on your App Service resource, and copy the value of `Object (principal) ID`.
 
