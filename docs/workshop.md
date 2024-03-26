@@ -162,7 +162,7 @@ cd terraform && terraform init
 
 You can deploy the infrastructure in a specific resource group in your subscription or in a new one:
 
-To deploy the infrastructure to a specific resource group, run the following commands:
+Option 1 : To deploy the infrastructure to a specific resource group, run the following commands:
 
 ```bash
 # Run plan to see the resources that will be created
@@ -179,7 +179,7 @@ terraform plan -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" -out plan.out
 terraform apply plan.out
 ```
 
-To deploy the infrastructure to a new resource group, run the following command:
+Option 2 : To deploy the infrastructure to a new resource group, run the following command:
 
 ```bash
 terraform apply -auto-approve
