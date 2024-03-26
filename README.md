@@ -1,10 +1,13 @@
 # Redis
 
-This Hands On Lab will let you discover and practice the Azure Cache for Redis
+You will find the lab instructions here : <br>
+[Hands-on Lab : Azure Cache for Redis in the Azure World](https://moaw.dev/workshop/gh:microsoft/hands-on-lab-redis/main/docs/)
 
-## Prerequisites
 
-TO BE DEFINED
+You will be experimenting with Azure Cache for Redis in multiple labs to discover how it's integrated to other Azure services by running a real world scenarios. Don't worry, even if the challenges will increase in difficulty, this is a step by step lab, you will be guided through the whole process.
+
+During this workshop you will have the instructions to complete each steps. It is recommended to search for the answers in the provided resources and links before looking at the solutions placed under the 📚 Toggle solution panel for a challenge based learning experience.
+
 
 ## Contributing
 
