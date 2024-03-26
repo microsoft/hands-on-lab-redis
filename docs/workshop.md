@@ -167,6 +167,14 @@ To deploy the infrastructure to a specific resource group, run the following com
 ```bash
 # Run plan to see the resources that will be created
 terraform plan -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" -out plan.out
+
+# Optional : You can take advantage of other variables to configure your deployment.
+# Make sure to separate each new variable with a whitespace
+    -var "location=eastus" \        #default : westeurope
+    -var "environment=***" \        #default : dev
+    -var "domain=***" \             #default : rds
+    -var "tags={tag1='value'}" \    #default : {}
+
 # Apply the plan
 terraform apply plan.out
 ```
