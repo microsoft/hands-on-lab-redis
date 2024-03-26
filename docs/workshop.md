@@ -415,6 +415,13 @@ You can now run debug for the catalog-api by selecting **Run and Debug** in the 
 
 ![Debug-Catalog-Api](./assets/vscode-debug-api.png)
 
+**If you get an exeception about HTTPS, please run the command in the terminal**
+
+```bash 
+cd src/catalog-api
+dotnet dev-certs https
+``` 
+
 Depending on the environment you are using : 
 - Devcontainer : 
     - Once the API is running, browse for the url: http://localhost:5076/products and you should see the list of products.
