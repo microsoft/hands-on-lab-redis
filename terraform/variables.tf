@@ -27,7 +27,7 @@ variable "location" {
 }
 
 variable "tags" {
-  type        = map(string)
+  type        = map(any)
   description = "The custom tags for all resources"
   default     = {}
 }
