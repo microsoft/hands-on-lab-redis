@@ -5,6 +5,7 @@ title: Product Hands-on Lab - Redis Cache in the Azure world
 short_title: Redis Workshop
 description: This workshop will show you how Azure Cache for Redis is integrated with other Azure Services.
 level: beginner # Required. Can be 'beginner', 'intermediate' or 'advanced'
+navigation_numbering: false
 authors: # Required. You can add as many authors as needed
   - Damien Aicheh
   - Julien Strebler
