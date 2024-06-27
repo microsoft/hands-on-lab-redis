@@ -17,7 +17,6 @@ resource "azurerm_linux_web_app" "this" {
     AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
     AZURE_REDIS_HOSTNAME                  = azurerm_redis_cache.this.hostname
     AZURE_REDIS_PORT                      = azurerm_redis_cache.this.ssl_port
-    AZURE_MANAGED_IDENTITY_PRINCIPAL_ID   = ""
     PRODUCT_LIST_CACHE_DISABLE            = "0"
     SIMULATED_DB_LATENCY_IN_SECONDS       = "2"
     APPINSIGHTS_INSTRUMENTATIONKEY        = azurerm_application_insights.this.instrumentation_key
