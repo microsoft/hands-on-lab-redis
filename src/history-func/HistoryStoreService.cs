@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using StackExchange.Redis;
-using Microsoft.Azure.StackExchangeRedis;
 
 namespace History.Api
 {

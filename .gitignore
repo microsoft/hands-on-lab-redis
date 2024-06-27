@@ -5,4 +5,5 @@ __azurite_*
 *.bkp
 
 src/tmp/*
+src/.vs/*
 .vscode/*.dictionary.*

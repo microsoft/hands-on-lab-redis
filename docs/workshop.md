@@ -1475,20 +1475,19 @@ var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(_connection
 To use system-assigned identities, the code above needs to be replaced with:
 
 ```csharp
-var configurationOptions = await ConfigurationOptions.Parse($"{_hostname}:{_port}").ConfigureForAzureWithSystemAssignedManagedIdentityAsync(_managedIdentityPrincipalId!);
+var configurationOptions = await ConfigurationOptions.Parse($"{_hostname}:{_port}").ConfigureForAzureWithSystemAssignedManagedIdentityAsync();
 var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurationOptions);
 ```
 
 <div class="task" data-title="Task">
 
 > - Update the code of the `GetDatabaseAsync` method in `src/catalog-api/RedisService.cs` to use system-assigned identity of the App Service Web App
-> - Set the value of the `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` app setting to the system-assigned identity of the App Service Web App (`Object (principal) ID`)
 
 </div>
 
 <div class="tip" data-title="Tips">
 
-> The variables `_hostname`, `_port`, and `_managedIdentityPrincipalId` were already defined in `src/catalog-api/RedisService.cs`
+> The variables `_hostname` and `_port` were already defined in `src/catalog-api/RedisService.cs`
 
 </div>
 
@@ -1505,8 +1504,6 @@ Next, you need to re-deploy your code to App Service like what you did in Lab 2 
 Afterwards, go to the **Identity** menu on your App Service resource, and copy the value of `Object (principal) ID`.
 
 ![Managed identity of catalog-api](./assets/catalog-api-managed-identity.png)
-
-Finally, go to the **Configuration** menu of your App Service resource and set the app setting `AZURE_MANAGED_IDENTITY_PRINCIPAL_ID` to the value of `Object (principal) ID`.
 
 Validate the change by clicking **Ok**, then **Save** and you should be all set now.
 
