@@ -23,7 +23,7 @@ resource "azurerm_linux_function_app" "func_history" {
 
   site_config {
     application_stack {
-      dotnet_version              = "7.0"
+      dotnet_version              = "8.0"
       use_dotnet_isolated_runtime = true
     }
   }
