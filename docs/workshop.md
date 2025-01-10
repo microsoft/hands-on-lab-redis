@@ -10,10 +10,12 @@ authors: # Required. You can add as many authors as needed
   - Damien Aicheh
   - Julien Strebler
   - Iheb Khemissi
+  - Yann Duval
 contacts: # Required. Must match the number of authors
   - "@damienaicheh"
   - "@justrebl"
   - "@ikhemissi"
+  - "@yannduval"
 duration_minutes: 120
 tags: azure, azure cache for redis, database, serverless, apim, cache, csu
 navigation_levels: 3
@@ -167,7 +169,10 @@ Option 1 : To deploy the infrastructure to a specific resource group, run the fo
 
 ```bash
 # Run plan to see the resources that will be created
-terraform plan -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" -out plan.out
+terraform plan \
+    -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" \
+    -var "subscription_id=YOUR_SUBSCRIPTION_ID" \
+    -out plan.out
 
 # Optional : You can take advantage of other variables to configure your deployment.
 # Make sure to separate each new variable with a whitespace
@@ -234,7 +239,9 @@ You have now seeded your database with the data for this Hands On Lab.
 
 We have created a Static Web App to help you assess your progress on this Hands-on-Lab by viewing products, browsing history, and the duration of the last HTTP call.
 
-![Viewing products in the Web App](./assets/webapp-view-products.png)
+Initially the web app will not show any products. This is itendend and will be fixed during the workshop. 
+
+![Viewing products in the Web App](./assets/webapp-view-products-empty.png)
 
 Deploying the Web App is optional but it is highly recommended as it will simplify the testing process so that you can focus on the fun stuff.
 
@@ -268,7 +275,7 @@ npm run swa:deploy -- \
 
 Great, now you should have a running Web App which you can use during the workshop to check your progress.
 
-It will allow you to:
+In the future it will allow you to:
 - View the list of products by calling `catalog-api`
 - View http call durations to assess caching policies
 - View the browsing history by calling `history-func`
@@ -360,7 +367,7 @@ To summarize, you can use the following basic commands to interact with Redis:
 
 # Lab 2 : Use Azure Cache for Redis in your API
 
-In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 7 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
+In this lab, you will see how to use Azure Cache for Redis in your API to improve its performance. This API is an ASP.NET Web API written in .NET 8 and you will use the [StackExchange.Redis][stackexchange-redis] NuGet package to interact with Redis. One of the goal of this API is to provide a list of products that you will display in a web application.
 
 <div class="tip" data-title="Tips">
 
@@ -567,9 +574,10 @@ Go to your App Service resource of the `catalog-api` on Azure and take note of t
 
 ![Get the url of catalog-api](./assets/catalog-api-get-url.png)
 
-Then go to the Static Web App, select the `Configuration` menu on the left and click on the `Add` button to add a new app setting.
+Then go to the Static Web App, select the `Environment variables` menu on the left and click on the `Add` button to add a new app setting.
 
-Next, enter `CATALOG_API` in the name of the setting, and set the value to the url of `catalog-api` which you retrieved previously from App Service.
+Next, enter `CATALOG_API` in the name of the setting, and set the value to the url of `catalog-api` which you retrieved previously from App Service. Make sure the URL starts with `https://`. Hit apply to create
+the variable, then hit apply again to apply the change to the Static Web App.
 
 ![Set CATALOG_API in the Web App config](./assets/webapp-set-catalog-api.png)
 
@@ -601,12 +609,12 @@ The APIM is used as a facade for all your APIs (in this case you only have one),
 
 In the previous lab, you added code in your API to use an Azure Cache for Redis directly on the `/products` endpoint. To avoid modifying the code of your API, we have added an environment variable called `PRODUCT_LIST_CACHE_DISABLE` that you can use to enable or disable the cache on this endpoint.
 
-To disable the cache, you need to set the value of this environment variable to `1`. To do this, go to your resource group, search the App service, select it and in the left menu, click on **Configuration**. 
+To disable the cache, you need to set the value of this environment variable to `1`. To do this, go to your resource group, search the App service, select it and in the left menu, click on **Environment variables**. 
 You will see the `PRODUCT_LIST_CACHE_DISABLE` environment variable, select the edit button:
 
 ![App service configuration](./assets/app-service-configuration.png)
 
-and set the value to `1` and click on the **OK** button.
+and set the value to `1` and click on the **Apply** button.
 
 Now if you try to refresh the list of products in the Web App (by refreshing the page) or calling the `/products` endpoint of the Catalog API (see Lab 2) you should see the response time of your API taking multiples seconds again.
 
@@ -1210,7 +1218,7 @@ You have confirmed that your code is working fine locally, so now you can procee
 You can do this using the Visual Studio Code extension like you saw in the previous section of this lab or by command line using the Azure Function Core Tools:
 
 ```sh
-func azure functionapp publish <NAME_OF_YOUR_HISTORY_FUNCTION_APP>
+func azure functionapp publish <NAME_OF_YOUR_HISTORY_FUNCTION_APP> --dotnet-isolated
 ```
 
 </details>
@@ -1407,7 +1415,7 @@ The goal of this lab is to update `catalog-api` to use AAD and RBAC instead of a
 
 <div class="task" data-title="Task">
 
-> Enable `Azure Active Directory access authorization` on your Azure Cache for Redis resource from the `Advanced settings` menu
+> Enable `Azure Active Directory access authorization` on your Azure Cache for Redis resource from the `Authentication` menu
 
 </div>
 
@@ -1421,9 +1429,9 @@ The goal of this lab is to update `catalog-api` to use AAD and RBAC instead of a
 
 <summary>📚 Toggle solution</summary>
 
-Head to the `Advanced settings` menu and then check the checkbox of `AAD access authorization`:
+Head to the `Authentication` menu and then check the checkbox of `Enable Microsoft Entra Authentication`:
 
-![Enabling AAD access authorization](./assets/redis-enable-aad.png)
+![Enabling Microsoft Entra access authorization](./assets/redis-enable-aad.png)
 
 </details>
 

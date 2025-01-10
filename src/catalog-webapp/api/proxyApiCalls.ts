@@ -22,7 +22,7 @@ export default async function (context: Context, req: HttpRequest, apiBaseUrl?: 
 
         const response = await fetch(url, {
             headers: {
-                'X-USER-ID': req.headers['X-USER-ID'],
+                'X-USER-ID': req.headers['x-user-id'],
             },
         });
 

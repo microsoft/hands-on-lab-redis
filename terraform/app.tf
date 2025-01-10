@@ -12,7 +12,7 @@ resource "azurerm_linux_web_app" "this" {
   }
 
   app_settings = {
-    AZURE_COSMOS_CONNECTION_STRING        = azurerm_cosmosdb_account.this.connection_strings[0]
+    AZURE_COSMOS_CONNECTION_STRING        = azurerm_cosmosdb_account.this.primary_sql_connection_string
     AZURE_COSMOS_DATABASE                 = "catalogdb"
     AZURE_REDIS_CONNECTION_STRING         = azurerm_redis_cache.this.primary_connection_string
     AZURE_REDIS_HOSTNAME                  = azurerm_redis_cache.this.hostname
@@ -26,7 +26,7 @@ resource "azurerm_linux_web_app" "this" {
 
   site_config {
     application_stack {
-      dotnet_version = "7.0"
+      dotnet_version = "8.0"
     }
   }
 

@@ -6,3 +6,4 @@ __azurite_*
 
 src/tmp/*
 .vscode/*.dictionary.*
+**/mise.toml

@@ -4,6 +4,11 @@ variable "resource_group_name" {
   description = "The resource group name to override default naming convention"
 }
 
+variable "subscription_id" {
+  type = string
+  description = "The subscription id to use for the resources"
+}
+
 variable "environment" {
   type        = string
   default     = "dev"
