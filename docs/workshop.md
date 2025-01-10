@@ -250,7 +250,7 @@ You have now seeded your database with the data for this Hands On Lab.
 
 We have created a Static Web App to help you assess your progress on this Hands-on-Lab by viewing products, browsing history, and the duration of the last HTTP call.
 
-Initially the web app will not show any products. This is itendend and will be fixed during the workshop. 
+Initially the web app will not show any products. This is intended and will be fixed during the workshop. 
 
 ![Viewing products in the Web App](./assets/webapp-view-products-empty.png)
 
