@@ -157,6 +157,18 @@ az provider register --namespace 'Microsoft.DocumentDB'
 
 If you look at the project, you will see a `terraform` folder. It contains the infrastructure as code that you will use to deploy the infrastructure for this Hands On Lab. This will deploy a series of Azure services that you will use in combination with Azure Cache for Redis.
 
+We need to specify the subscription we want to use:
+
+```bash
+# For bash
+export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+```
+
+```powershell
+# For powershell
+$ARM_SUBSCRIPTION_ID = (az account show --query id -o tsv)
+```
+
 In a terminal run the following command to initialize terraform:
 
 ```bash
@@ -171,7 +183,6 @@ Option 1 : To deploy the infrastructure to a specific resource group, run the fo
 # Run plan to see the resources that will be created
 terraform plan \
     -var "resource_group_name=YOUR_RESOURCE_GROUP_NAME" \
-    -var "subscription_id=YOUR_SUBSCRIPTION_ID" \
     -out plan.out
 
 # Optional : You can take advantage of other variables to configure your deployment.
